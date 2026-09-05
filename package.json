@@ -9,7 +9,7 @@
 		"node": ">=20"
 	},
 	"scripts": {
-		"postinstall": "bash scripts/make-fake-secrets.sh",
+		"postinstall": "bash scripts/make-fake-secrets.sh || echo 'note: could not generate fake-secrets/ (needs openssl + python3). Wallet buttons still render; run scripts/make-fake-secrets.sh later if you want the clicks to work.'",
 		"doctor": "node scripts/doctor.mjs",
 		"argo": "argo",
 		"validate": "argo validate",
