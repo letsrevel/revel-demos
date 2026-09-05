@@ -17,20 +17,19 @@
 #  you never need the Revel source code to record a video.
 #
 #  ---------------------------------------------------------------------------
-#  !!! TODO — BUMP THE IMAGE TAGS !!!
+#  IMAGE TAGS
 #  ---------------------------------------------------------------------------
-#  The tags below are the latest releases as of 2026-09-06. A newer backend
-#  release (the one that adds the `bootstrap_demo_video` seeding command) is
-#  being cut — until you bump REVEL_BACKEND_TAG to it, the bootstrap step
-#  prints a loud warning and seeds only the standard demo data.
+#  The tags below are the latest releases as of 2026-09-06. Backend 2.8.0 is the
+#  first release that carries the `bootstrap_demo_video` seeding command, so the
+#  demo-video scenarios seed out of the box — do not go below it.
 #
-#  To bump: edit .env (copy it from .env.example first), set
-#      REVEL_BACKEND_TAG=2.8.0
-#      REVEL_FRONTEND_TAG=v2.9.0
+#  To move to a newer release: edit .env (copy it from .env.example first), set
+#      REVEL_BACKEND_TAG=…
+#      REVEL_FRONTEND_TAG=…
 #  then `docker compose pull && docker compose up -d`.
 #
 #  Mind the asymmetry, it is easy to get wrong:
-#      backend  image tags have NO "v"   → 2.7.0
+#      backend  image tags have NO "v"   → 2.8.0
 #      frontend image tags HAVE the "v"  → v2.8.0
 #  Published tags: https://github.com/orgs/letsrevel/packages
 #  ---------------------------------------------------------------------------
@@ -149,7 +148,7 @@ x-backend-env: &backend-env
   GOOGLE_WALLET_SERVICE_ACCOUNT_KEY_PATH: /fake-secrets/google-wallet-sa.json
   GOOGLE_WALLET_CLASS_PREFIX: revel-demo
 
-x-backend-image: &backend-image ghcr.io/letsrevel/revel:${REVEL_BACKEND_TAG:-2.7.0}
+x-backend-image: &backend-image ghcr.io/letsrevel/revel:${REVEL_BACKEND_TAG:-2.8.0}
 
 services:
   # ---------------------------------------------------------------------------

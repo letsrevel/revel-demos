@@ -178,7 +178,7 @@ Revel ships new releases regularly. To move the demo environment to a newer one,
 edit `.env` (copy it from `.env.example` if you have not yet):
 
 ```bash
-REVEL_BACKEND_TAG=2.7.0
+REVEL_BACKEND_TAG=2.8.0
 REVEL_FRONTEND_TAG=v2.8.0
 ```
 
