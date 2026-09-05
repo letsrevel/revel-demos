@@ -1,0 +1,332 @@
+# =============================================================================
+#  Revel — self-contained demo stack for recording product videos
+# =============================================================================
+#
+#   docker compose up -d          bring everything up (first run pulls ~1.5 GB)
+#   docker compose ps             watch until every service says "healthy"
+#   docker compose logs -f        follow logs
+#   docker compose down           stop (keeps the database)
+#   docker compose down -v        stop AND wipe the database (full reset)
+#
+#  Once healthy:
+#     frontend   http://localhost:5173
+#     API        http://localhost:8000/api/version
+#     Mailpit    http://localhost:8025      (every email the app sends)
+#
+#  Everything here runs from PUBLISHED images — nothing is built locally, so
+#  you never need the Revel source code to record a video.
+#
+#  ---------------------------------------------------------------------------
+#  !!! TODO — BUMP THE IMAGE TAGS !!!
+#  ---------------------------------------------------------------------------
+#  The tags below are the latest releases as of 2026-09-06. A newer backend
+#  release (the one that adds the `bootstrap_demo_video` seeding command) is
+#  being cut — until you bump REVEL_BACKEND_TAG to it, the bootstrap step
+#  prints a loud warning and seeds only the standard demo data.
+#
+#  To bump: edit .env (copy it from .env.example first), set
+#      REVEL_BACKEND_TAG=2.8.0
+#      REVEL_FRONTEND_TAG=v2.9.0
+#  then `docker compose pull && docker compose up -d`.
+#
+#  Mind the asymmetry, it is easy to get wrong:
+#      backend  image tags have NO "v"   → 2.7.0
+#      frontend image tags HAVE the "v"  → v2.8.0
+#  Published tags: https://github.com/orgs/letsrevel/packages
+#  ---------------------------------------------------------------------------
+
+name: revel-demos
+
+# --- shared backend environment ----------------------------------------------
+# All three backend containers (api, worker, bootstrap) run the same image with
+# the same settings. Values live here rather than in .env on purpose: none of
+# them are secret, and a missing .env must not silently change behaviour.
+x-backend-env: &backend-env
+  # -- core ---------------------------------------------------------------
+  # Throwaway keys for a local demo box. Not secret, not reused anywhere.
+  SECRET_KEY: demo-video-not-a-secret-key-do-not-reuse-anywhere
+  SALT_KEY: 583l5Y4hl9WCwIu3qSpTctFZochMoegbghahnyUhUYE=
+  DEBUG: "False"
+  # The single switch that puts the app in demo mode. It makes /api/version
+  # report demo:true, which is what makes the login page show the one-click
+  # demo-account picker (very handy on camera) and forces questionnaire
+  # scoring onto its mock backend so no LLM is needed.
+  DEMO_MODE: "True"
+  ALLOWED_HOSTS: web,localhost,127.0.0.1
+  # DEBUG=False closes CORS completely unless this is set explicitly.
+  CORS_ALLOWED_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
+  SITE_DOMAIN: localhost:8000
+  SITE_NAME: Revel
+  BASE_URL: http://localhost:8000
+  # NOTE: this only seeds a DB row on first boot. Changing it later has no
+  # effect — the app reads the stored value. `down -v` to really change it.
+  FRONTEND_BASE_URL: http://localhost:5173
+  SERVICE_DESCRIPTION: The Revel API
+  ADMIN_URL: admin/
+
+  # -- database / cache ---------------------------------------------------
+  DB_NAME: revel
+  DB_USER: revel
+  DB_PASSWORD: revel
+  DB_HOST: postgres
+  DB_PORT: "5432"
+  DB_USE_PGBOUNCER: "False"
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  CELERY_REDIS_DB: "0"
+  CELERY_TASK_ALWAYS_EAGER: "False"
+
+  # -- email → Mailpit ----------------------------------------------------
+  # EMAIL_DRY_RUN=False is load-bearing: when true the app writes mail to its
+  # own console instead of sending it, and Mailpit stays empty — which breaks
+  # the demo scripts, since they read verification links out of Mailpit.
+  EMAIL_HOST: mailpit
+  EMAIL_PORT: "1025"
+  EMAIL_USE_TLS: "False"
+  EMAIL_USE_SSL: "False"
+  EMAIL_HOST_USER: ""
+  EMAIL_HOST_PASSWORD: ""
+  EMAIL_DRY_RUN: "False"
+  DEFAULT_FROM_EMAIL: Revel Demo <noreply@localhost>
+  DEFAULT_REPLY_TO_EMAIL: Revel Demo <noreply@localhost>
+  DEFAULT_BILLING_EMAIL: Revel Demo <billing@localhost>
+  INTERNAL_CATCHALL_EMAIL: internal@localhost
+
+  # -- seeded superuser (Django admin at /admin/) -------------------------
+  DEFAULT_SUPERUSER_USERNAME: admin@example.com
+  DEFAULT_SUPERUSER_EMAIL: admin@example.com
+  DEFAULT_SUPERUSER_PASSWORD: password123
+
+  # -- features -----------------------------------------------------------
+  FEATURE_ORGANIZATION_CREATION: "True"
+  FEATURE_LLM_EVALUATION: "False"
+  FEATURE_TELEGRAM: "False"
+  FEATURE_MALWARE_SCAN: "False"
+  FEATURE_OBSERVABILITY: "False"
+
+  # =======================================================================
+  #  FAKE single-sign-on — makes the login/register page render a real
+  #  "Continue with Google" button.
+  # =======================================================================
+  # The provider list is a CSV of keys; each key reads its own OIDC_<KEY>_*
+  # vars. The key must be exactly `google` for the Google-branded button —
+  # any other key renders a plain generic button. OIDC_GOOGLE_NAME is the
+  # word after "Continue with".
+  #
+  # These values are FAKE and grant access to nothing. They are enough
+  # because the credentials are never checked at startup — the app only
+  # contacts the issuer when somebody actually clicks the button. So the
+  # button RENDERS and photographs correctly; clicking it will fail. Do not
+  # film the click.
+  #
+  # The issuer must be https:// (a plain-http issuer is rejected unless
+  # DEBUG=True), which is why it points at the real Google endpoint.
+  OIDC_PROVIDERS: google
+  OIDC_GOOGLE_NAME: Google
+  OIDC_GOOGLE_ISSUER: https://accounts.google.com
+  OIDC_GOOGLE_CLIENT_ID: 473859204837-demovideo7q2klm3n4p5r6s8t9u0vwxyz.apps.googleusercontent.com
+  OIDC_GOOGLE_CLIENT_SECRET: GOCSPX-DemoVideo-Fake-Secret-000000000
+  OIDC_GOOGLE_SCOPES: openid email profile
+
+  # =======================================================================
+  #  FAKE wallet passes — makes tickets and membership cards render the
+  #  "Add to Apple Wallet" and "Add to Google Wallet" buttons.
+  # =======================================================================
+  # This is GLOBAL configuration, not per-organization: the app advertises
+  # a wallet pass on a ticket when these settings are non-empty strings. It
+  # never checks that the files exist, so the buttons appear either way.
+  #
+  # The files in fake-secrets/ (self-signed, committed, worthless) exist so
+  # that *clicking* a button produces an actual — invalid — pass instead of
+  # a 500 error page on camera. Regenerate with scripts/make-fake-secrets.sh.
+  APPLE_WALLET_PASS_TYPE_ID: pass.io.letsrevel.demo
+  APPLE_WALLET_TEAM_ID: DEMOTEAM01
+  APPLE_WALLET_CERT_PATH: /fake-secrets/pass.pem
+  APPLE_WALLET_KEY_PATH: /fake-secrets/pass-key.pem
+  APPLE_WALLET_WWDR_CERT_PATH: /fake-secrets/wwdr.pem
+  APPLE_WALLET_KEY_PASSWORD: ""
+  GOOGLE_WALLET_ISSUER_ID: "3388000000022473859"
+  GOOGLE_WALLET_SERVICE_ACCOUNT_KEY_PATH: /fake-secrets/google-wallet-sa.json
+  GOOGLE_WALLET_CLASS_PREFIX: revel-demo
+
+x-backend-image: &backend-image ghcr.io/letsrevel/revel:${REVEL_BACKEND_TAG:-2.7.0}
+
+services:
+  # ---------------------------------------------------------------------------
+  # PostgreSQL + PostGIS. PostGIS is not optional — the app stores event
+  # locations as geographic points and will not migrate on plain postgres.
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: revel
+      POSTGRES_USER: revel
+      POSTGRES_PASSWORD: revel
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U revel']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Redis — Celery broker and cache.
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Mailpit — catches every email the app sends. Nothing leaves your machine.
+  # The demo scripts read verification links out of its API, so this is a hard
+  # dependency, not a convenience.  UI: http://localhost:8025
+  # ---------------------------------------------------------------------------
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - '8025:8025' # web UI + API
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 'true'
+      MP_SMTP_AUTH_ALLOW_INSECURE: 'true'
+      MP_MAX_MESSAGES: '5000'
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8025/api/v1/info']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # The API. Must be called `web` — the frontend's server-side rendering calls
+  # it by that hostname, and that name is in ALLOWED_HOSTS.
+  # Database migrations run automatically here, because the image's entrypoint
+  # migrates whenever the command starts with the word `gunicorn`.
+  # ---------------------------------------------------------------------------
+  web:
+    image: *backend-image
+    environment: *backend-env
+    command:
+      - gunicorn
+      - revel.wsgi:application
+      - --worker-class=gthread
+      - --workers=2
+      - --threads=4
+      - --bind=0.0.0.0:8000
+      - --timeout=120
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./fake-secrets:/fake-secrets:ro
+      - media:/app/src/media
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      mailpit: { condition: service_healthy }
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/healthcheck', timeout=5)"
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 40s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Background worker. NOT optional: account-verification emails, notifications
+  # and image thumbnails are all dispatched as background jobs. Without it the
+  # demo scripts hang waiting for a verification email that never arrives.
+  #
+  # (There is deliberately no `beat` scheduler here. In demo mode the schedule
+  # can include a task that wipes and re-seeds all demo data — which would be a
+  # catastrophe halfway through a recording.)
+  # ---------------------------------------------------------------------------
+  worker:
+    image: *backend-image
+    environment: *backend-env
+    command:
+      - celery
+      - -A
+      - revel
+      - worker
+      - --loglevel=INFO
+      - --concurrency=2
+      - --hostname=worker-default@%h
+    volumes:
+      - ./fake-secrets:/fake-secrets:ro
+      - media:/app/src/media
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # One-shot seeding. Runs once when the database is empty, then exits.
+  # See scripts/bootstrap-demo.sh — it migrates, seeds the standard demo world
+  # (organizations, events, the @example.com accounts), and then runs the
+  # demo-video scenario seeding.
+  #
+  # Re-run it by hand at any time:   npm run reseed
+  # Wipe and start over completely:  docker compose down -v && docker compose up -d
+  # ---------------------------------------------------------------------------
+  bootstrap:
+    image: *backend-image
+    environment:
+      <<: *backend-env
+      # set to 1 to force a re-seed of an already-populated database
+      FORCE_RESEED: '${FORCE_RESEED:-0}'
+    entrypoint: ['/bin/sh', '/bootstrap-demo.sh']
+    volumes:
+      - ./scripts/bootstrap-demo.sh:/bootstrap-demo.sh:ro
+      - ./fake-secrets:/fake-secrets:ro
+      - media:/app/src/media
+    depends_on:
+      web: { condition: service_healthy }
+    restart: 'no'
+
+  # ---------------------------------------------------------------------------
+  # The web app itself → http://localhost:5173
+  #
+  # PUBLIC_API_URL is the address the BROWSER uses to reach the API, so it must
+  # be a localhost URL, not the internal container name. INTERNAL_API_URL is
+  # the one used for server-side rendering, inside the Docker network.
+  #
+  # It waits for seeding to finish, so when this reports healthy the demo data
+  # is really there.
+  # ---------------------------------------------------------------------------
+  frontend:
+    image: ghcr.io/letsrevel/revel-frontend:${REVEL_FRONTEND_TAG:-v2.8.0}
+    environment:
+      PUBLIC_API_URL: http://localhost:8000
+      INTERNAL_API_URL: http://web:8000
+      ORIGIN: http://localhost:5173
+      NODE_ENV: production
+      PORT: '3000'
+      HOST: 0.0.0.0
+      ENABLE_METRICS: 'false'
+      LOG_LEVEL: info
+    ports:
+      - '5173:3000'
+    depends_on:
+      web: { condition: service_healthy }
+      bootstrap: { condition: service_completed_successfully }
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - node -e "require('http').get('http://localhost:3000', r => { if (r.statusCode !== 200) process.exit(1) }).on('error', () => process.exit(1))"
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  media:

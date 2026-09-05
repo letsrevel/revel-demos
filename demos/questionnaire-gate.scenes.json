@@ -1,0 +1,76 @@
+[
+	{
+		"scene": "gate",
+		"text": "Some spaces are built on trust. This shibari workshop curates its guest list — newcomers apply with a short questionnaire before tickets unlock.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Curated, vetted guest lists",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "apply",
+		"text": "The application lives right in the flow. Answer the questions, hit submit — that's it.",
+		"overlay": {
+			"type": "callout",
+			"text": "Built-in questionnaires",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "pending",
+		"text": "While the organizers review, guests always see where they stand. No black box.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Transparent application status",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "organizer",
+		"text": "Meanwhile, in the organizer's studio, every application lands in one review queue.",
+		"overlay": {
+			"type": "headline-card",
+			"kicker": "Organizer studio",
+			"title": "Review applications",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "approve",
+		"text": "Read the answers, then approve with one click — scores and notes are there when you need them.",
+		"overlay": {
+			"type": "callout",
+			"text": "One-click review",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "unlocked",
+		"text": "The moment it's approved, the guest's page unlocks. Tickets are live.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Approved — tickets unlocked",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "outro",
+		"text": "Safer spaces, effortless vetting. Revel. Get started at lets revel dot io.",
+		"overlay": {
+			"type": "block",
+			"block": "logo-outro",
+			"props": {
+				"title": "let's revel.",
+				"subtitle": "letsrevel.io"
+			},
+			"placement": "center"
+		}
+	}
+]

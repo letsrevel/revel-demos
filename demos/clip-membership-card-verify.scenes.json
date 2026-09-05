@@ -1,0 +1,22 @@
+[
+	{
+		"scene": "card",
+		"text": "Every member carries their membership with them — a card with a QR code, right in their account. Download it, add it to your wallet, done.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "A card in every member's pocket",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "verify",
+		"text": "And at the door, the organizer scans or pastes that code — and knows exactly who's standing in front of them, and whether the membership is good.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Verified in seconds",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	}
+]

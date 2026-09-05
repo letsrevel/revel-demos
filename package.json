@@ -1,0 +1,35 @@
+{
+	"name": "revel-demos",
+	"version": "1.0.0",
+	"description": "Narrated product demo videos of Revel — the free, open-source event platform for communities, clubs and independent venues.",
+	"license": "MIT",
+	"private": true,
+	"type": "module",
+	"engines": {
+		"node": ">=20"
+	},
+	"scripts": {
+		"postinstall": "bash scripts/make-fake-secrets.sh",
+		"doctor": "node scripts/doctor.mjs",
+		"argo": "argo",
+		"validate": "argo validate",
+		"validate:all": "node scripts/validate-all.mjs",
+		"pipeline": "argo pipeline",
+		"record": "argo record",
+		"export": "argo export",
+		"preview": "argo preview",
+		"stitch": "node stitch.mjs",
+		"purge-clips": "node scripts/purge-clips.mjs",
+		"up": "docker compose up -d",
+		"down": "docker compose down",
+		"logs": "docker compose logs -f",
+		"reseed": "docker compose run --rm bootstrap"
+	},
+	"devDependencies": {
+		"@argo-video/cli": "^0.39.2",
+		"@elevenlabs/elevenlabs-js": "^2.66.0",
+		"@playwright/test": "^1.62.1",
+		"kokoro-js": "^1.2.1",
+		"playwright": "^1.62.1"
+	}
+}

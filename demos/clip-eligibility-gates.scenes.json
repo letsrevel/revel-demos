@@ -1,0 +1,32 @@
+[
+	{
+		"scene": "blocked",
+		"text": "Not every event is for everyone — and that's fine. This reading circle is members-only, so outsiders see exactly why they can't join yet, and what to do about it.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Clear rules, not dead ends",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "questionnaire",
+		"text": "A member gets one step further: the club asks a short questionnaire first. Every gate turns into a clear next step.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Eligibility, explained",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "invited",
+		"text": "And a personally invited guest? They walk straight through. You set the rules — Revel explains them to everyone else.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Invitations can waive any rule",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	}
+]

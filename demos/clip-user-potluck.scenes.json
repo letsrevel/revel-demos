@@ -1,0 +1,32 @@
+[
+	{
+		"scene": "board",
+		"text": "Planning a potluck? Switch it on for any event, and the whole plan lives right on the event page — what's coming, what's claimed, and what's still needed.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Potluck coordination, built in",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "claim",
+		"text": "See something you can bring? One tap and it's yours — the tally updates for everyone.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Tap to claim",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "add",
+		"text": "Got your own idea? Add it in seconds, and it lands on the list already claimed by you. No spreadsheet, no group-chat chaos.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Bring your own thing",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	}
+]

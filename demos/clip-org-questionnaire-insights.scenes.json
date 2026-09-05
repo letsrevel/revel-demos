@@ -1,0 +1,22 @@
+[
+	{
+		"scene": "board",
+		"text": "When applications come in, they all land in one place. Filter by pending, approved or rejected — review each one with its full answers, one click to decide.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "One board for every application",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "summary",
+		"text": "And the summary shows you the shape of it all — how many applied, how many you approved, and how people actually answered. Your community, at a glance.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Insights without spreadsheets",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	}
+]

@@ -1,0 +1,56 @@
+[
+	{
+		"scene": "hero",
+		"text": "This is Revel — the community-first platform for events, memberships, and ticketing. Let's take a quick tour.",
+		"overlay": {
+			"type": "headline-card",
+			"kicker": "let's revel.",
+			"title": "Events, made for communities",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "discover",
+		"text": "Finding your next night out is easy. Browse everything that's on — from club nights to festivals — no account needed.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Discover events near you",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "event",
+		"text": "Every event gets a beautiful page with everything your guests need. Dates, venue, ticket tiers, and instant RSVP.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Everything on one page",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "seats",
+		"text": "Selling seated shows? Your guests pick their exact seat on an interactive map — holds and availability update in real time.",
+		"overlay": {
+			"type": "callout",
+			"text": "Interactive seat maps",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "outro",
+		"text": "Revel. Your events, your community, your data. Get started for free at lets revel dot io.",
+		"overlay": {
+			"type": "block",
+			"block": "logo-outro",
+			"props": {
+				"title": "let's revel.",
+				"subtitle": "letsrevel.io"
+			},
+			"placement": "center"
+		}
+	}
+]

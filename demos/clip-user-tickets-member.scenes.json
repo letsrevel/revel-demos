@@ -1,0 +1,22 @@
+[
+	{
+		"scene": "guest",
+		"text": "Take a club night on Revel. Anyone can find the event and grab a general admission ticket — nothing special so far.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "What everyone sees",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "member",
+		"text": "But open the same page as a member, and there's an extra tier — free entry, just for them. Members-only tickets, without a single spreadsheet.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Members see their own tier",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	}
+]
