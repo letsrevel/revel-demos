@@ -116,23 +116,34 @@ compose up -d`.
 
 ### Seeded demo world
 
-All demo accounts use the password **`password123`**. The login page shows a
-one-click picker for them, because the backend runs in demo mode.
+All demo accounts use the password **`password123`**.
 
 The standard seed creates the `@example.com` cast — `alice.owner@example.com`,
 `bob.staff@example.com`, `charlie.member@example.com` and others — plus
-organizations, events and test scenarios covering every eligibility gate.
+organizations, events and test scenarios covering every eligibility gate. Demo
+mode puts exactly these accounts, and only these, in the login page's one-click
+picker.
 
 On top of that, `bootstrap_demo_video` seeds the scenarios written specifically
-for filming:
+for filming. Their accounts are **not** in the picker: reach them through the
+"Show login form" toggle, typing the address in full.
 
-| Organization | What it demonstrates |
-| --- | --- |
-| Shibari Circle Vienna | the flagship: a questionnaire-gated event, screening who attends |
-| The Velvet Cellar | members-only ticket tiers and member pricing |
-| Sunday Slow Picnic Club | potluck coordination |
-| Analog Photo Walks | organizer-side questionnaire insights |
-| Paper Hearts Book Club | eligibility gates |
+| Organization (slug = org page under `/org/`) | Event slug, under `/events/<org>/` | What it demonstrates |
+| --- | --- | --- |
+| `shibari-circle-vienna` | `intro-to-shibari-rope-and-trust` | the flagship: a questionnaire-gated event, screening who attends |
+| `the-velvet-cellar` | `basement-sessions-live-and-loud` | members-only ticket tiers and member pricing |
+| `sunday-slow-picnic-club` | `picnic-in-the-park` | potluck coordination |
+| `analog-photo-walks` | `golden-hour-photo-walk` | organizer-side questionnaire insights |
+| `paper-hearts-book-club` | `monthly-reading-circle` | eligibility gates |
+
+Every persona is `<first-name>.<role>@demovideo.example.com` — `ren.owner@…`,
+`lena.member@…`, `bea.outsider@…`, `clara.invited@…`. The seeder prints the full
+cast with each one's situation, and that output is the source of truth for who
+is who; the README table lists the ones worth filming:
+
+```bash
+docker compose logs bootstrap | sed -n '/DEMO VIDEO SEED/,$p'
+```
 
 If `docker compose logs bootstrap` printed a warning that
 `bootstrap_demo_video` does not exist in the image, raise `REVEL_BACKEND_TAG`
@@ -150,8 +161,9 @@ buttons which normally require corporate accounts still render on camera:
   `_CLIENT_SECRET` in `docker-compose.yml`. Nothing is verified at startup — the
   app only contacts Google when someone clicks — so fake values boot fine and
   the button renders. **Film the button, not the click**; the click fails.
-  On `/login` the button sits behind the "use a real account" toggle, because
-  demo mode shows the account picker first. `/register` shows it immediately.
+  On `/login` the button sits behind the "Show login form" toggle, because
+  demo mode shows the account picker first. `/register` shows it without a toggle, but opens behind a "This is a demo"
+  dialog — dismiss it with "Register anyway" before filming.
 - **"Add to Apple Wallet" / "Add to Google Wallet"** on tickets and membership
   cards. This is global configuration, not per-organization: the app offers a
   wallet pass whenever the `APPLE_WALLET_*` / `GOOGLE_WALLET_*` settings are

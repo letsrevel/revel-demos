@@ -82,8 +82,9 @@ if (ver.status !== 200) {
 		);
 	}
 	console.log(
-		'  note  the Google button is behind the "use a real account" toggle on /login ' +
-			'(demo mode shows the account picker first); /register shows it immediately'
+		'  note  the Google button is behind the "Show login form" toggle on /login ' +
+			'(demo mode shows the account picker first); on /register it needs no toggle, ' +
+			'but dismiss the "This is a demo" dialog with "Register anyway" first'
 	);
 	console.log('  note  wallet buttons cannot be checked from here — open a ticket in the app to confirm');
 }

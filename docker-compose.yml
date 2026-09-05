@@ -51,6 +51,15 @@ x-backend-env: &backend-env
   # demo-account picker (very handy on camera) and forces questionnaire
   # scoring onto its mock backend so no LLM is needed.
   DEMO_MODE: "True"
+  # Without this the backend calls itself a production deployment (that is the
+  # default whenever DEBUG is False) and switches on the full HTTPS hardening
+  # block: every http:// request is 301'd to https://, and a one-year HSTS
+  # header is sent. On localhost both are actively harmful — the API becomes
+  # unreachable over http (so `npm run doctor`, the arrange scripts and the
+  # frontend's server-side rendering all fail), and the HSTS header pins
+  # *localhost itself* to https in the browser for a year, breaking every other
+  # local project on the machine. Any value other than "production" is fine.
+  DEPLOYMENT_ENVIRONMENT: demo
   ALLOWED_HOSTS: web,localhost,127.0.0.1
   # DEBUG=False closes CORS completely unless this is set explicitly.
   CORS_ALLOWED_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
@@ -150,6 +159,19 @@ x-backend-env: &backend-env
 
 x-backend-image: &backend-image ghcr.io/letsrevel/revel:${REVEL_BACKEND_TAG:-2.8.0}
 
+# --- image architecture ------------------------------------------------------
+# The Revel images and the PostGIS image are published for linux/amd64 only. On
+# an Intel/AMD machine (any normal Linux server, and Intel Macs) this changes
+# nothing.
+#
+# On an Apple-Silicon Mac it is what makes the stack run at all: without it the
+# pull fails outright with
+#     no matching manifest for linux/arm64/v8 in the manifest list entries
+# and nothing starts. With it, Docker Desktop runs the images emulated — slower
+# to boot, but correct. Leave it alone unless arm64 images start being
+# published, in which case set REVEL_PLATFORM=linux/arm64 in .env.
+x-platform: &platform ${REVEL_PLATFORM:-linux/amd64}
+
 services:
   # ---------------------------------------------------------------------------
   # PostgreSQL + PostGIS. PostGIS is not optional — the app stores event
@@ -157,6 +179,7 @@ services:
   # ---------------------------------------------------------------------------
   postgres:
     image: postgis/postgis:17-3.5
+    platform: *platform
     environment:
       POSTGRES_DB: revel
       POSTGRES_USER: revel
@@ -203,6 +226,30 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
+  # One-shot volume preparation. The `media` volume is shared by web, worker
+  # and bootstrap so that cover art seeded by one is served by the others.
+  #
+  # Docker creates a named volume owned by root:root, but the Revel image runs
+  # as the unprivileged `appuser`. Without this step the very first thing
+  # seeding does — writing cover art into media/ — dies with
+  #     PermissionError: [Errno 13] Permission denied: '/app/src/media/cover-art'
+  # and takes the whole stack down with it, because `frontend` waits for
+  # `bootstrap` to succeed. So: chown the volume once, as root, before anything
+  # else opens it. Cheap, idempotent, and a no-op on later boots.
+  # ---------------------------------------------------------------------------
+  media-init:
+    image: *backend-image
+    platform: *platform
+    user: root
+    entrypoint:
+      - /bin/sh
+      - -c
+      - 'mkdir -p /app/src/media && chown -R appuser:appuser /app/src/media'
+    volumes:
+      - media:/app/src/media
+    restart: 'no'
+
+  # ---------------------------------------------------------------------------
   # The API. Must be called `web` — the frontend's server-side rendering calls
   # it by that hostname, and that name is in ALLOWED_HOSTS.
   # Database migrations run automatically here, because the image's entrypoint
@@ -210,6 +257,7 @@ services:
   # ---------------------------------------------------------------------------
   web:
     image: *backend-image
+    platform: *platform
     environment: *backend-env
     command:
       - gunicorn
@@ -221,13 +269,30 @@ services:
       - --timeout=120
     ports:
       - '8000:8000'
+      # Published here on purpose, not on `frontend`: that service shares this
+      # container's network namespace (see its network_mode), so its port has
+      # to be declared on the namespace's owner.
+      - '5173:3000'
     volumes:
       - ./fake-secrets:/fake-secrets:ro
       - media:/app/src/media
+      # The image ships without the IP2Location database (it is a ~168 MB
+      # licensed download). The backend geolocates the caller's IP to sort
+      # events nearest-first, and its lookup helper stat()s that file OUTSIDE
+      # its own try/except — so when the file is missing, the whole public
+      # events listing 500s and the app's /events discovery page renders
+      # "try again later" with no events on it.
+      #
+      # This zero-filled stand-in is enough: the loader opens it, the lookup
+      # inside it fails, and that failure IS caught — the request falls back to
+      # "no location known" and returns the events unsorted, which is exactly
+      # what a demo box wants. Never ship this to a real deployment.
+      - ./fake-secrets/ip2location-stub.BIN:/app/src/geo/data/IP2LOCATION-LITE-DB5.BIN:ro
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
       mailpit: { condition: service_healthy }
+      media-init: { condition: service_completed_successfully }
     healthcheck:
       test:
         - CMD-SHELL
@@ -249,6 +314,7 @@ services:
   # ---------------------------------------------------------------------------
   worker:
     image: *backend-image
+    platform: *platform
     environment: *backend-env
     command:
       - celery
@@ -261,9 +327,11 @@ services:
     volumes:
       - ./fake-secrets:/fake-secrets:ro
       - media:/app/src/media
+      - ./fake-secrets/ip2location-stub.BIN:/app/src/geo/data/IP2LOCATION-LITE-DB5.BIN:ro
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
+      media-init: { condition: service_completed_successfully }
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
@@ -277,6 +345,7 @@ services:
   # ---------------------------------------------------------------------------
   bootstrap:
     image: *backend-image
+    platform: *platform
     environment:
       <<: *backend-env
       # set to 1 to force a re-seed of an already-populated database
@@ -286,6 +355,7 @@ services:
       - ./scripts/bootstrap-demo.sh:/bootstrap-demo.sh:ro
       - ./fake-secrets:/fake-secrets:ro
       - media:/app/src/media
+      - ./fake-secrets/ip2location-stub.BIN:/app/src/geo/data/IP2LOCATION-LITE-DB5.BIN:ro
     depends_on:
       web: { condition: service_healthy }
     restart: 'no'
@@ -302,6 +372,26 @@ services:
   # ---------------------------------------------------------------------------
   frontend:
     image: ghcr.io/letsrevel/revel-frontend:${REVEL_FRONTEND_TAG:-v2.8.0}
+    platform: *platform
+    # Share the API container's network namespace, so that inside this
+    # container `localhost:8000` IS the API.
+    #
+    # Why that is necessary: PUBLIC_API_URL is the address the BROWSER uses, so
+    # it has to be http://localhost:8000. Server-side rendering normally
+    # rewrites API calls to INTERNAL_API_URL — but the app's token-refresh
+    # endpoint calls the API through the generated client rather than
+    # SvelteKit's request-scoped fetch, so it is never rewritten and asks for
+    # http://localhost:8000 from inside this container. With its own network
+    # namespace that is the frontend itself, nothing listens on 8000, and every
+    # refresh fails: sign-in appears to work, then the browser silently drops
+    # back to logged-out (no notification bell, "Login"/"Sign Up" still in the
+    # navbar) — which strands every recording that films a signed-in view.
+    #
+    # Sharing the namespace makes one address correct for both sides. Note the
+    # consequences: this service publishes no ports of its own (5173 is
+    # declared on `web` above) and is no longer reachable as `frontend` by
+    # name — nothing here needs either.
+    network_mode: 'service:web'
     environment:
       PUBLIC_API_URL: http://localhost:8000
       INTERNAL_API_URL: http://web:8000
@@ -311,8 +401,6 @@ services:
       HOST: 0.0.0.0
       ENABLE_METRICS: 'false'
       LOG_LEVEL: info
-    ports:
-      - '5173:3000'
     depends_on:
       web: { condition: service_healthy }
       bootstrap: { condition: service_completed_successfully }

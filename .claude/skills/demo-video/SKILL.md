@@ -58,7 +58,7 @@ page's demo picker lists them). `docker compose down -v` wipes everything;
 with believable fake values so the buttons render on camera:
 
 - The login and register pages show a real **"Continue with Google"** button.
-  On `/login` it sits behind the "use a real account" toggle, because demo mode
+  On `/login` it sits behind the "Show login form" toggle, because demo mode
   shows the account picker first — `/register` shows it immediately. The button
   is for filming; clicking it fails, so do not film the click.
 - Tickets and membership cards show **"Add to Apple Wallet"** and **"Add to

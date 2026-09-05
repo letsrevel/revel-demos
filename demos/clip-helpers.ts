@@ -12,11 +12,43 @@ export async function slowScroll(page: Page, totalPx: number, ms: number): Promi
 	}
 }
 
-/** Hide demo-environment chrome (banner) — re-apply after every full load. */
+const DEMO_CHROME_CSS = `div[role="alert"]:has(a[href*="mailpit"]) { display: none !important; }`;
+
+/** Pages whose permanent hiding rule has already been installed. */
+const chromeHidden = new WeakSet<Page>();
+
+/**
+ * Hide demo-environment chrome (the "Demo Mode … mailpit" banner).
+ *
+ * Injecting the rule after the page has loaded is not enough on its own. The
+ * banner is client-rendered once /api/version comes back, so on a slow load it
+ * can paint after `gotoClean` has already run — and a scene recorded in that
+ * window has the banner in shot. That is not hypothetical: it put the banner
+ * across the middle scene of clip-eligibility-gates while the scenes on either
+ * side of it, recorded by the same code, were clean.
+ *
+ * So the rule is installed twice over. `addInitScript` re-runs on every
+ * navigation this page makes from now on, before any of the app's own script,
+ * which closes the race for good; the `addStyleTag` covers the document that is
+ * already open at the moment of the first call.
+ */
 export async function hideDemoChrome(page: Page): Promise<void> {
-	await page.addStyleTag({
-		content: `div[role="alert"]:has(a[href*="mailpit"]) { display: none !important; }`
-	});
+	if (!chromeHidden.has(page)) {
+		chromeHidden.add(page);
+		await page.addInitScript((css: string) => {
+			const install = (): void => {
+				const style = document.createElement('style');
+				style.setAttribute('data-demo-chrome-hider', '');
+				style.textContent = css;
+				document.head.append(style);
+			};
+			// addInitScript runs before the document has a <head>.
+			if (document.head) install();
+			else document.addEventListener('DOMContentLoaded', install, { once: true });
+		}, DEMO_CHROME_CSS);
+	}
+	// Can reject if the page navigates mid-call; the init script covers that case.
+	await page.addStyleTag({ content: DEMO_CHROME_CSS }).catch(() => undefined);
 }
 
 export async function waitHydrated(page: Page): Promise<void> {
