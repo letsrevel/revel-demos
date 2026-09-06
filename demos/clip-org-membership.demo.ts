@@ -3,6 +3,8 @@ import { test, withOverlay } from '@argo-video/cli';
 import {
 	createDressedOrg,
 	createMembershipTier,
+	createMembershipPlan,
+	describeMembershipTier,
 	defaultMembershipTier,
 	registerVerifiedUser,
 	makeMember
@@ -15,6 +17,37 @@ test.use({ bypassCSP: true });
 // seeded orgs have either one member (The Velvet Cellar) or the standard seed's
 // QA fixtures, so this clip builds its own cast — which also means it survives
 // a reseed.
+// What each tier is for, and what it costs. Without these the Tiers tab films
+// as three boxes reading "No plans yet." above half a screen of whitespace —
+// which says the opposite of the line about membership having levels. Prices
+// are a small club's real prices, not enterprise numbers.
+const TIERS: Array<{ name: string; blurb: string; plans: Array<{ name: string; price: string; period_unit?: string }> }> = [
+	{
+		name: 'General membership',
+		blurb: 'A seat at the table. Members’ nights, and a vote at the annual meeting.',
+		plans: [
+			{ name: 'Monthly', price: '8.00' },
+			{ name: 'Yearly', price: '80.00', period_unit: 'year' }
+		]
+	},
+	{
+		name: 'Supporters',
+		blurb: 'Pays for the small gigs that never sell out. Brings a guest for free, once a month.',
+		plans: [
+			{ name: 'Monthly', price: '15.00' },
+			{ name: 'Yearly', price: '150.00', period_unit: 'year' }
+		]
+	},
+	{
+		name: 'Founders',
+		blurb: 'The people who bought the sound system. Free entry to everything, forever.',
+		plans: [
+			{ name: 'Yearly', price: '250.00', period_unit: 'year' },
+			{ name: 'Lifetime', price: '800.00', period_unit: 'lifetime' }
+		]
+	}
+];
+
 const CAST: Array<[string, string, 'Supporters' | 'Founders' | null]> = [
 	['Marta', 'Ferreira', 'Founders'],
 	['Jonah', 'Adeyemi', 'Founders'],
@@ -34,13 +67,35 @@ test('clip-org-membership', async ({ page, narration }) => {
 			'A small members club above the old harbour. Live music on Fridays, records and cheap beer the rest of the week. Run by the people who show up.',
 		address: 'Praterstraße 42, 1020 Vienna, Austria'
 	});
+	// "General membership" is created with the org, so it is described rather
+	// than created; the other two are new. Then every tier gets its prices.
 	const general = await defaultMembershipTier(org.slug, org.owner.token);
-	const supporters = await createMembershipTier(org.slug, org.owner.token, 'Supporters');
-	const founders = await createMembershipTier(org.slug, org.owner.token, 'Founders');
+	await describeMembershipTier(org.slug, org.owner.token, general, TIERS[0].blurb);
+	const supporters = await createMembershipTier(
+		org.slug,
+		org.owner.token,
+		'Supporters',
+		TIERS[1].blurb
+	);
+	const founders = await createMembershipTier(
+		org.slug,
+		org.owner.token,
+		'Founders',
+		TIERS[2].blurb
+	);
 	const tierByName: Record<string, { id: string }> = {
 		Supporters: supporters,
 		Founders: founders
 	};
+	for (const [tier, spec] of [
+		[general, TIERS[0]],
+		[supporters, TIERS[1]],
+		[founders, TIERS[2]]
+	] as const) {
+		for (const plan of spec.plans) {
+			await createMembershipPlan(org.slug, org.owner.token, tier.id, plan);
+		}
+	}
 	for (const [first, last, tierName] of CAST) {
 		// These addresses are on camera in the members list, so give them a
 		// human shape rather than the default demo-<label>-<stamp> form.

@@ -153,8 +153,48 @@ export async function createTier(eventId, token, overrides = {}) {
 	});
 }
 
-export async function createMembershipTier(orgSlug, token, name) {
-	return api(`/api/organization-admin/${orgSlug}/membership-tiers`, { token, body: { name } });
+export async function createMembershipTier(orgSlug, token, name, description = null) {
+	return api(`/api/organization-admin/${orgSlug}/membership-tiers`, {
+		token,
+		body: { name, description }
+	});
+}
+
+/** Describe an already-existing tier (the auto-created default one). */
+export async function describeMembershipTier(orgSlug, token, tier, description) {
+	// PUT, not PATCH — send the name back or it is cleared. Deliberately does
+	// NOT send requires_membership_approval / membership_questionnaire_id:
+	// setting either of those makes the tier refuse priced plans (400).
+	return api(`/api/organization-admin/${orgSlug}/membership-tiers/${tier.id}`, {
+		method: 'PUT',
+		token,
+		body: { name: tier.name, description }
+	});
+}
+
+/**
+ * Price a membership tier.
+ *
+ * A tier with no plan renders as "Plans — No plans yet." on the organizer's
+ * Tiers tab: three empty boxes where the whole point of the screen is that
+ * membership has levels and levels have prices. `payment_method` stays
+ * `offline` because the demo stack has no Stripe account behind it — the card
+ * then reads "Offline · manual", which is what a small club does anyway.
+ */
+export async function createMembershipPlan(orgSlug, token, tierId, { name, price, currency = 'EUR', period_unit = 'month', description }) {
+	return api(`/api/organization-admin/${orgSlug}/tiers/${tierId}/plans`, {
+		token,
+		body: {
+			name,
+			price,
+			currency,
+			period_unit,
+			payment_method: 'offline',
+			// `description` is a plain string on this endpoint, not a nullable
+			// one: sending null is a 422, so the key is omitted when unset.
+			...(description === undefined ? {} : { description })
+		}
+	});
 }
 
 /** Potluck: create an item as `token`'s user (claim: false → open suggestion). */
