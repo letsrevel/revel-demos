@@ -110,9 +110,20 @@ docker compose down -v             # stop and wipe the database completely
 ```
 
 **Image versions live in `.env`** (`REVEL_BACKEND_TAG`, `REVEL_FRONTEND_TAG`),
-copied from `.env.example`. Backend tags have no leading `v` (`2.9.0`); frontend
+copied from `.env.example`; when `.env` does not set them, the defaults in
+`docker-compose.yml` apply. Backend tags have no leading `v` (`2.9.0`); frontend
 tags do (`v2.8.2`). After changing either: `docker compose pull && docker
 compose up -d`.
+
+**Pinned is not the same as running.** Bumping the tag — in `.env` or in the
+compose defaults — changes nothing until the container is recreated, and a stack
+that has been up for hours will happily keep serving the old image while the new
+one sits pulled on disk. Always confirm before filming:
+
+```bash
+docker compose pull frontend && docker compose up -d frontend
+docker compose images frontend   # the TAG column is the truth
+```
 
 ### Seeded demo world
 
@@ -244,6 +255,18 @@ npm run stitch -- compilation.mp4 clip-intro clip-a clip-b clip-outro
 Clip names resolve to `videos/<name>.mp4`. Keep `clip-intro` first and
 `clip-outro` last unless the user asks otherwise. Output lands in `videos/`.
 
+Re-rendering a clip does **not** update a compilation that already contains it.
+Re-stitch after every clip render — otherwise you hand over the old cut, and the
+fix you just verified in the clip is nowhere in the film. A stale compilation
+looks exactly like a fix that did not work.
+
+The standing full tour, in order:
+
+```bash
+npm run stitch -- revel-tour-full.mp4 \
+  revel-tour clip-org-membership clip-gate-review clip-dietary-potluck clip-much-more
+```
+
 ## Voice & TTS
 
 Set in `argo.config.mjs`, selected with the `ARGO_TTS` environment variable.
@@ -306,6 +329,12 @@ Each of these cost a failed take at least once.
 | Seeded personas already own tickets | someone who already has a ticket sees no purchase UI. Prefer arranging a fresh organization and event through `demos/arrange-lib.mjs` |
 | Stale state between takes | make demos self-healing: release leftover holds and recreate state in setup, before `startRecording` |
 | Clip cache versus engine | purge cached clips on every engine or voice change (see above) |
+| Org-wide admin lists are often pickers, not lists | `/org/<slug>/admin/tickets` is "Select an event to manage its tickets" — event names, no ticket and no attendee on it. The screen that shows tickets AND attendees is the event's own, `/org/<slug>/admin/events/<event_id>/tickets`. Event ids are regenerated on every reseed, so resolve one at runtime from the public `GET /api/events/<org_slug>/event/<event_slug>`, and fall back to the org-wide page rather than 404 on camera |
+| A montage that budgets by narration alone starves its last screen | weighting clauses against the whole line assumes navigation is free. It is not — each admin page costs a second or more under the recorder, and the drift all lands on the final screen, which then flashes past already fading out. Divide the *remaining* wall clock after every load instead (the loop in `clip-much-more.demo.ts`) |
+| SSR paints the logged-out header until client auth lands | a fast cut onto an admin page shows "Login / Sign Up" over the organizer's own dashboard for up to half a second, and `gotoClean`'s `networkidle` does not always outlast it. Wait for the account chrome after the goto — bounded by that screen's own slot and swallowed on timeout, because a screen that never arrives is worse than a flash. Pre-visiting the page on the unrecorded side page helps too: the document loads in the same second either way, but a primed bundle cache makes hydration land sooner |
+| Client-rendered admin tabs need client auth, not just hydration | clicking the members "Tiers" tab before the bootstrap paints "No membership tiers" over a fully populated org |
+| Whatever the arrange step leaves unset is an empty state on camera | membership tiers created with only a name render "Plans — No plans yet.": three empty boxes above half a screen of whitespace. Dress prices and descriptions the way you dress addresses. Two API edges here — a tier carrying `requires_membership_approval` or a membership questionnaire *refuses* priced plans (400), and a plan's `description` is a plain string, so sending `null` is a 422 |
+| Seeded ticket holders are QA fixtures | the busiest seeded event's door list reads "Bootstrap Guest 4" and `concert-filler-31@bootstrap.example`. Either arrange your own attendees, or keep the frame moving — a slow drift carries past a name where a static hold invites reading it |
 
 ## Tone & brand
 
