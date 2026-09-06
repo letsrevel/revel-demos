@@ -25,10 +25,12 @@ const TICKETS_EVENT_SLUG = 'classical-music-evening';
 // is the standard seed's test data ("Past Due", "E2E Revival Tier", test.*).
 // Weights are each clause's share of the line's characters, so the screen
 // changes land on the sentence breaks:
-//   "…Waitlists and invitations, on every event you run."   83 chars
-//   "Revenue and V A T, worked out for you."                 38
-//   "Your own venues, with their own seating maps."          45
-//   "And every ticket and attendee in one place."            43
+//   "…Waitlists and invitations, on every event you run."    83 chars
+//   "Revenue and V A T, worked out for you."                  38
+//   "Your own venues, with their own seating maps."           45
+//   "And every ticket and attendee in one place. Cash at the
+//    door, a bank transfer, or card online. All of it tracked
+//    the same way."                                          126
 // The venues slot points at the venue's LAYOUT DESIGNER, not the venues list:
 // the line promises seating maps, so show the actual map — stage, sectors and
 // every seat — from the organizer's side. Its URL carries a venue id that is
@@ -36,20 +38,21 @@ const TICKETS_EVENT_SLUG = 'classical-music-evening';
 // The tickets slot points at ONE EVENT's ticket list, not the org-wide
 // /admin/tickets: that page is only "Select an event to manage its tickets" —
 // a list of event names with no ticket and no attendee on it, which is the
-// opposite of what the line promises. The event page opens straight onto the
-// money and the counts — 42 tickets, 37 active, 5 pending, 0 checked in — and
-// that header IS the shot. It deliberately does NOT scroll into the table
-// below: the seeded door list is "Bootstrap Guest 4" and
-// "concert-filler-31@bootstrap.example", which reads as QA data on camera. It
-// is also the last screen of the line and gets whatever the three navigations
-// before it leave behind, so a screen that needs no scroll to land is the one
-// that survives. Its URL carries an event id regenerated on each reseed, so
-// it is resolved at runtime below.
+// opposite of what the line promises. It carries two clauses now, so it holds
+// nearly half the line and has the room to travel: it opens on the money and
+// the counts (42 tickets, 37 active, 5 pending), then drifts down through the
+// payment-method filters — Online (Stripe), Offline, At the Door, Free — and
+// into the door list itself, which is exactly what the cash-and-transfers
+// sentence is describing. One continuous slow glide rather than a scroll and a
+// hold: the seeded attendees are "Bootstrap Guest 4" and
+// "concert-filler-31@bootstrap.example", and motion carries past a name where
+// a static frame invites reading it. Its URL carries an event id regenerated
+// on each reseed, so it is resolved at runtime below.
 const MONTAGE = [
-	{ path: `/org/${ORG}/admin/events`, weight: 0.4, scroll: 260 }, // waitlists + invitations
-	{ path: `/org/${ORG}/admin/financials`, weight: 0.18, scroll: 260 }, // revenue and VAT
-	{ path: '', weight: 0.21, scroll: 620 }, // ← seat map (layout designer)
-	{ path: '', weight: 0.21, scroll: 0 } // ← one event's ticket list (tickets + attendees)
+	{ path: `/org/${ORG}/admin/events`, weight: 0.284, scroll: 260 }, // waitlists + invitations
+	{ path: `/org/${ORG}/admin/financials`, weight: 0.13, scroll: 260 }, // revenue and VAT
+	{ path: '', weight: 0.154, scroll: 620 }, // ← seat map (layout designer)
+	{ path: '', weight: 0.432, scroll: 820 } // ← one event's tickets: counts → filters → door list
 ];
 
 test('clip-much-more', async ({ page, narration }) => {
@@ -75,16 +78,21 @@ test('clip-much-more', async ({ page, narration }) => {
 	await side.waitForLoadState('networkidle').catch(() => undefined);
 
 	// Resolve the ticket screen's event id off the PUBLIC event endpoint — no
-	// auth, no extra session round-trip. Deliberately not pre-warmed: measured
-	// cold and warm, that page loads in the same second either way, and one
-	// take was lost to a dropped session after too many parallel loads. If the
-	// seed ever moves, fall back to the org-wide list rather than 404 on camera.
+	// auth needed. If the seed ever moves, fall back to the org-wide list
+	// rather than 404 on camera.
 	const found = await fetch(`${API}/api/events/${ORG}/event/${TICKETS_EVENT_SLUG}`)
 		.then((r) => (r.ok ? r.json() : null))
 		.catch(() => null);
 	MONTAGE[3].path = found?.id
 		? `/org/${ORG}/admin/events/${found.id}/tickets`
 		: `/org/${ORG}/admin/tickets`;
+	// Warmed here for the client bundle, not the document: the page's own load
+	// measures the same cold or warm, but the recorded cut shows a logged-out
+	// header until the client auth bootstrap finishes, and that is what a
+	// primed bundle cache shortens. It is also the heaviest page in the
+	// montage — 42 rows and their avatars — so it is the one that needs it.
+	await side.goto(MONTAGE[3].path).catch(() => undefined);
+	await side.waitForLoadState('networkidle').catch(() => undefined);
 	await side.close();
 
 	await gotoClean(page, MONTAGE[0].path);
@@ -116,13 +124,28 @@ test('clip-much-more', async ({ page, narration }) => {
 			weightLeft -= screen.weight;
 			const deadline = Date.now() + slot;
 
+			// SSR serves the LOGGED-OUT header until the client auth bootstrap
+			// lands, so a fast cut onto an admin page shows "Login / Sign Up"
+			// over the organizer's own dashboard for a beat. gotoClean's
+			// networkidle does not always outlast it. Wait for the account
+			// chrome — but bounded by this screen's own slot and swallowed on
+			// timeout, because a screen that never arrives is worse than a
+			// flash, and an unbounded wait here has cost takes before.
+			await page
+				.getByRole('button', { name: 'Open notifications' })
+				.waitFor({ timeout: Math.max(300, Math.min(2000, slot * 0.6)) })
+				.catch(() => undefined);
+
 			// Let the screen register before it moves, but never longer than a
-			// fifth of its slot — the short slots have no beat to spare.
-			const settle = Math.min(700, Math.max(200, slot * 0.2));
+			// fifth of what is left — the short slots have no beat to spare.
+			const settle = Math.min(700, Math.max(150, (deadline - Date.now()) * 0.2));
 			await page.waitForTimeout(settle);
 			const remaining = deadline - Date.now();
+			// Capped generously: the tickets screen holds most of the line and
+			// wants one slow, continuous drift rather than a quick scroll and a
+			// long stare at the bottom of it.
 			if (screen.scroll && remaining > 600) {
-				await glideScroll(page, screen.scroll, Math.min(remaining - 120, 2200));
+				await glideScroll(page, screen.scroll, Math.min(remaining - 120, 5000));
 			}
 			const left = deadline - Date.now();
 			if (left > 0) await page.waitForTimeout(left);
