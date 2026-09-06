@@ -112,8 +112,18 @@ test('clip-gate-review', async ({ page, narration }) => {
 	narration.mark('queue');
 	// The card is carried ACROSS the navigation and then dissolved, so the queue
 	// arrives on a soft crossfade instead of the hard cut it used to be.
+	// holdMs is doing double duty here. It is the beat the title card gets, and
+	// it is also the only recorded runway between the mark and the scene block:
+	// argo stops the screencast when the last withOverlay resolves, so a wait
+	// placed after it — or after the body's own durationFor top-up — is never
+	// captured (measured at 0ms, 1.2s, 4s and 5s of tail; the recording came
+	// back 27.1s, 27.0s, 26.8s and 26.7s). On the paid voice this line runs ~2s
+	// longer than it did on the draft voice and the recording ran out before
+	// the audio, cutting "no inbox archaeology, no spreadsheet" off the end.
+	// The card holds under the narration, which is already what the mark above
+	// is placed early for, so the extra beat is free.
 	await interstitialCutTo(page, 'the other side', 'Who gets in is your decision', `${href}/submissions`, {
-		holdMs: 1300
+		holdMs: 4200
 	});
 	await page
 		.getByRole('button', { name: 'Pending Review' })
