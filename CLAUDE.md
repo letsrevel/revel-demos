@@ -111,7 +111,7 @@ docker compose down -v             # stop and wipe the database completely
 
 **Image versions live in `.env`** (`REVEL_BACKEND_TAG`, `REVEL_FRONTEND_TAG`),
 copied from `.env.example`. Backend tags have no leading `v` (`2.9.0`); frontend
-tags do (`v2.8.1`). After changing either: `docker compose pull && docker
+tags do (`v2.8.2`). After changing either: `docker compose pull && docker
 compose up -d`.
 
 ### Seeded demo world

@@ -1,0 +1,31 @@
+# Front door for the demo API, on the port the browser and the scripts use.
+#
+# Why this exists: the backend serves /media/ itself ONLY when DEBUG is True
+# (see revel/urls.py — the urlpattern is inside `if settings.DEBUG`), and this
+# demo box deliberately runs DEBUG=False. In production Caddy serves that path
+# from the media volume; without an equivalent here every seeded cover image
+# and organization logo 404s, and the app films with broken-image icons in
+# frame. This restores the production shape.
+:8000 {
+	# Seeded artwork: cover art, organization logos, membership card images.
+	# Served straight off the shared volume, exactly as the real Caddy does.
+	#
+	# One deliberate simplification: production gates /media/protected/* behind
+	# a signed-URL check, and this does not — everything under the volume is
+	# served openly. On a throwaway box seeded with invented people that is a
+	# convenience, not a risk. Never point a real deployment at this file.
+	handle_path /media/* {
+		root * /srv/media
+		file_server
+	}
+
+	# Everything else is the API. Host is passed through unchanged, which
+	# matters: ALLOWED_HOSTS only accepts web, localhost and 127.0.0.1.
+	handle {
+		reverse_proxy web:8000 {
+			# Never buffer — the API streams (notifications, long polls), and
+			# a buffered stream stalls the page mid-recording.
+			flush_interval -1
+		}
+	}
+}

@@ -32,7 +32,11 @@ await search.click();
 await search.fill('Classical');
 const card = page.getByRole('link', { name: /Classical Music Evening/ }).first();
 await card.waitFor({ state: 'visible', timeout: 10000 });
-console.log('search + card: OK');
+// The search is debounced: the results list re-renders after the card first
+// appears, so clicking immediately hits a node that is about to be replaced
+// and the navigation never happens. Let the query settle first.
+await page.waitForLoadState('networkidle');
+console.log('search + card: OK ->', await card.getAttribute('href'));
 await card.click();
 await page.waitForURL(/\/events\/.+/, { timeout: 15000 });
 console.log('event page: OK ->', page.url());

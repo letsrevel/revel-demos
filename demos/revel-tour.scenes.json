@@ -1,10 +1,10 @@
 [
 	{
 		"scene": "hero",
-		"text": "This is Revel — the community-first platform for events, memberships, and ticketing. Let's take a quick tour.",
+		"text": "This is Revel — the free, open-source event platform for communities, clubs and independent venues. Let's take a quick tour.",
 		"overlay": {
 			"type": "headline-card",
-			"kicker": "let's revel.",
+			"kicker": "free & open source",
 			"title": "Events, made for communities",
 			"placement": "top-right",
 			"motion": "slide-in"
@@ -38,19 +38,6 @@
 			"text": "Interactive seat maps",
 			"placement": "top-left",
 			"motion": "slide-in"
-		}
-	},
-	{
-		"scene": "outro",
-		"text": "Revel. Your events, your community, your data. Get started for free at lets revel dot io.",
-		"overlay": {
-			"type": "block",
-			"block": "logo-outro",
-			"props": {
-				"title": "let's revel.",
-				"subtitle": "letsrevel.io"
-			},
-			"placement": "center"
 		}
 	}
 ]

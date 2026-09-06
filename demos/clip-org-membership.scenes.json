@@ -1,0 +1,22 @@
+[
+	{
+		"scene": "rules",
+		"text": "Every event starts with a form. One question on it decides who this is for — public, unlisted, invitation only, or members only, so it's your people in the room.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Members-only events",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "members",
+		"text": "And membership itself lives here. Set up your tiers, handle requests to join, and share invite links — all from one page.",
+		"overlay": {
+			"type": "callout",
+			"text": "Manage your members",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	}
+]

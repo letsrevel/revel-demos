@@ -206,6 +206,36 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
+  # The API's front door on http://localhost:8000, and the only thing that
+  # serves /media/.
+  #
+  # The backend serves media itself ONLY when DEBUG is True, and this box runs
+  # DEBUG=False on purpose. Production puts Caddy in front to serve /media/
+  # off the volume; without the same thing here, every seeded cover image and
+  # organization logo 404s and the app films with broken-image icons — which
+  # is exactly what happened to the first cut of the tour.
+  #
+  # It forwards everything that is not /media/ to gunicorn untouched, so the
+  # API behaves identically; see scripts/media-proxy.Caddyfile.
+  # ---------------------------------------------------------------------------
+  media-proxy:
+    image: caddy:2
+    platform: *platform
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./scripts/media-proxy.Caddyfile:/etc/caddy/Caddyfile:ro
+      - media:/srv/media:ro
+    depends_on:
+      web: { condition: service_healthy }
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:8000/api/healthcheck']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
   # Mailpit — catches every email the app sends. Nothing leaves your machine.
   # The demo scripts read verification links out of its API, so this is a hard
   # dependency, not a convenience.  UI: http://localhost:8025
@@ -268,7 +298,11 @@ services:
       - --bind=0.0.0.0:8000
       - --timeout=120
     ports:
-      - '8000:8000'
+      # NOTE: 8000 is NOT published here. The `media-proxy` service owns that
+      # host port and forwards to this container, so that /media/ is served at
+      # all (see its Caddyfile). Gunicorn still listens on 8000 *inside* this
+      # namespace, which is what the frontend's token refresh depends on.
+      #
       # Published here on purpose, not on `frontend`: that service shares this
       # container's network namespace (see its network_mode), so its port has
       # to be declared on the namespace's owner.
@@ -371,7 +405,7 @@ services:
   # is really there.
   # ---------------------------------------------------------------------------
   frontend:
-    image: ghcr.io/letsrevel/revel-frontend:${REVEL_FRONTEND_TAG:-v2.8.1}
+    image: ghcr.io/letsrevel/revel-frontend:${REVEL_FRONTEND_TAG:-v2.8.2}
     platform: *platform
     # Share the API container's network namespace, so that inside this
     # container `localhost:8000` IS the API.

@@ -1,0 +1,16 @@
+[
+	{
+		"scene": "more",
+		"text": "And there's much more than this. Waitlists and invitations, on every event you run. Revenue and V A T, worked out for you. Your own venues, with their own seating maps. And every ticket and attendee in one place.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "…and much more",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Revel. Your events, your community, your data. It's free, it's open source, and you can host it yourself. Come and build with us, at lets revel dot io."
+	}
+]

@@ -27,8 +27,21 @@ export async function login(email, password) {
 }
 
 /** Register + email-verify a fresh user via Mailpit. */
-export async function registerVerifiedUser(label, firstName = 'Alex', lastName = 'Demo') {
-	const email = `demo-${label}-${Date.now().toString(36)}@example.com`;
+/**
+ * Register a user and click through its Mailpit verification link.
+ *
+ * `options.emailLocal` overrides the generated local-part for people whose
+ * address ends up ON CAMERA — a members list full of
+ * "demo-member-tomas-mtpof2zr@example.com" reads as test data. A short
+ * uniqueness suffix is still appended, because clips get re-run and the
+ * address must stay free.
+ */
+export async function registerVerifiedUser(label, firstName = 'Alex', lastName = 'Demo', options = {}) {
+	const stamp = Date.now().toString(36);
+	const local = options.emailLocal
+		? `${options.emailLocal}.${stamp.slice(-4)}`
+		: `demo-${label}-${stamp}`;
+	const email = `${local}@example.com`;
 	const password = 'Demo-video-Pass!123';
 	await api('/api/account/register', {
 		body: {

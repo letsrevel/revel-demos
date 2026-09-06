@@ -1,6 +1,7 @@
 import { test, showOverlay, withOverlay, demoType } from '@argo-video/cli';
 import type { Page } from '@playwright/test';
 
+
 const MEMBER_EMAIL = 'charlie.member@example.com';
 const MEMBER_PASSWORD = 'password123';
 const EVENT_NAME = 'Classical Music Evening';
@@ -149,8 +150,7 @@ test('revel-tour', async ({ page, narration }) => {
 		await page.waitForTimeout(Math.max(0, narration.durationFor('seats')));
 	});
 
-	// ---- Scene 5: outro card
-	narration.mark('outro');
-	await showOverlay(page, 'outro', narration.durationFor('outro'));
-	await page.waitForTimeout(500);
+	// No end card here: this clip is the opening act of the stitched tour, and
+	// the brand end card closes the whole film at the end of clip-much-more.
+	await page.waitForTimeout(600);
 });

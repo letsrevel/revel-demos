@@ -1,0 +1,12 @@
+[
+	{
+		"scene": "dietary",
+		"text": "Tell Revel how you eat once, on your profile — a preference like vegetarian, and an allergy, with how serious it is. You choose what gets shared. Then the host opens their event and sees only the totals: enough to cook for everyone, without reading a single private detail. And when the meal is a potluck, the plan lives on that same page. See a gap, claim it, and the list updates for everyone.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Dietary needs, handled quietly",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	}
+]

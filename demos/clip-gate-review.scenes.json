@@ -1,0 +1,22 @@
+[
+	{
+		"scene": "gate",
+		"text": "Some rooms need care about who comes. This workshop asks a few questions first, and says so plainly, right where you'd click to attend.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Screening, done kindly",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "queue",
+		"text": "The answers land in one queue. Open an application, read what they actually wrote, and approve or decline it there and then. Everybody hears back automatically. No inbox archaeology, no spreadsheet.",
+		"overlay": {
+			"type": "callout",
+			"text": "Applications in one place",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	}
+]

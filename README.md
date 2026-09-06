@@ -220,7 +220,7 @@ edit `.env` (copy it from `.env.example` if you have not yet):
 
 ```bash
 REVEL_BACKEND_TAG=2.9.0
-REVEL_FRONTEND_TAG=v2.8.1
+REVEL_FRONTEND_TAG=v2.8.2
 ```
 
 then `docker compose pull && docker compose up -d`.
