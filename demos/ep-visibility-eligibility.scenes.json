@@ -1,0 +1,60 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode fourteen. Who can see it, and who can come. Two different questions, and Revel asks them separately. Seen by the organizer, an outsider, and a member."
+	},
+	{
+		"scene": "dials",
+		"text": "Every event has two dials. Visibility is who can find the page: everyone, people with the link, or only members. Event type is who is allowed in: anyone, invited people, or members. They are set independently. This members' night is public to see, and members-only to attend.",
+		"overlay": {
+			"type": "callout",
+			"text": "Two separate dials",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "outsider-list",
+		"text": "Bea isn't a member. On the choir's page she sees the open rehearsal and the members' night, because both are public. The committee meeting isn't on her list at all.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Two of three events",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "outsider-page",
+		"text": "She can open the members' night, but she can't R S V P. The page says why, and offers the way in: join the choir.",
+		"overlay": {
+			"type": "callout",
+			"text": "Visible, not open",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "member-list",
+		"text": "Lena is a member. She sees all three, committee meeting included.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "All three events",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "member-rsvp",
+		"text": "And for her, the members' night just works. She says yes, and she's in. No gate, no request, nothing to explain.",
+		"overlay": {
+			"type": "callout",
+			"text": "Members just RSVP",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Visible isn't the same as open, and you get to choose both. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

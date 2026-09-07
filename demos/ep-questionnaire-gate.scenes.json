@@ -1,0 +1,60 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode thirteen. The questionnaire gate. A rope workshop that asks a few questions before it says yes. First as the applicant, then as the organizer."
+	},
+	{
+		"scene": "gate",
+		"text": "Some events shouldn't be first come, first served. This workshop has one free tier, and a gate in front of it: a short application, read by a person.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "A gate, not a price",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "fill",
+		"text": "Two sections, five questions. Multiple choice for the quick ones: how much rope experience, and whether you're coming with a partner. Free text where it matters: what you hope to learn, and anything the instructors should know about your body. A consent line at the end. The organizer wrote all of this. Revel just asks it. Submit, and it goes to a person.",
+		"overlay": {
+			"type": "callout",
+			"text": "Five questions, on camera",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "pending",
+		"text": "Nothing to buy yet. The page says the application is being reviewed, and that's honest.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Under review",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "review",
+		"text": "On the other side, the answers arrive exactly as they were written. Ren reads them, leaves a short note, and approves. Or doesn't. Either way, Noa hears back automatically.",
+		"overlay": {
+			"type": "callout",
+			"text": "Read by a person",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "unlocked",
+		"text": "Approved. The tier unlocks, and the spot is hers. One free ticket, with her name on it, sitting in her account, ready for the door on the night.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "The tier unlocks",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Screening that feels like care, not a bouncer. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

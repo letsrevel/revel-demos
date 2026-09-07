@@ -1,0 +1,30 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode zero. The shape of an episode. This is the frame every episode of Revel in depth sits inside."
+	},
+	{
+		"scene": "browse",
+		"text": "An episode opens on a real page, doing a real thing. The narration says what is happening and why someone would care.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Scene one, on a real page",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "orgs",
+		"text": "When the point of view changes, a soft card marks the cut, and the next page arrives underneath it.",
+		"overlay": {
+			"type": "callout",
+			"text": "Scene two, after a cut",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "And every episode ends here. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

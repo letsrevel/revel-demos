@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode five. The waitlist. A full event, from the point of view of the person who got there too late."
+	},
+	{
+		"scene": "full",
+		"text": "It's full. Two places, both taken. But instead of a dead end there's a waitlist. One click, and you're in the queue.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Full, with a waitlist",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "queued",
+		"text": "That's it. You're on the list, and you can leave it any time. Behind the scenes, the organizer can see who is waiting, and manage it.",
+		"overlay": {
+			"type": "callout",
+			"text": "In the queue",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "list",
+		"text": "Here's that side. The list stays honest: who's waiting, since when, and a button to offer someone a place by hand. And if the organizer adds a place, or someone drops out, the next person is told.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "The organizer's list",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "spot",
+		"text": "And there it is. A place opened up, the notification came, with a deadline so it doesn't sit unclaimed. Close it, and the R S V P is yours to take.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Your spot is ready",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Full doesn't have to mean no. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

@@ -58,6 +58,10 @@ demos/                    One pair of files per clip:
   <name>.demo.ts            the Playwright script (what happens on screen)
   <name>.scenes.json        the narration + overlays for each scene
   clip-helpers.ts           shared waits, logins, cuts — always import these
+  episode-helpers.ts        the "Revel, in depth" series frame (title card,
+                            persona cuts, end card) — see EPISODES.md
+  ep-<slug>.*               the episodes themselves; ep-format-check is the
+                            empty skeleton to copy
   arrange-lib.mjs           build backend state through the API
   arrange-qgate.mjs         older per-demo arrange helpers
   arrange-potluck.mjs
@@ -69,6 +73,7 @@ tts-samples/              Voice audition clips (audio is not committed)
 videos/                   Rendered output (not committed)
 .argo/                    argo's working cache (not committed)
 
+EPISODES.md               Storyboards + house rules of the episode series
 argo.config.mjs           Video, audio and TTS engine settings
 playwright.config.ts      Browser and viewport settings
 stitch.mjs                Join finished clips into one video
@@ -260,6 +265,16 @@ Re-stitch after every clip render — otherwise you hand over the old cut, and t
 fix you just verified in the clip is nowhere in the film. A stale compilation
 looks exactly like a fix that did not work.
 
+### The episode series ("Revel, in depth")
+
+Fifteen ~60–85 s episodes, one feature each, one or two personas each, all in
+the same frame. `EPISODES.md` holds the house rules and every storyboard;
+`.claude/EPISODE-BRIEF.md` is the brief an episode author works from. Render
+with `npm run episode -- ep-<slug>`: it takes one of two render slots (so
+several authors can render at once without starving the recorder) and writes
+to `videos/in-depth/` via `ARGO_OUT`. Episodes stand alone — each carries its
+own title card and end card, so they are not stitched with clip-intro/outro.
+
 The standing full tour, in order:
 
 ```bash
@@ -320,6 +335,7 @@ Each of these cost a failed take at least once.
 | One recording, one page | `startRecording(page)` can never follow a page switch. Cut to another view with a full-screen interstitial painted on `about:blank`, do the account switch on a second **unrecorded** page in the same browser context (`page.context().newPage()`: /logout → log in), then navigate the recorded page. `showInterstitial` + `switchUser` implement this |
 | `showOverlay` blocks for its whole duration | anything written after `showOverlay(page, scene, durationFor(scene))` only runs once the narration has finished — so every action lands after its own line. Use `withOverlay(page, scene, async () => {…})` for scenes that *do* something; `showOverlay` only for pure holds. `durationFor` already means "remaining from now" — never subtract manually |
 | Text that appears twice on the page | `getByText(...)` can match a hidden duplicate (mobile and desktop layouts both render) and time out — add `.filter({ visible: true })` |
+| Scene transitions are one global setting, and most scene boundaries sit on the same page | argo's `export.transition` applies at EVERY `mark()`, so a fade-through-black between two lines spoken over the same screen reads as the page blinking off and back on. The episode series therefore renders with **no transition** (the default in `argo.config.mjs` now) and paints its own cuts in-page (`episode-helpers`: title-card dissolve, persona interstitials). Every page change must sit under one of those cards or be an in-app click on camera. The standing tour clips were paced around the fade: render them with `ARGO_TRANSITION=fade` |
 | A narration mark placed before a cut | narration starts at `mark()`, so marking before an interstitial and a page load narrates over the interstitial. Change the content first, then `mark()`, and pad the interstitial hold (silence is sped up 2× automatically) |
 | A never-matching locator hangs the whole take | `actionTimeout: 15_000` in `playwright.config.ts` — keep it. `.catch()` does **not** rescue endless waiting, only rejection. Check `count()`/`isVisible()` before acting |
 | Interactions dropped while data is still loading | after landing on a form, `waitForLoadState('networkidle')` and verify typed values before submitting |
@@ -334,6 +350,11 @@ Each of these cost a failed take at least once.
 | SSR paints the logged-out header until client auth lands | a fast cut onto an admin page shows "Login / Sign Up" over the organizer's own dashboard for up to half a second, and `gotoClean`'s `networkidle` does not always outlast it. Wait for the account chrome after the goto — bounded by that screen's own slot and swallowed on timeout, because a screen that never arrives is worse than a flash. Pre-visiting the page on the unrecorded side page helps too: the document loads in the same second either way, but a primed bundle cache makes hydration land sooner |
 | Client-rendered admin tabs need client auth, not just hydration | clicking the members "Tiers" tab before the bootstrap paints "No membership tiers" over a fully populated org |
 | Whatever the arrange step leaves unset is an empty state on camera | membership tiers created with only a name render "Plans — No plans yet.": three empty boxes above half a screen of whitespace. Dress prices and descriptions the way you dress addresses. Two API edges here — a tier carrying `requires_membership_approval` or a membership questionnaire *refuses* priced plans (400), and a plan's `description` is a plain string, so sending `null` is a 422 |
+| The API throttles per IP, and every author on this machine is one IP | anonymous 60/min, authenticated 100/min, auth endpoint 100/min. Several clips arranging at once trip it: registrations die with `429 Request was throttled` before the camera starts, a throttled sign-in stays on /login, and a throttled anonymous page (the `/join/event/<token>` preview) renders a 404. `arrange-lib.api()` waits and retries on 429 and `uiLogin` re-presses the button; keep page loads on the recorded page few, and prime anonymous pages on the side page first |
+| Refresh tokens rotate, and leaving the dashboard mid-refresh strands the session | the login page lands on `/dashboard`, whose bootstrap immediately rotates the refresh token. Navigate away — or close a side page — while that refresh is in flight and the browser keeps the OLD cookie: the next load gets a 401, both cookies are cleared, and the admin page paints logged out for the rest of the take (reproduced 4/4). `uiLogin` and `switchUser` now wait for the account bell before returning; do not shortcut them |
+| Publish/reload on an admin page flashes the logged-out SSR header | a `window.location.reload()` (the Publish button does one) paints "Login / Sign Up" and UTC times for ~0.5 s. Screenshot the page before the click, paint the still as a document-start cover via `addInitScript`, dissolve it once the account bell is back (`ep-publish-event.demo.ts`) |
+| The waitlist only auto-processes when the event has an offer window | raising `max_attendees` on a plain waitlist does nothing (`process_waitlist_for_event` returns `disabled`). Set `waitlist_time_window` via `PATCH /api/event-admin/{id}/waitlist-settings` first; then a capacity raise issues a timed offer with a real deadline on the page |
+| Arranged org names collect Roman numerals | `createDressedOrg` walks `Name`, `Name Studio`, `Name II`… and every probe run and failed take burns one, so the fourth render films "Hafenklang Social Club IV". Pick the name at runtime from a list of natural variants and check `/api/organizations/<slug>` (404 = free) before creating |
 | Seeded ticket holders are QA fixtures | the busiest seeded event's door list reads "Bootstrap Guest 4" and `concert-filler-31@bootstrap.example`. Either arrange your own attendees, or keep the frame moving — a slow drift carries past a name where a static hold invites reading it |
 
 ## Tone & brand

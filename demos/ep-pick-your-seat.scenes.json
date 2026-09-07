@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode three. Pick your seat. A venue with real rows, first from the organizer's layout designer, then from the seat map a buyer sees."
+	},
+	{
+		"scene": "designer",
+		"text": "A venue is drawn once and reused for every show: sectors, rows and seats, with the price zones painted right onto the map. A ticket tier then sells from one sector.",
+		"overlay": {
+			"type": "callout",
+			"text": "Drawn once, reused",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "map",
+		"text": "As a buyer, the map is the ticket page. Grey seats are already sold, and whatever you tap is held for you for ten minutes.",
+		"overlay": {
+			"type": "callout",
+			"text": "Held for ten minutes",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "pick",
+		"text": "Pick two seats together, add the names, and reserve. Each seat is priced on its own, so the front rows can cost more than the back without a separate tier.",
+		"overlay": {
+			"type": "callout",
+			"text": "Priced seat by seat",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "ticket",
+		"text": "In your dashboard, the ticket names the hall, the row and the seat. The door scanner reads the same thing.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Row and seat",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Reserved seating, without a box-office contract. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

@@ -1,0 +1,60 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode one. Publishing your first event. We're the organizer of a small club, and tonight we're putting our next night on the calendar."
+	},
+	{
+		"scene": "form",
+		"text": "The event form asks the questions a real night needs answered: what, when, where. Then two separate dials. Visibility is who can find the page: everyone, people with the link, or only members. Event type is who's allowed to come: a public page with members-only entry is a real choice. Leave tickets off, and it's a free R S V P.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "What, when, who",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "details",
+		"text": "Then a couple of lines about the night. Where it is: the city comes from your club, the street is yours to type. And how many people fit. Save it. The rest can wait.",
+		"overlay": {
+			"type": "callout",
+			"text": "Where, and how many",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "draft",
+		"text": "It saves as a draft. Nothing is public yet, so you can add a cover, a schedule, a potluck list, and get it right first.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Saved as a draft",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "open",
+		"text": "One click publishes it, and the night is open.",
+		"overlay": {
+			"type": "callout",
+			"text": "One click to publish",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "live",
+		"text": "And this is what your people see: the night, the place, how many spots are left, and a button to say they're coming.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Live for everyone",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "From a blank form to a live page, in a couple of minutes. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

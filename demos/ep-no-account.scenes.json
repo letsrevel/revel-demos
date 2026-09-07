@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode eleven. No account needed. Coming to something without signing up for anything. This time we're just a visitor, with no login at all."
+	},
+	{
+		"scene": "guest",
+		"text": "A free open-air film night, and we're not signed in. No account, no password, nothing. When the organizer allows it, the R S V P button is still there, and it asks for two things: a name, and an email address.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "No login required",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "form",
+		"text": "Type them in, say yes, and send it. That's the whole form. Nothing to install, nothing to remember. And it tells you what happens next: check your email.",
+		"overlay": {
+			"type": "callout",
+			"text": "A name and an email",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "email",
+		"text": "Here's the one email you get. It's there to confirm it's really you, and it's the only thing between you and the list. One button. And the link stops working after a day.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "One email to confirm",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "confirmed",
+		"text": "That's it. R S V P confirmed. Back on the event page, the count has gone up by one. No spam, and no account you'll forget about. If you do make one later, with the same email, this R S V P is already there.",
+		"overlay": {
+			"type": "callout",
+			"text": "You're on the list",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Low friction for guests, no spam for anyone. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

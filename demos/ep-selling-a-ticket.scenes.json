@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode fifteen. Selling a ticket, start to finish. Setting the price, taking the money, and confirming it came in."
+	},
+	{
+		"scene": "tier",
+		"text": "A tier is a price and a way to pay. Card online, through Stripe. Bank transfer, with your instructions on the ticket. Cash at the door. Or free. And a fixed price, or pay what you can, with a floor and a ceiling.",
+		"overlay": {
+			"type": "callout",
+			"text": "Four ways to pay",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "instructions",
+		"text": "Twelve euros, by bank transfer. The instructions you type here go on the buyer's ticket. Twenty seats, and save. There it is, next to the other two.",
+		"overlay": {
+			"type": "callout",
+			"text": "Instructions on the ticket",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "buy",
+		"text": "The buyer picks it, and gets a pending ticket with your instructions on it. It counts toward capacity, but it's not valid at the door yet.",
+		"overlay": {
+			"type": "callout",
+			"text": "Pending, with instructions",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "confirm",
+		"text": "When the transfer lands, one click confirms it. The ticket goes active, the buyer is told, and the numbers at the top follow.",
+		"overlay": {
+			"type": "callout",
+			"text": "One click to confirm",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Every payment method, one ticket list. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

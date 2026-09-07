@@ -1,0 +1,40 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode six. Announcements. When the venue changes on a Thursday night, you need to tell everyone who's coming — once, and only the people it concerns."
+	},
+	{
+		"scene": "draft",
+		"text": "Write it once. A title, a couple of lines, and then who it's for: everyone coming to this event, all your members, one membership tier, or just the staff. Here it's the people who said yes to Friday.",
+		"overlay": {
+			"type": "callout",
+			"text": "Write it once",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "count",
+		"text": "Send it now, or schedule it — for the morning of, or an hour before doors. Once it's out, the sent list tells you exactly how many people it reached. Six, here. Nobody who didn't need it.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Six people, one send",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "inbox",
+		"text": "For the people coming, it lands in their notifications — and in their email inbox, if they've kept that on. And it stays on the event page, so anyone who signs up later still finds the new room.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Right where they look",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "One message, the right people, and no group chat to scroll through. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

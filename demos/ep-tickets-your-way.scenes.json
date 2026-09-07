@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode two. Tickets, your way. First as the organizer setting the prices, then as someone buying one."
+	},
+	{
+		"scene": "tiers",
+		"text": "A tier is a way in. This night has three: an early-bird price paid by bank transfer, pay-what-you-can at the door, and a free tier for volunteers. Each has its own quantity, sales window, and who can see it.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Three ways in",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "choose",
+		"text": "Here's the same night from the other side. The tiers you're allowed to see, with the price, what's left, and how many you can take.",
+		"overlay": {
+			"type": "callout",
+			"text": "What a buyer sees",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "pwyc",
+		"text": "Pay what you can means exactly that: pick a number between the floor and the ceiling, reserve, and you're in. No card needed for a door ticket.",
+		"overlay": {
+			"type": "callout",
+			"text": "Pay what you can",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "ticket",
+		"text": "The ticket lives in your dashboard. Open it, and there's the Q R code for the door, and a pass for your phone's wallet, Apple or Google.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "QR and wallet pass",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Card, cash, transfer, or free, and every ticket tracked the same way. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

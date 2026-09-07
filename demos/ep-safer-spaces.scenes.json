@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode eight. Safer spaces. What happens when a name that shouldn't be there tries to come in. First as the organizer, then as the person whose name matched."
+	},
+	{
+		"scene": "entry",
+		"text": "Some spaces need to keep certain people out. Under Blacklist, an entry can carry hard identifiers, an email address or a Telegram handle, and those block right away. Or soft ones: a first name, a last name, a preferred name. Those still match when the spelling is a little off, and instead of a block, they ask for a check. Add a short note on why, for whoever runs the door next year, and it's done.",
+		"overlay": {
+			"type": "callout",
+			"text": "Hard or soft identifiers",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "blocked",
+		"text": "Now Jordan opens the night. No R S V P button. Instead, an honest message that something needs checking, and a way to say: that's not me.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Not a dead end",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "request",
+		"text": "Jordan writes a line, and a verification request goes to the organizer with the message attached. Until they answer, the page says so, and nothing else changes.",
+		"overlay": {
+			"type": "callout",
+			"text": "Say “that’s not me”",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "queue",
+		"text": "And the organizer decides, with the context in front of them: the name, which entry it matched, and what Jordan wrote. Members of the community skip the name check entirely. They're already trusted.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Context, then a decision",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Tools for care, not just for tickets. Revel is free and open source. Find it at lets revel dot io."
+	}
+]
