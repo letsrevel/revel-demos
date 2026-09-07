@@ -1,0 +1,60 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode ten. Polls. Asking the members instead of guessing — which night, which venue, which name for the new thing."
+	},
+	{
+		"scene": "create",
+		"text": "A poll starts with a question and an audience. Members only, here — or everyone, one membership tier, or just the people coming to an event. Then who gets to see the results, and when. Anonymous or not is your call, and it's locked once the poll opens.",
+		"overlay": {
+			"type": "callout",
+			"text": "Question, audience, rules",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "options",
+		"text": "Then the options. One multiple choice question, three nights. You can add more questions, or a free text one, but one is usually enough. Create it, and it's saved as a draft.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Three nights, one question",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "open",
+		"text": "Open it, and it's live. Members get a link they can vote from, and you can close it whenever you've heard enough.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Live for members",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "vote",
+		"text": "As a member, the page tells you the rules up front: who can vote, who sees the results, and that your name stays out of it. Then one tap, and submit.",
+		"overlay": {
+			"type": "callout",
+			"text": "Rules up front",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "results",
+		"text": "And because the organizer chose to share them, the results are right there. Five voters. Saturday it is.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Five voters, one answer",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Decisions made with the people they affect. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

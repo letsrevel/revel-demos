@@ -1,7 +1,7 @@
 {
 	"name": "revel-demos",
 	"version": "1.0.0",
-	"description": "Narrated product demo videos of Revel — the free, open-source event platform for communities, clubs and independent venues.",
+	"description": "Narrated product demo videos of Revel \u2014 the free, open-source event platform for communities, clubs and independent venues.",
 	"license": "MIT",
 	"private": true,
 	"type": "module",
@@ -23,7 +23,8 @@
 		"up": "docker compose up -d",
 		"down": "docker compose down",
 		"logs": "docker compose logs -f",
-		"reseed": "docker compose run --rm bootstrap"
+		"reseed": "docker compose run --rm bootstrap",
+		"episode": "node scripts/render-episode.mjs"
 	},
 	"devDependencies": {
 		"@argo-video/cli": "^0.39.2",

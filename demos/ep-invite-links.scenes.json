@@ -1,0 +1,60 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode four. Invite links. An invitation-only night, first as the organizer who makes the link, then as the friend who gets it."
+	},
+	{
+		"scene": "token",
+		"text": "For a private night, you don't publish, you invite. A shareable link carries the invitation: a name, how many times it can be used, and until when. And if you say so, it can waive a questionnaire, or a capacity limit.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Create an invite link",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "link",
+		"text": "Copy it, and send it wherever your people already are.",
+		"overlay": {
+			"type": "callout",
+			"text": "One link to share",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "locked",
+		"text": "Mira isn't on the list. She can see the night exists, and that's all. The door is closed.",
+		"overlay": {
+			"type": "callout",
+			"text": "Invitation required",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "preview",
+		"text": "Whoever gets the link sees exactly what it grants before they claim it: which night, until when, and how many uses are left. Nobody joins something by accident.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "What the link grants",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "claim",
+		"text": "Claim it, and the same page opens up. Now it asks whether she's coming. One tap, and she's on the list.",
+		"overlay": {
+			"type": "callout",
+			"text": "Claimed, and in",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Private events, invited people, one link. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

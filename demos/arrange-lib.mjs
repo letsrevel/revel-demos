@@ -5,16 +5,30 @@
 const API = process.env.API_URL || 'http://localhost:8000';
 const MAILPIT = process.env.MAILPIT_URL || 'http://localhost:8025';
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 export async function api(path, options = {}) {
 	const method = options.method ?? (options.body === undefined ? 'GET' : 'POST');
-	const res = await fetch(`${API}${path}`, {
-		method,
-		headers: {
-			'Content-Type': 'application/json',
-			...(options.token ? { Authorization: `Bearer ${options.token}` } : {})
-		},
-		body: options.body === undefined ? undefined : JSON.stringify(options.body)
-	});
+	let res;
+	// The API throttles per IP (anonymous: 60/min, authenticated: 100/min), and
+	// every author on this machine is the same IP. Several clips arranging at
+	// once trip it — a 429 is not a bug in the clip, so wait it out and retry
+	// rather than failing the take before the camera has even started.
+	for (let attempt = 0; ; attempt++) {
+		res = await fetch(`${API}${path}`, {
+			method,
+			headers: {
+				'Content-Type': 'application/json',
+				...(options.token ? { Authorization: `Bearer ${options.token}` } : {})
+			},
+			body: options.body === undefined ? undefined : JSON.stringify(options.body)
+		});
+		if (res.status !== 429 || attempt >= 12) break;
+		const retryAfter = Number(res.headers.get('retry-after')) || 0;
+		const wait = Math.min(30_000, Math.max(retryAfter * 1000, 4_000 + attempt * 2_000));
+		console.warn(`[arrange] ${method} ${path} throttled (429) — retrying in ${Math.round(wait / 1000)}s`);
+		await sleep(wait);
+	}
 	if (!res.ok) throw new Error(`${method} ${path} → ${res.status}: ${await res.text()}`);
 	const text = await res.text();
 	if (!text || !res.headers.get('content-type')?.includes('json')) return {};
@@ -280,4 +294,16 @@ export async function getMyMembership(orgSlug, token) {
 export async function innerQuestionnaireId(wrapperId, token) {
 	const detail = await api(`/api/questionnaires/${wrapperId}`, { token });
 	return detail.questionnaire.id;
+}
+
+/**
+ * Create a shareable EVENT invitation link (an event token). `duration` is
+ * minutes from now, 0 = never expires; `max_uses` 0 = unlimited. The claim URL
+ * is `/join/event/<id>`; the event page can also be opened with `?et=<id>`.
+ */
+export async function createEventToken(eventId, token, { name, max_uses = 1, duration = 0, invitation_payload = {} }) {
+	return api(`/api/event-admin/${eventId}/tokens`, {
+		token,
+		body: { name, max_uses, duration, grants_invitation: true, invitation_payload, ticket_tier_ids: [] }
+	});
 }

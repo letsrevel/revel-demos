@@ -1,0 +1,60 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode twelve. Your account, your data. The settings a person actually gets to keep, seen as a regular user."
+	},
+	{
+		"scene": "profile",
+		"text": "Your name the way you want it said, your pronouns, your language. Save it, and that's how Revel greets you from now on. Organizers see what you choose to share, and nothing more.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Name, pronouns, language",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "dietary",
+		"text": "Dietary needs live in your profile, entered once. Peanuts, an allergy. Every potluck and dinner you join can plan around it, and you decide whether it's shared or kept private for the organizer.",
+		"overlay": {
+			"type": "callout",
+			"text": "Entered once",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "notifications",
+		"text": "Notifications on your terms. Which channels, and whether it's right away or a daily digest, at the hour you pick.",
+		"overlay": {
+			"type": "callout",
+			"text": "Or a daily digest",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "security",
+		"text": "Two-factor sign-in with any authenticator app. Scan the code, or type the secret, and your account has a second lock.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Two-factor sign-in",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "privacy",
+		"text": "And the two buttons every platform should have. Export everything about me, and delete my account. Both are real, both are yours, and neither needs a support ticket.",
+		"overlay": {
+			"type": "callout",
+			"text": "Export, or delete",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Privacy-first is a setting you can see. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

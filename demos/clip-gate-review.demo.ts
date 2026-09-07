@@ -67,7 +67,16 @@ test('clip-gate-review', async ({ page, narration }) => {
 	const lookup = await page.context().newPage();
 	await lookup.goto(`/org/${ORG}/admin/questionnaires`);
 	await lookup.locator('body[data-hydrated="true"]').waitFor({ state: 'attached' });
-	const qLink = lookup.locator('a[href*="/admin/questionnaires/"]').first();
+	// The seeded questionnaire by name, not "the first link": ep-questionnaire-gate
+	// leaves a second one ("Workshop Application · October") on this org, and it
+	// sorts first. Fall back to the first link only if the exact name is absent.
+	const byName = lookup
+		.locator('a[href*="/admin/questionnaires/"]')
+		.filter({ hasText: /^\s*Workshop Application\s*$/ })
+		.first();
+	const qLink = (await byName.count())
+		? byName
+		: lookup.locator('a[href*="/admin/questionnaires/"]').first();
 	await qLink.waitFor({ state: 'attached', timeout: 20_000 });
 	const href = await qLink.getAttribute('href');
 

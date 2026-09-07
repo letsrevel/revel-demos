@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode seven. Staff and permissions. Handing someone the door, without handing them the keys."
+	},
+	{
+		"scene": "promote",
+		"text": "Felix has been helping on the door for months. Under Members, open his card, and make him staff. That gives him a sensible starter set — nothing that touches the organization itself.",
+		"overlay": {
+			"type": "callout",
+			"text": "Make him staff",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "permissions",
+		"text": "Then decide exactly what he gets. Every permission is a tick box: check people in, manage tickets, send announcements, edit the organization, and so on. Here it's just the two he needs: the door, and the ticket list. Nothing else.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Tick exactly two",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "limited",
+		"text": "Signed in as Felix, the admin area opens — with a staff badge, not an owner's. The menu looks the same, but what he can actually open is what he was ticked for. The ticket list for the cabaret night, yes: here's the door list, check-in one tap away.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "The door list, yes",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "denied",
+		"text": "The members list, no. That one stays with the owner. And permissions can be set per event too, so whoever runs the door on the night isn't running everything.",
+		"overlay": {
+			"type": "callout",
+			"text": "The members list, no",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Trust in small, specific pieces. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

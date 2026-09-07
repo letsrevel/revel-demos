@@ -153,8 +153,31 @@ export async function uiLogin(page: Page, email: string, password: string): Prom
 	}
 	await page.getByLabel('Email address').fill(email);
 	await page.getByLabel('Password', { exact: true }).fill(password);
-	await page.getByRole('button', { name: 'Sign in', exact: true }).click();
-	await page.waitForURL(/\/dashboard(\/|$|\?)/, { timeout: 20_000 });
+	// The auth endpoint is throttled per IP (100/min) and every author on this
+	// machine shares one. A throttled sign-in stays on /login with an error
+	// toast; wait and press the button again instead of failing the take.
+	for (let attempt = 0; ; attempt++) {
+		await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+		try {
+			await page.waitForURL(/\/dashboard(\/|$|\?)/, { timeout: 20_000 });
+			// Do not leave the dashboard until its auth bootstrap has finished.
+			// Refresh tokens rotate, and navigating (or closing a side page)
+			// while that first refresh is mid-flight leaves the browser holding
+			// a stale cookie: the next load gets a 401, the session is wiped,
+			// and the recorded admin page paints logged out (seen in the
+			// safer-spaces and recurring-events probes).
+			await page
+				.getByRole('button', { name: 'Open notifications' })
+				.waitFor({ timeout: 20_000 })
+				.catch(() => undefined);
+			await page.waitForTimeout(800);
+			return;
+		} catch (err) {
+			if (attempt >= 3) throw err;
+			console.warn(`[uiLogin] ${email}: not on the dashboard after sign-in (throttled?) — retrying`);
+			await page.waitForTimeout(15_000 + attempt * 10_000);
+		}
+	}
 }
 
 /**
@@ -166,6 +189,15 @@ export async function switchUser(page: Page, email: string, password: string): P
 	await side.goto('/logout');
 	await side.waitForURL(/logged_out/, { timeout: 15_000 }).catch(() => undefined);
 	await uiLogin(side, email, password);
+	// Refresh tokens rotate on every refresh. Closing the side page while the
+	// dashboard's auth bootstrap is still mid-refresh drops the rotated cookie,
+	// and the recorded page's next load then presents a blacklisted token and
+	// paints the whole admin page LOGGED OUT, for good (reproduced 4/4 in the
+	// safer-spaces probe). Wait for the bootstrap to land before closing.
+	await side
+		.getByRole('button', { name: 'Open notifications' })
+		.waitFor({ timeout: 20_000 })
+		.catch(() => undefined);
 	await side.close();
 }
 

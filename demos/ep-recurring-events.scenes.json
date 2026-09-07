@@ -1,0 +1,50 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode nine. Recurring events. A weekly session, set up once — first as the organizer writing the rule, then as someone who just wants to know when the next one is."
+	},
+	{
+		"scene": "template",
+		"text": "Describe the night once, as a template. A name, a start and end time, and where it happens. Tickets or a simple R S V P. Every week from here on is built from this one blueprint.",
+		"overlay": {
+			"type": "callout",
+			"text": "One template",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "rule",
+		"text": "Then the rule. Weekly, on Thursdays, with no end date. Auto-publish means each new date goes live the moment it's made, eight weeks ahead — and Revel keeps the calendar topped up by itself.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Every Thursday",
+			"placement": "bottom-left",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "occurrences",
+		"text": "One click, and there are the coming Thursdays. Every one is a real event, with its own page, its own R S V P list, and its own capacity. Change the template and the change carries forward. Cancel one week without touching the rest.",
+		"overlay": {
+			"type": "callout",
+			"text": "Real events, every week",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "follow",
+		"text": "For your people, the series has a page of its own, with every date on it. Follow it, and each new date lands in their notifications as it's added. No need to keep checking back.",
+		"overlay": {
+			"type": "lower-third",
+			"text": "Follow the series",
+			"placement": "bottom-center",
+			"motion": "fade-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Set it up once, and it runs every week. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

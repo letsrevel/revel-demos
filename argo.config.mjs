@@ -69,7 +69,9 @@ const { engine, voice } = selected();
 export default defineConfig({
 	baseURL: process.env.BASE_URL || 'http://localhost:5173',
 	demosDir: 'demos',
-	outputDir: 'videos',
+	// ARGO_OUT lets a series render into its own folder (videos/in-depth for
+	// the "Revel, in depth" episodes) without touching the standing clips.
+	outputDir: process.env.ARGO_OUT || 'videos',
 	tts: {
 		engine,
 		// ARGO_VOICE overrides for either engine (ElevenLabs voices are IDs).
@@ -88,7 +90,17 @@ export default defineConfig({
 	export: {
 		preset: 'slow',
 		crf: 16,
-		transition: { type: 'fade-through-black', durationMs: 2000 },
+		// No scene transition by default. argo only has ONE global transition,
+		// applied at every scene boundary, and most boundaries in the episodes
+		// sit on the SAME page (a new narration line, same screen) — a
+		// fade-through-black there reads as the page blinking off and back on.
+		// Real cuts are painted in-page instead (episode-helpers: the title
+		// card dissolve, the persona interstitials), so nothing is lost.
+		// ARGO_TRANSITION=fade restores the old dip-to-black for the standing
+		// tour clips, which were paced around it.
+		...(process.env.ARGO_TRANSITION === 'fade'
+			? { transition: { type: 'fade-through-black', durationMs: 2000 } }
+			: {}),
 		speedRamp: { gapSpeed: 2.0, minGapMs: 500 },
 		sharpen: true,
 		audio: { loudnorm: true },
