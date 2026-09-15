@@ -157,6 +157,17 @@ x-backend-env: &backend-env
   GOOGLE_WALLET_SERVICE_ACCOUNT_KEY_PATH: /fake-secrets/google-wallet-sa.json
   GOOGLE_WALLET_CLASS_PREFIX: revel-demo
 
+  # Stripe, test mode only — empty by default, so nothing changes unless the
+  # filming machine's .env supplies keys (copied from revel-backend/.env). With
+  # keys set, run `stripe listen --forward-to localhost:8000/api/stripe/webhook`
+  # on the host so webhooks reach the container. CONNECTED_TEST_STRIPE_ID makes
+  # the seeder mark Revel Events Collective as a Stripe-connected organization.
+  STRIPE_ACCOUNT: ${STRIPE_ACCOUNT:-}
+  STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
+  STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+  STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+  CONNECTED_TEST_STRIPE_ID: ${CONNECTED_TEST_STRIPE_ID:-}
+
 x-backend-image: &backend-image ghcr.io/letsrevel/revel:${REVEL_BACKEND_TAG:-2.9.0}
 
 # --- image architecture ------------------------------------------------------
@@ -243,7 +254,10 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     ports:
-      - '8025:8025' # web UI + API
+      # Host port is overridable: another Mailpit (the backend repo's dev stack)
+      # often already holds 8025. Set MAILPIT_PORT in .env and export
+      # MAILPIT_URL=http://localhost:<port> for the scripts.
+      - '${MAILPIT_PORT:-8025}:8025' # web UI + API
     environment:
       MP_SMTP_AUTH_ACCEPT_ANY: 'true'
       MP_SMTP_AUTH_ALLOW_INSECURE: 'true'

@@ -167,6 +167,33 @@ in `.env` and re-run `npm run reseed`. Everything else still works meanwhile:
 the standard accounts are seeded, and demo scripts that build their own data
 through the API do not depend on it at all.
 
+### Stripe, in test mode (episodes that pay by card)
+
+Card tickets, refunds and card membership plans go through Stripe's **hosted
+checkout** (`checkout.stripe.com`, with a TEST MODE badge — never on camera).
+The demo stack has no Stripe until `.env` carries the five `STRIPE_*` /
+`CONNECTED_TEST_STRIPE_ID` values copied from `revel-backend/.env`
+(`docker-compose.yml` passes them into the containers; empty means off). Then:
+
+```bash
+stripe listen --forward-to localhost:8000/api/stripe/webhook   # keep running while filming
+```
+
+An arranged organization is not Stripe-connected: `markStripeConnected(slug)`
+in `demos/arrange-lib.mjs` stamps the test connected account on it through
+`manage.py shell` in the container (the id is unique per org, so it is
+released from earlier throwaway orgs first), and `setOrgBilling()` fills the
+billing details online tiers and plans refuse to exist without.
+`demos/stripe-lib.mjs` drives the hosted checkout on an **unrecorded side
+page** with the 4242 test card (`buyTicketByCard`, `subscribeByCard`) and
+polls the API until the webhook has flipped the ticket or subscription Active.
+Demo mode also prints a "Demo Payment Test Card" hint under the ticket tiers —
+hide it with `.bg-info\/10.border-info\/30{display:none!important}`.
+
+**Mailpit port**: the backend repo's dev stack usually holds 8025, so the demo
+Mailpit publishes on `MAILPIT_PORT` (`.env`). Every script reads
+`MAILPIT_URL`, so run them as `MAILPIT_URL=http://localhost:8125 npm run …`.
+
 ### The deliberate fakes
 
 The demo environment is configured with believable **fake** credentials so that

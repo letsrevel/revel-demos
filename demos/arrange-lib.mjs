@@ -195,7 +195,12 @@ export async function describeMembershipTier(orgSlug, token, tier, description) 
  * `offline` because the demo stack has no Stripe account behind it — the card
  * then reads "Offline · manual", which is what a small club does anyway.
  */
-export async function createMembershipPlan(orgSlug, token, tierId, { name, price, currency = 'EUR', period_unit = 'month', description }) {
+export async function createMembershipPlan(
+	orgSlug,
+	token,
+	tierId,
+	{ name, price, currency = 'EUR', period_unit = 'month', period_count = 1, payment_method = 'offline', description }
+) {
 	return api(`/api/organization-admin/${orgSlug}/tiers/${tierId}/plans`, {
 		token,
 		body: {
@@ -203,12 +208,47 @@ export async function createMembershipPlan(orgSlug, token, tierId, { name, price
 			price,
 			currency,
 			period_unit,
-			payment_method: 'offline',
+			period_count,
+			// 'offline' (staff record payments), 'online' (Stripe auto-billing; the
+			// org must be Stripe-connected — see markStripeConnected) or 'free'.
+			payment_method,
 			// `description` is a plain string on this endpoint, not a nullable
 			// one: sending null is a 422, so the key is omitted when unset.
 			...(description === undefined ? {} : { description })
 		}
 	});
+}
+
+/**
+ * Stripe Connect onboarding is a redirect dance with no API shortcut, so for
+ * filming we stamp the test connected account onto the organization directly,
+ * inside the backend container. Needs CONNECTED_TEST_STRIPE_ID in .env (the
+ * compose file passes it into the container); warns and returns false otherwise.
+ */
+export async function markStripeConnected(orgSlug) {
+	const { execFileSync } = await import('node:child_process');
+	const code = [
+		'import os',
+		'from events.models import Organization',
+		'acct = os.environ.get("CONNECTED_TEST_STRIPE_ID") or ""',
+		`o = Organization.objects.get(slug="${orgSlug}")`,
+		'if acct:',
+		// The account id is unique per organization, and every earlier probe run
+		// or take left a throwaway org holding it — release it from them first.
+		'    Organization.objects.filter(stripe_account_id=acct).exclude(pk=o.pk).update(stripe_account_id=None, stripe_charges_enabled=False, stripe_details_submitted=False)',
+		'    o.stripe_account_id = acct; o.stripe_charges_enabled = True; o.stripe_details_submitted = True; o.save()',
+		'print("connected" if acct else "NO CONNECTED_TEST_STRIPE_ID")'
+	].join('\n');
+	const out = execFileSync(
+		'docker',
+		['compose', 'exec', '-T', 'web', 'python', 'manage.py', 'shell', '-c', code],
+		{ encoding: 'utf8' }
+	)
+		.trim()
+		.split('\n')
+		.at(-1); // the container also logs JSON lines on stdout — keep only the verdict
+	if (out !== 'connected') console.warn(`markStripeConnected(${orgSlug}): ${out}`);
+	return out === 'connected';
 }
 
 /** Potluck: create an item as `token`'s user (claim: false → open suggestion). */
@@ -305,5 +345,32 @@ export async function createEventToken(eventId, token, { name, max_uses = 1, dur
 	return api(`/api/event-admin/${eventId}/tokens`, {
 		token,
 		body: { name, max_uses, duration, grants_invitation: true, invitation_payload, ticket_tier_ids: [] }
+	});
+}
+
+/**
+ * Org names are unique and every probe run or failed take leaves one behind,
+ * so `createDressedOrg`'s "Name II / III" fallback ends up on camera. Pick the
+ * first candidate whose slug is still free (404 on the public org endpoint).
+ */
+export async function pickFreeOrgName(candidates) {
+	for (const name of candidates) {
+		const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+		const taken = await api(`/api/organizations/${slug}`).then(() => true).catch(() => false);
+		if (!taken) return name;
+	}
+	return candidates[0];
+}
+
+/**
+ * Online (Stripe) ticket tiers refuse to be created until the organization has
+ * billing details (422 "Billing information is required for online payments
+ * with platform fees"). Fill them the way a real club would.
+ */
+export async function setOrgBilling(orgSlug, token, { billing_name, billing_address, billing_email, vat_country_code = 'AT' }) {
+	return api(`/api/organization-admin/${orgSlug}/billing-info`, {
+		method: 'PATCH',
+		token,
+		body: { billing_name, billing_address, billing_email, vat_country_code }
 	});
 }
