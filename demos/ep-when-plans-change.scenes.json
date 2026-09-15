@@ -1,0 +1,70 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode sixteen. When plans change. Setting a refund policy, and what it feels like to use it."
+	},
+	{
+		"scene": "policy",
+		"text": "Every paid tier can carry its own refund policy. Let people cancel their own tickets, and set a deadline. Here, up to a day before.",
+		"overlay": {
+			"type": "callout",
+			"text": "Self-cancel, with rules",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "brackets",
+		"text": "Then decide what comes back. Everything a week out. Half of it two days out. Nothing after that. Save, and that's the rule for every ticket sold from now on.",
+		"overlay": {
+			"type": "callout",
+			"text": "Refund brackets",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "terms",
+		"text": "As a buyer, you see those terms before you pay. Not after.",
+		"overlay": {
+			"type": "callout",
+			"text": "Terms before payment",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "cancel",
+		"text": "Something came up. Open the ticket and cancel it. The dialog tells you exactly what comes back, and until when. Card payments are refunded through Stripe, automatically.",
+		"overlay": {
+			"type": "callout",
+			"text": "Refund quoted upfront",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "list",
+		"text": "On your side, the row says who cancelled and what was refunded. The seat is free again, and the numbers at the top already know.",
+		"overlay": {
+			"type": "callout",
+			"text": "Refunded, seat freed",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "whole-night",
+		"text": "And if the whole night has to go, one dialog cancels it, with a reason everyone sees, and refunds every ticket at once.",
+		"overlay": {
+			"type": "callout",
+			"text": "Cancel the whole night",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Plans change. The money and the message follow. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

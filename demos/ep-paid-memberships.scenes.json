@@ -1,0 +1,70 @@
+[
+	{
+		"scene": "title",
+		"text": "Episode seventeen. Paid memberships. A club that runs on monthly dues, first from the organizer's side, then as someone joining."
+	},
+	{
+		"scene": "plans",
+		"text": "A membership tier can carry plans: a price, a period, and how it's paid. By card, renewing automatically through Stripe. Offline, where you record the dues you actually receive. Or free.",
+		"overlay": {
+			"type": "callout",
+			"text": "Card, offline, or free",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "price",
+		"text": "Eight euros a month, by card. Create it, and it's on the club's membership page.",
+		"overlay": {
+			"type": "callout",
+			"text": "A plan per tier",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "join",
+		"text": "For members, the page says what it costs, when it renews, and what happens if a payment ever fails. Subscribe, pay, and the membership is live.",
+		"overlay": {
+			"type": "callout",
+			"text": "No surprises",
+			"placement": "top-left",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "mine",
+		"text": "It lives in your account. Next renewal, the receipts, and the buttons to change plan or cancel. Cancel, and you keep access to the end of what you've paid for.",
+		"overlay": {
+			"type": "callout",
+			"text": "Yours to manage",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "dues",
+		"text": "Back at the club: who is on which plan, recurring revenue at a glance, and the cash members right next to the card ones.",
+		"overlay": {
+			"type": "callout",
+			"text": "Dues at a glance",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "record",
+		"text": "Paul pays at the boathouse. Record it, and his membership rolls on for another month. No spreadsheet.",
+		"overlay": {
+			"type": "callout",
+			"text": "Record a cash payment",
+			"placement": "top-right",
+			"motion": "slide-in"
+		}
+	},
+	{
+		"scene": "close",
+		"text": "Dues, without the spreadsheet. Revel is free and open source. Find it at lets revel dot io."
+	}
+]

@@ -1,6 +1,6 @@
 # Revel, in depth — the episode series
 
-Fifteen short episodes, one feature each, each told through a different pair of
+Seventeen short episodes, one feature each, each told through a different pair of
 eyes. Same frame every time, so they read as a series:
 
 ```
@@ -251,3 +251,63 @@ free "Volunteers" tier and an at-the-door tier already there via API; the
 3. cut → **buy** (buyer on the event page: picks Early bird → checkout → the ticket comes back **Pending**, with the bank-transfer instructions on it, in the ticket modal and/or dashboard) — "The buyer picks it, and gets a pending ticket with your instructions on it. It counts toward capacity, but it's not valid at the door yet."
 4. cut → **confirm** (organizer on the event's ticket list: the Pending row, the action that confirms payment — find it: "Confirm payment" / mark as paid / status → Active — then the row reads Active and the counts update) — "When the transfer lands, one click confirms it. The ticket goes active, the buyer is told, and the numbers at the top follow."
 5. **close** — "Every payment method, one ticket list. Revel is free and open source. Find it at lets revel dot io."
+
+## 16 · When plans change — *the organizer, then an attendee, then the organizer*
+Journeys 6.12, 10.9 (event cancellation with reason and refunds). Needs the
+**Stripe test-mode stack**: `STRIPE_*` + `CONNECTED_TEST_STRIPE_ID` in `.env`
+(passed into the containers by `docker-compose.yml`) and `stripe listen
+--forward-to localhost:8000/api/stripe/webhook` running on the host. Arrange a
+dressed film club stamped Stripe-connected (`markStripeConnected`) with billing
+details (`setOrgBilling` — online tiers refuse to exist without them), one
+ticketed event **ten days out** with `require_ticket_names` (the checkout
+sheet, where the terms live, only opens when names are required), a "Standard"
+tier at €18 **paid by card** with NO policy yet, and two attendees who have
+already paid (`buyTicketByCard` in `demos/stripe-lib.mjs`, on side pages).
+The policy is set ON CAMERA, and the buyer pays under the "On Stripe" cut card,
+so the ticket carries the policy snapshot. Stripe's own page is never on
+camera: it carries a TEST MODE badge. Demo mode also prints a "Demo Payment
+Test Card" hint under the tiers — hide it (`.bg-info\/10.border-info\/30`).
+
+1. **title** — "Episode sixteen. When plans change. Setting a refund policy, and what it feels like to use it."
+2. **policy** (organizer, Ticketing tab → the tier's Edit → "Cancellation & refunds": toggle on, deadline 1 day) — "Every paid tier can carry its own refund policy. Let people cancel their own tickets, and set a deadline. Here, up to a day before."
+3. **brackets** (same dialog: Add another bracket → 168 h / 100 %, 48 h / 50 % → Save Changes) — "Then decide what comes back. Everything a week out. Half of it two days out. Nothing after that. Save, and that's the rule for every ticket sold from now on."
+4. cut → **terms** (attendee: event page → add Standard → Buy → the checkout sheet with the "Cancellation policy" box; type the ticket name) — "As a buyer, you see those terms before you pay. Not after."
+5. cut "On Stripe" (same persona; `buyTicketByCard` runs on a side page under the card) → **cancel** (`/dashboard/tickets` → View Ticket → *Cancel ticket* → "You'll receive €18.00", open *Refund schedule*, type a reason → *Confirm cancellation* → toast) — "Something came up. Open the ticket and cancel it. The dialog tells you exactly what comes back, and until when. Card payments are refunded through Stripe, automatically."
+6. cut → **list** (organizer, the event's ticket list: Total earned with Refunds, the counters, the row *Cancelled · Refunded*) — "On your side, the row says who cancelled and what was refunded. The seat is free again, and the numbers at the top already know."
+7. **whole-night** (in-app click *Edit Event* → *Cancel event* → the dialog with reason, "Refund all tickets" and the preview "€36.00 to refund" → *Keep event*) — "And if the whole night has to go, one dialog cancels it, with a reason everyone sees, and refunds every ticket at once."
+8. **close** — "Plans change. The money and the message follow. Revel is free and open source. Find it at lets revel dot io."
+
+Gotchas met while probing: the bracket rows are `DurationInput`s whose unit
+picker can read "Days" while converting as hours on a fresh row — pick *Hours*
+explicitly from the picker before typing (`setDuration`); the tier update
+endpoint is a full `PUT`, not `PATCH`; `stripe_account_id` is unique per org,
+so `markStripeConnected` releases it from earlier throwaway orgs first; the
+buyer's tickets live at `GET /api/dashboard/tickets`.
+
+## 17 · Paid memberships — *the organizer, then a member, then the organizer*
+Journey 23. Same Stripe stack as episode 16. Arrange a dressed rowing club
+stamped Stripe-connected with billing details, describe the default free tier
+(otherwise it renders as an empty column on the membership page), a
+"Supporter" tier with a description, one yearly **card** plan (€80 / year), one
+**offline** plan (€8 / month, "paid in person") with two staff-created
+subscriptions (`POST /organization-admin/<slug>/subscriptions` with
+`user_id` from `/api/account/me`) and a recorded first payment. The monthly
+card plan is created ON CAMERA in the Tiers tab. A fresh person joins; the
+Stripe hosted checkout (`subscribeByCard`) happens on a side page under the
+"On Stripe" cut card, and the recorded page comes back on
+`/account/memberships` already Active.
+
+1. **title** — "Episode seventeen. Paid memberships. A club that runs on monthly dues, first from the organizer's side, then as someone joining."
+2. **plans** (`/org/<slug>/admin/members` → Tiers → the Supporter card → *Add plan*: type the name, point at the three payment methods — *Offline — you record payments*, *Online — Stripe auto-billing*, *Free — members join at no cost* — pick Online) — "A membership tier can carry plans: a price, a period, and how it's paid. By card, renewing automatically through Stripe. Offline, where you record the dues you actually receive. Or free."
+3. **price** (description, €8, every 1 month → *Create plan* → the plan appears under the tier) — "Eight euros a month, by card. Create it, and it's on the club's membership page."
+4. cut → **join** (member on `/org/<slug>/membership`: the plan cards with prices → *Subscribe* → the dialog, open *How billing works*, hover *Continue to payment*) — "For members, the page says what it costs, when it renews, and what happens if a payment ever fails. Subscribe, pay, and the membership is live."
+5. cut "On Stripe" → **mine** (`/account/memberships`: the card — Active, next renewal; open *Payment history*; hover *Change plan*, *Cancel membership*) — "It lives in your account. Next renewal, the receipts, and the buttons to change plan or cancel. Cancel, and you keep access to the end of what you've paid for."
+6. cut → **dues** (organizer, Members → Subscriptions tab: Monthly recurring revenue, Active subscribers, the rows — card and cash members side by side) — "Back at the club: who is on which plan, recurring revenue at a glance, and the cash members right next to the card ones."
+7. **record** (click Paul's row → the drawer → *Record payment* → €8, a note → submit → *Next renewal* moves a month) — "Paul pays at the boathouse. Record it, and his membership rolls on for another month. No spreadsheet."
+8. **close** — "Dues, without the spreadsheet. Revel is free and open source. Find it at lets revel dot io."
+
+Gotchas met while probing: online plans need the org to be Stripe-connected
+(the *Online* radio is disabled otherwise) and — like online tiers — org
+billing details; `POST /me/organizations/<id>/subscribe` returns a hosted
+`checkout_url` (not a client secret); the members admin page nests two
+`<main>` elements, so scope text reads with `.last()`.
