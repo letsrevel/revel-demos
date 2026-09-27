@@ -1,0 +1,106 @@
+{
+ "voice": "Sulafat",
+ "model": "google/gemini-3.8-flash-tts",
+ "lines": [
+  {
+   "id": "v01",
+   "tag": "warm, intimate, unhurried, gentle smile",
+   "text": "Every community starts the same way."
+  },
+  {
+   "id": "v02",
+   "tag": "warm, intimate, unhurried",
+   "text": "A few people. And a reason to get together."
+  },
+  {
+   "id": "v03",
+   "tag": "warm, affectionate, lightly rhythmic",
+   "text": "A book club. A rope circle. A Sunday picnic. A basement gig."
+  },
+  {
+   "id": "v04",
+   "tag": "lower, measured, slightly wry, disappointed",
+   "text": "Then come the platforms. Fees on every ticket. Your people, turned into data."
+  },
+  {
+   "id": "v05",
+   "tag": "calm, quietly confident, a small smile",
+   "text": "Revel is different."
+  },
+  {
+   "id": "v06",
+   "tag": "confident, bright, clear",
+   "text": "It's open source. Anyone can read it, run it, and make it better."
+  },
+  {
+   "id": "v07",
+   "tag": "confident, plain-spoken",
+   "text": "Buyers pay the ticket price. No fee on top."
+  },
+  {
+   "id": "v08",
+   "tag": "confident, plain-spoken",
+   "text": "The money goes straight to the organizer."
+  },
+  {
+   "id": "v09",
+   "tag": "confident",
+   "text": "No ads. No trackers. And your data is never, ever sold."
+  },
+  {
+   "id": "v10",
+   "tag": "soft, intimate, slower, tender",
+   "text": "Some rooms need a little more care."
+  },
+  {
+   "id": "v11",
+   "tag": "soft, intimate, slower",
+   "text": "Like a rope workshop in Vienna, built on trust."
+  },
+  {
+   "id": "v12",
+   "tag": "soft, intimate, unhurried",
+   "text": "So before anyone gets a ticket, they answer a few questions."
+  },
+  {
+   "id": "v13",
+   "tag": "soft, intimate, unhurried",
+   "text": "About experience, the consent guidelines, and why they want to come."
+  },
+  {
+   "id": "v14",
+   "tag": "warm, honest, reassuring",
+   "text": "Then a real person reads every answer, and makes the call."
+  },
+  {
+   "id": "v15",
+   "tag": "warm, joyful, a little breathless smile",
+   "text": "And then, you're in."
+  },
+  {
+   "id": "v16",
+   "tag": "warm, heartfelt",
+   "text": "Everyone in the room chose to be there. And was welcomed with care."
+  },
+  {
+   "id": "v17",
+   "tag": "bright, rhythmic, smiling, brisk",
+   "text": "Potlucks. Member pricing. Pay what you can. Waitlists. Check-in at the door. In six languages."
+  },
+  {
+   "id": "v18",
+   "tag": "warm, clear, proud",
+   "text": "Revel."
+  },
+  {
+   "id": "v19",
+   "tag": "warm, clear, proud, unhurried",
+   "text": "The free, open-source event platform for communities, clubs and independent venues."
+  },
+  {
+   "id": "v20",
+   "tag": "warm, inviting, smiling",
+   "text": "Let's revel."
+  }
+ ]
+}
