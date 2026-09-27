@@ -1,0 +1,634 @@
+{
+ "v05": {
+  "takes": [
+   {
+    "file": "v05-t1.wav",
+    "transcript": "Revel is different.",
+    "exact": true,
+    "natural": 8,
+    "fit": 7,
+    "issues": "Slightly standard announcer tone, lacks the warmth of a small smile."
+   },
+   {
+    "file": "v05-t2.wav",
+    "transcript": "Revel is different.",
+    "exact": true,
+    "natural": 7,
+    "fit": 6,
+    "issues": "Hesitant pause after 'Revel', slight vocal fry, lacks quiet confidence."
+   },
+   {
+    "file": "v05-t3.wav",
+    "transcript": "Revel is different.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None."
+   }
+  ],
+  "best": "v05-t3.wav",
+  "why": "Take 3 perfectly captures the requested calm, quietly confident tone with a warm, smiling delivery, avoiding the standard announcer feel of take 1 and the hesitation of take 2."
+ },
+ "v01": {
+  "takes": [
+   {
+    "file": "v01-t1.wav",
+    "transcript": "Every community starts the same way.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Clean audio, appropriate pacing, and a warm, natural tone."
+   },
+   {
+    "file": "v01-t2.wav",
+    "transcript": "With planning and preparation. Every community starts the same way.",
+    "exact": false,
+    "natural": 7,
+    "fit": 4,
+    "issues": "Includes extra unscripted dialogue at the beginning of the clip."
+   },
+   {
+    "file": "v01-t3.wav",
+    "transcript": "Warm, intimate, unhurried, gentle smile. Every community starts the same way.",
+    "exact": false,
+    "natural": 6,
+    "fit": 2,
+    "issues": "The voice actor reads the stage directions out loud before delivering the actual line."
+   }
+  ],
+  "best": "v01-t1.wav",
+  "why": "It is the only take that exactly matches the intended script without adding extra words or reading the stage directions out loud. The delivery perfectly captures the requested warm, intimate, and unhurried tone."
+ },
+ "v04": {
+  "takes": [
+   {
+    "file": "v04-t1.wav",
+    "transcript": "Then come the platforms. Fees on every ticket. Your people, turned into data.",
+    "exact": true,
+    "natural": 6,
+    "fit": 5,
+    "issues": "Unnatural upward inflections on 'platforms' and 'ticket', slightly robotic and disjointed cadence."
+   },
+   {
+    "file": "v04-t2.wav",
+    "transcript": "Then come the platforms. Fees on every ticket. Your people, turned into data.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Slight vocal fry, but it effectively adds to the requested disappointed tone. Clean audio."
+   },
+   {
+    "file": "v04-t3.wav",
+    "transcript": "Then come the platforms. Fees on every ticket. Your people, turned into data.",
+    "exact": true,
+    "natural": 7,
+    "fit": 4,
+    "issues": "Ends with a strong upward inflection on 'data', making it sound like a question. Pacing is a bit rushed and lacks the measured feel."
+   }
+  ],
+  "best": "v04-t2.wav",
+  "why": "It perfectly captures the requested lower, measured, and disappointed tone. The pacing is deliberate, and the downward inflections convey the wry disappointment effectively, unlike the other takes which feature unnatural or questioning upward inflections."
+ },
+ "v03": {
+  "takes": [
+   {
+    "file": "v03-t1.wav",
+    "transcript": "A book club. A rope circle. A Sunday picnic. A basement gig.",
+    "exact": true,
+    "natural": 6,
+    "fit": 6,
+    "issues": "Pacing is a bit disjointed with long pauses between phrases. Tone is somewhat flat and lacks the requested warmth."
+   },
+   {
+    "file": "v03-t2.wav",
+    "transcript": "A book club. A rope circle. A Sunday picnic. A basement gig.",
+    "exact": true,
+    "natural": 7,
+    "fit": 7,
+    "issues": "Delivery is a bit staccato. The 'A' at the beginning of each phrase is overly pronounced, disrupting the natural rhythm."
+   },
+   {
+    "file": "v03-t3.wav",
+    "transcript": "A book club. A rope circle. A Sunday picnic. A basement gig.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Clean, warm, and well-paced."
+   }
+  ],
+  "best": "v03-t3.wav",
+  "why": "It has the most natural flow and best captures the warm, affectionate, and lightly rhythmic tone requested in the brief. The pacing is smooth and the delivery feels genuine, making it sound like a cohesive list rather than isolated phrases."
+ },
+ "v02": {
+  "takes": [
+   {
+    "file": "v02-t1.wav",
+    "transcript": "A few people. And a reason to get together.",
+    "exact": true,
+    "natural": 9,
+    "fit": 10,
+    "issues": "None. Features a gentle, natural breath and a well-timed pause that enhances the intimate feel."
+   },
+   {
+    "file": "v02-t2.wav",
+    "transcript": "A few people. And a reason to get together.",
+    "exact": true,
+    "natural": 6,
+    "fit": 5,
+    "issues": "Slightly metallic resonance/processing artifact on the vocal. The delivery is a bit more projected and lacks the requested intimacy."
+   },
+   {
+    "file": "v02-t3.wav",
+    "transcript": "A few people and a reason to get together.",
+    "exact": true,
+    "natural": 5,
+    "fit": 3,
+    "issues": "Rushed pacing. The speaker runs the two phrases together without a pause, completely missing the 'unhurried' direction."
+   }
+  ],
+  "best": "v02-t1.wav",
+  "why": "Take 1 perfectly captures the warm, intimate, and unhurried direction. The pacing allows for a natural, inviting pause between the phrases, making it feel genuine, whereas Take 2 has minor audio artifacts and Take 3 is far too rushed."
+ },
+ "v07": {
+  "takes": [
+   {
+    "file": "v07-t1.wav",
+    "transcript": "Buyers pay the ticket price. No fee on top.",
+    "exact": true,
+    "natural": 8,
+    "fit": 8,
+    "issues": "Slight mouth noise/click right before the first word. Good confident emphasis, but the pause between sentences is slightly abrupt."
+   },
+   {
+    "file": "v07-t2.wav",
+    "transcript": "Buyers pay the ticket price. No fee on top.",
+    "exact": true,
+    "natural": 6,
+    "fit": 6,
+    "issues": "Slightly robotic/metallic inflection on 'ticket price'. The delivery feels a bit stilted, clinical, and lacks the requested warmth."
+   },
+   {
+    "file": "v07-t3.wav",
+    "transcript": "Buyers pay the ticket price. No fee on top.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Clean audio with no noticeable artifacts. Very natural pacing and human-sounding inflection."
+   }
+  ],
+  "best": "v07-t3.wav",
+  "why": "It has the most natural, conversational flow that perfectly captures the warm, honest, and plain-spoken tone required. It avoids the slight mouth noise present in take 1 and the robotic, clinical inflection of take 2."
+ },
+ "v06": {
+  "takes": [
+   {
+    "file": "v06-t1.wav",
+    "transcript": "It's open source. Anyone can read it, run it, and make it better.",
+    "exact": true,
+    "natural": 6,
+    "fit": 6,
+    "issues": "Stilted pacing with a slightly unnatural pause after the first sentence; cadence feels a bit robotic and lacks the desired warmth."
+   },
+   {
+    "file": "v06-t2.wav",
+    "transcript": "It's open source. Anyone can read it, run it, and make it better.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Clean audio with a very natural, fluid delivery."
+   },
+   {
+    "file": "v06-t3.wav",
+    "transcript": "It's open source. Anyone can read it, run it, and make it better.",
+    "exact": true,
+    "natural": 8,
+    "fit": 7,
+    "issues": "Slightly rushed pacing on the second sentence, making it feel a bit too casual and slightly less confident than desired."
+   }
+  ],
+  "best": "v06-t2.wav",
+  "why": "It offers the most fluid and natural delivery, perfectly balancing a warm, honest tone with the requested confident and bright energy. The pacing is excellent, avoiding the stiltedness of take 1 and the rushed feel of take 3."
+ },
+ "v10": {
+  "takes": [
+   {
+    "file": "v10-t1.wav",
+    "transcript": "Some rooms need a little more care.",
+    "exact": true,
+    "natural": 7,
+    "fit": 6,
+    "issues": "Slightly sharp and punchy emphasis on 'care', making it feel more upbeat and commercial rather than soft and tender."
+   },
+   {
+    "file": "v10-t2.wav",
+    "transcript": "Some rooms need a little more care.",
+    "exact": true,
+    "natural": 8,
+    "fit": 6,
+    "issues": "Pacing is a bit too fast for the intended 'slower' and 'intimate' direction; reads more like a standard, breezy commercial."
+   },
+   {
+    "file": "v10-t3.wav",
+    "transcript": "Some rooms need a little more care.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Clean audio with a very faint, natural breath that adds to the intimacy; no negative artifacts."
+   }
+  ],
+  "best": "v10-t3.wav",
+  "why": "It perfectly captures the requested soft, intimate, and slower delivery. The gentle pacing and warm tone make it feel much more tender and honest compared to the faster or punchier alternatives."
+ },
+ "v08": {
+  "takes": [
+   {
+    "file": "v08-t1.wav",
+    "transcript": "The money goes straight to the organizer.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Clean audio with natural pacing and appropriate, warm emphasis."
+   },
+   {
+    "file": "v08-t2.wav",
+    "transcript": "The money goes straight to the organizer.",
+    "exact": true,
+    "natural": 6,
+    "fit": 6,
+    "issues": "Slightly disjointed rhythm with an unnatural micro-pause before 'straight'. Intonation on 'organizer' rises slightly at the end, reducing the confident, plain-spoken feel."
+   },
+   {
+    "file": "v08-t3.wav",
+    "transcript": "The money goes straight to the organizer.",
+    "exact": true,
+    "natural": 7,
+    "fit": 7,
+    "issues": "Emphasis on 'straight' is a bit heavy and punchy for a warm brand film. Slight metallic vocal fry on the tail end of 'organizer'."
+   }
+  ],
+  "best": "v08-t1.wav",
+  "why": "It delivers the most natural, conversational flow while perfectly capturing the confident, plain-spoken, and warm tone required. It is free of the awkward pacing and overly aggressive emphasis found in the other takes."
+ },
+ "v09": {
+  "takes": [
+   {
+    "file": "v09-t1.wav",
+    "transcript": "Confident. No ads. No trackers. And your data is never, ever sold.",
+    "exact": false,
+    "natural": 5,
+    "fit": 3,
+    "issues": "The voice actor reads the stage direction 'Confident.' out loud at the beginning of the take."
+   },
+   {
+    "file": "v09-t2.wav",
+    "transcript": "Confident. No ads. No trackers. And your data is never, ever sold.",
+    "exact": false,
+    "natural": 5,
+    "fit": 3,
+    "issues": "The voice actor reads the stage direction 'Confident.' out loud at the beginning of the take."
+   },
+   {
+    "file": "v09-t3.wav",
+    "transcript": "With Brave, no ads. No trackers. And your data is never, ever sold.",
+    "exact": false,
+    "natural": 8,
+    "fit": 6,
+    "issues": "Adds the words 'With Brave,' at the beginning of the script."
+   },
+   {
+    "file": "v09-t4.wav",
+    "transcript": "No ads. No trackers. And your data is never, ever sold.",
+    "exact": true,
+    "natural": 7,
+    "fit": 6,
+    "issues": "Delivery is a bit too fast, upbeat, and peppy for a 'warm, honest' brand film. Feels more like a standard retail commercial."
+   },
+   {
+    "file": "v09-t5.wav",
+    "transcript": "No ads. No trackers. And your data is never, ever sold.",
+    "exact": true,
+    "natural": 9,
+    "fit": 10,
+    "issues": "None. Clean audio with excellent, deliberate pacing."
+   }
+  ],
+  "best": "v09-t5.wav",
+  "why": "It is the only take that matches the script exactly while also nailing the intended tone. Takes 1 and 2 include the stage direction, and Take 3 adds a brand name. Take 4 is accurate but too rushed and peppy. Take 5 has a grounded, deliberate pace that perfectly captures the confident, warm, and honest vibe required for the brand film."
+ },
+ "v14": {
+  "takes": [
+   {
+    "file": "v14-t1.wav",
+    "transcript": "Then a real person reads every answer, and makes the call.",
+    "exact": true,
+    "natural": 8,
+    "fit": 8,
+    "issues": "Slight mouth noise/breath at the very beginning. The pause after 'answer' is a bit long, making the pacing feel slightly disjointed, though the tone is warm."
+   },
+   {
+    "file": "v14-t2.wav",
+    "transcript": "Then a real person reads every answer, and makes the call.",
+    "exact": true,
+    "natural": 7,
+    "fit": 7,
+    "issues": "Audible lip smack/click right before the first word. The delivery is a bit rushed, and the upward inflection at the end feels slightly too peppy and casual rather than grounded and reassuring."
+   },
+   {
+    "file": "v14-t3.wav",
+    "transcript": "Then a real person reads every answer, and makes the call.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Very clean audio. Natural, well-placed breath and excellent, deliberate pacing. No distracting artifacts."
+   },
+   {
+    "file": "v14-t4.wav",
+    "transcript": "Then a real person reads every answer, and makes the call.",
+    "exact": true,
+    "natural": 6,
+    "fit": 6,
+    "issues": "Rushed pacing, causing the words to run together slightly. Lacks the warmth of the other takes, sounding a bit more like a standard, stiff commercial read. Slight vocal fry on the word 'call'."
+   }
+  ],
+  "best": "v14-t3.wav",
+  "why": "It has the most grounded, reassuring tone with a natural, unhurried pace that perfectly fits the 'warm, honest' brief. The audio is clean without any distracting mouth noises, and the emphasis feels genuine and comforting."
+ },
+ "v11": {
+  "takes": [
+   {
+    "file": "v11-t1.wav",
+    "transcript": "Like a rope workshop in Vienna, built on trust.",
+    "exact": true,
+    "natural": 8,
+    "fit": 8,
+    "issues": "Slightly long, dramatic pause after 'Vienna'. Minor vocal fry and breathiness trailing off on the word 'trust'."
+   },
+   {
+    "file": "v11-t2.wav",
+    "transcript": "Like a rope workshop in Vienna, built on trust.",
+    "exact": true,
+    "natural": 7,
+    "fit": 5,
+    "issues": "Pacing is noticeably faster; lacks the requested softness and intimacy. Feels more like a standard, slightly rushed commercial read rather than a warm brand film."
+   },
+   {
+    "file": "v11-t3.wav",
+    "transcript": "Like a rope workshop in Vienna, built on trust.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "No distracting artifacts. Contains a very faint, natural breath before 'built' that adds to the intimate feel."
+   }
+  ],
+  "best": "v11-t3.wav",
+  "why": "It perfectly captures the soft, intimate, and slower direction required for the brand film. The pacing is natural and the tone is warm and honest, whereas t1 has a slightly disjointed pause and t2 is much too fast and lacks the necessary intimacy."
+ },
+ "v15": {
+  "takes": [
+   {
+    "file": "v15-t1.wav",
+    "transcript": "Ah, and then, you're in.",
+    "exact": false,
+    "natural": 7,
+    "fit": 7,
+    "issues": "Added vocalization ('Ah') at the beginning. There is a slightly unnatural, long pause between 'then' and 'you're'."
+   },
+   {
+    "file": "v15-t2.wav",
+    "transcript": "And then, you're in.",
+    "exact": true,
+    "natural": 9,
+    "fit": 10,
+    "issues": "Includes a breathy laugh at the start, but it perfectly matches the requested 'breathless smile' direction. Very clean audio with no negative artifacts."
+   },
+   {
+    "file": "v15-t3.wav",
+    "transcript": "And then, you're in.",
+    "exact": true,
+    "natural": 5,
+    "fit": 5,
+    "issues": "The chuckle at the beginning sounds forced and artificial. The emphasis on 'in' feels a bit too punchy and abrupt, losing the intended warmth."
+   }
+  ],
+  "best": "v15-t2.wav",
+  "why": "It nails the intended direction perfectly. The breathy laugh at the beginning feels incredibly genuine and natural, conveying warmth and joy without sounding forced like take 3 or disjointed like take 1."
+ },
+ "v13": {
+  "takes": [
+   {
+    "file": "v13-t1.wav",
+    "transcript": "About experience, the consent guidelines, and why they want to come.",
+    "exact": true,
+    "natural": 8,
+    "fit": 7,
+    "issues": "A bit too bright and upbeat for the intended soft and intimate tone. Slight vocal fry on the last word."
+   },
+   {
+    "file": "v13-t2.wav",
+    "transcript": "About experience, the consent guidelines, and why they want to come.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Very clean, soft, and intimate delivery."
+   },
+   {
+    "file": "v13-t3.wav",
+    "transcript": "About experience, the consent guidelines, and why they want to come.",
+    "exact": true,
+    "natural": 8,
+    "fit": 8,
+    "issues": "Slight mouth click before 'and why'. Pacing is good but slightly less natural flow than t2."
+   },
+   {
+    "file": "v13-t4.wav",
+    "transcript": "About experience, the consent guidelines, and why they want to come.",
+    "exact": true,
+    "natural": 7,
+    "fit": 6,
+    "issues": "Odd, slightly unnatural emphasis on the word 'they'. Pacing feels a bit disjointed."
+   }
+  ],
+  "best": "v13-t2.wav",
+  "why": "It perfectly captures the requested soft, intimate, and unhurried delivery with a very natural, conversational flow and no distracting audio artifacts."
+ },
+ "v12": {
+  "takes": [
+   {
+    "file": "v12-t1.wav",
+    "transcript": "So before anyone gets a ticket, they answer a few questions.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Very slight mouth noise at the very beginning, but otherwise clean with excellent, natural pacing and appropriate warmth."
+   },
+   {
+    "file": "v12-t2.wav",
+    "transcript": "So before anyone gets a ticket, they answer a few questions.",
+    "exact": true,
+    "natural": 6,
+    "fit": 5,
+    "issues": "Slightly rushed in the second half. The inflection on 'few questions' is bouncy and pitches up unnaturally, breaking the unhurried, intimate brief."
+   },
+   {
+    "file": "v12-t3.wav",
+    "transcript": "So before anyone gets a ticket, they answer a few questions.",
+    "exact": true,
+    "natural": 7,
+    "fit": 8,
+    "issues": "Pacing is a bit disjointed with overly long pauses. There is a noticeable breath before 'they answer' and slight vocal fry on the opening 'So'."
+   }
+  ],
+  "best": "v12-t1.wav",
+  "why": "It perfectly captures the soft, intimate, and unhurried tone while maintaining a natural, conversational flow. It avoids the bouncy, rushed delivery of take 2 and the overly dramatic pauses of take 3."
+ },
+ "v16": {
+  "takes": [
+   {
+    "file": "v16-t1.wav",
+    "transcript": "Everyone in the room chose to be there. And was welcomed with care.",
+    "exact": true,
+    "natural": 8,
+    "fit": 8,
+    "issues": "Slightly breathy pause between sentences, minor vocal fry on the final word."
+   },
+   {
+    "file": "v16-t2.wav",
+    "transcript": "Everyone in the room chose to be there. And was welcomed with care.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Clean audio with excellent pacing."
+   },
+   {
+    "file": "v16-t3.wav",
+    "transcript": "Everyone in the room chose to be there. And was welcomed with care.",
+    "exact": true,
+    "natural": 7,
+    "fit": 7,
+    "issues": "Delivery is a bit too smiley and projected, making it feel slightly less intimate and more commercial."
+   }
+  ],
+  "best": "v16-t2.wav",
+  "why": "It offers the most genuine, conversational delivery. The pacing is smooth, and it perfectly captures the warm, heartfelt, and honest tone required for the brand film without sounding overly performed."
+ },
+ "v18": {
+  "takes": [
+   {
+    "file": "v18-t1.wav",
+    "transcript": "Revel.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "None. Clean audio with clear pronunciation and a confident tone."
+   },
+   {
+    "file": "v18-t2.wav",
+    "transcript": "Revel.",
+    "exact": true,
+    "natural": 8,
+    "fit": 7,
+    "issues": "Slightly breathy on the initial 'R', making it feel a bit more intimate and soft rather than proud."
+   },
+   {
+    "file": "v18-t3.wav",
+    "transcript": "Revel.",
+    "exact": true,
+    "natural": 7,
+    "fit": 6,
+    "issues": "Slightly flat and lower in pitch, lacking the requested warmth and proud energy."
+   }
+  ],
+  "best": "v18-t1.wav",
+  "why": "It has the best balance of warmth and pride, delivered clearly with a confident, natural tone that perfectly matches the intended brand direction."
+ },
+ "v20": {
+  "takes": [
+   {
+    "file": "v20-t1.wav",
+    "transcript": "Let's revel.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Clean delivery, no noticeable artifacts. Good pacing and clear tone."
+   },
+   {
+    "file": "v20-t2.wav",
+    "transcript": "Let's revel.",
+    "exact": true,
+    "natural": 6,
+    "fit": 6,
+    "issues": "Unnatural pause between the two words. Slight hesitation and vocal fry on 'Let's'."
+   },
+   {
+    "file": "v20-t3.wav",
+    "transcript": "Let's revel.",
+    "exact": true,
+    "natural": 8,
+    "fit": 7,
+    "issues": "Audible chuckle/laughing breath right before the line begins. Delivery is a bit overly breathy."
+   }
+  ],
+  "best": "v20-t1.wav",
+  "why": "Take 1 hits the requested warm, inviting, and smiling tone perfectly while remaining clean and professional. It avoids the awkward pacing of Take 2 and the distracting pre-line chuckle of Take 3."
+ },
+ "v19": {
+  "takes": [
+   {
+    "file": "v19-t1.wav",
+    "transcript": "The free, open-source event platform for communities, clubs and independent venues.",
+    "exact": true,
+    "natural": 9,
+    "fit": 9,
+    "issues": "Slight pause after 'communities', but otherwise excellent pacing and tone."
+   },
+   {
+    "file": "v19-t2.wav",
+    "transcript": "The free, open-source event platform for communities, clubs and independent venues.",
+    "exact": true,
+    "natural": 8,
+    "fit": 7,
+    "issues": "Slightly rushed pacing on the list, missing the 'unhurried' direction."
+   },
+   {
+    "file": "v19-t3.wav",
+    "transcript": "The free, open-source event platform for communities, clubs and independent venues.",
+    "exact": true,
+    "natural": 7,
+    "fit": 6,
+    "issues": "Upward inflection on 'venues' makes it sound unresolved."
+   }
+  ],
+  "best": "v19-t1.wav",
+  "why": "It best captures the 'unhurried' and 'warm' direction with a steady, deliberate pace and a confident, resolved ending."
+ },
+ "v17": {
+  "takes": [
+   {
+    "file": "v17-t1.wav",
+    "transcript": "Potlucks, member pricing, pay what you can. Waitlists, check-in at the door. In six languages.",
+    "exact": true,
+    "natural": 8,
+    "fit": 8,
+    "issues": "Slightly uneven pacing with a noticeable breath and pause before 'waitlists', breaking the brisk rhythm slightly."
+   },
+   {
+    "file": "v17-t2.wav",
+    "transcript": "Potlucks, member pricing, pay what you can, waitlists, check-in at the door, in six languages.",
+    "exact": true,
+    "natural": 9,
+    "fit": 10,
+    "issues": "None. Very clean, fluid, and energetic."
+   },
+   {
+    "file": "v17-t3.wav",
+    "transcript": "Potlucks. Member pricing. Pay what you can. Waitlists. Check-in at the door. In six languages.",
+    "exact": true,
+    "natural": 6,
+    "fit": 4,
+    "issues": "Pauses between every phrase are far too long, making the delivery sound choppy, slow, and disjointed rather than brisk and rhythmic."
+   }
+  ],
+  "best": "v17-t2.wav",
+  "why": "It perfectly nails the intended direction. The delivery is genuinely smiling, bright, and maintains a brisk, continuous rhythm throughout the entire list without feeling rushed or disjointed."
+ }
+}

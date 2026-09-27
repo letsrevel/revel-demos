@@ -1,0 +1,16 @@
+# regenerable / scratch
+.render/
+previews/
+audio/chunks/
+audio/master.wav
+audio/stem-*.wav
+audio/aud-*.mp3
+audio/t-*.mp3
+audio/t-*.pcm
+audio/vo/*.wav
+audio/vo/old/
+audio/score-v[1234678].mp3*
+# keep: audio/vo/final/ (chosen, trimmed narration) and audio/score-v5.mp3 (the score) —
+# both cost money and are not reproducible byte-for-byte.
+audio/vo/old*/
+audio/score-v[1234678].review.txt
