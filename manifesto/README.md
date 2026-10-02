@@ -34,7 +34,7 @@ open film/index.html          # live preview in a browser (add ?from=44 to start
   Three takes per line; each take transcribed and rated by an audio model (`pick.mjs`) — this caught
   several takes that hallucinated extra words. Word timings from faster-whisper (`finalize.py`).
 - **Type**: Bricolage Grotesque (display), Instrument Serif (the intimate lines), Nata Sans (the Revel UI font), JetBrains Mono.
-- **Brand**: the vector R from `revel-frontend/static/logo.svg`; the wordmark cut from `assets/revel-logo-gradient.png`.
+- **Brand**: the vector R from `revel-frontend/static/logo.svg`; the wordmark (`film/wordmark-white.png`, inlined in `film/wordmark.js`) is the text line of the designer's official `assets/brand/Revel_Logo_White_Wordmark.svg`.
 - **Code texture**: real lines from `revel-backend/src/questionnaires/evaluator.py`, with every line about automated/LLM evaluation filtered out (no AI on screen, by request).
 
 ## Claims on screen (all checked against the repos)
