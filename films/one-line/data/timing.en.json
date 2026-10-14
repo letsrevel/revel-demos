@@ -49,8 +49,6 @@
   {
    "id": "v01",
    "text": "Every community starts the same way.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 0,
    "start": 1.2,
    "dur": 2.411,
    "end": 3.611,
@@ -85,13 +83,20 @@
      "s": 3.28,
      "e": 3.611
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 0,
+     "start": 1.2,
+     "dur": 2.411,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v02",
    "text": "A few people. And a reason to get together.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 2.582,
    "start": 4.3,
    "dur": 2.662,
    "end": 6.962,
@@ -141,13 +146,20 @@
      "s": 6.358,
      "e": 6.962
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 2.582,
+     "start": 4.3,
+     "dur": 2.662,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v03",
    "text": "A book club. A rope circle. A Sunday picnic. A basement gig.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 5.293,
    "start": 7.6,
    "dur": 4.172,
    "end": 11.772,
@@ -212,13 +224,20 @@
      "s": 11.347,
      "e": 11.772
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 5.293,
+     "start": 7.6,
+     "dur": 4.172,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v04",
    "text": "Then come the platforms. Fees on every ticket. Your people, turned into data.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 9.655,
    "start": 13.3,
    "dur": 5.392,
    "end": 18.692,
@@ -288,13 +307,20 @@
      "s": 18.125,
      "e": 18.692
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 9.655,
+     "start": 13.3,
+     "dur": 5.392,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v05",
    "text": "Revel is different.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 15.238,
    "start": 19.4,
    "dur": 1.446,
    "end": 20.846,
@@ -314,13 +340,20 @@
      "s": 20.242,
      "e": 20.846
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 15.238,
+     "start": 19.4,
+     "dur": 1.446,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v06",
    "text": "It's open source. Anyone can read it, run it, and make it better.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 16.772,
    "start": 22.3,
    "dur": 4.185,
    "end": 26.485,
@@ -390,13 +423,20 @@
      "s": 26.088,
      "e": 26.485
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 16.772,
+     "start": 22.3,
+     "dur": 4.185,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v07",
    "text": "Buyers pay the ticket price. No fee on top.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 21.233,
    "start": 27,
    "dur": 2.963,
    "end": 29.963,
@@ -446,22 +486,73 @@
      "s": 29.607,
      "e": 29.963
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 21.233,
+     "start": 27,
+     "dur": 2.963,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v08",
    "text": "The money goes straight to the organizer.",
    "start": 30.4,
-   "dur": 2.6,
-   "end": 33,
-   "gap": true,
-   "words": []
+   "dur": 2.64,
+   "end": 33.04,
+   "words": [
+    {
+     "w": "The",
+     "s": 30.4,
+     "e": 30.53
+    },
+    {
+     "w": "money",
+     "s": 30.53,
+     "e": 31.01
+    },
+    {
+     "w": "goes",
+     "s": 31.01,
+     "e": 31.33
+    },
+    {
+     "w": "straight",
+     "s": 31.33,
+     "e": 31.73
+    },
+    {
+     "w": "to",
+     "s": 31.73,
+     "e": 31.97
+    },
+    {
+     "w": "the",
+     "s": 31.97,
+     "e": 32.21
+    },
+    {
+     "w": "organizer.",
+     "s": 32.21,
+     "e": 33.04
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-pickups-d03.wav",
+     "mediaStart": 0.11,
+     "start": 30.4,
+     "dur": 2.64,
+     "volume": 0.708
+    }
+   ]
   },
   {
    "id": "v09",
    "text": "No ads. No trackers. And your data is never, ever sold.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 24.492,
    "start": 33.6,
    "dur": 4.453,
    "end": 38.053,
@@ -521,13 +612,20 @@
      "s": 37.428,
      "e": 38.053
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 24.492,
+     "start": 33.6,
+     "dur": 4.453,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v10",
    "text": "Some rooms need a little more care.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 29.007,
    "start": 39.9,
    "dur": 2.258,
    "end": 42.158,
@@ -567,13 +665,20 @@
      "s": 41.693,
      "e": 42.158
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 29.007,
+     "start": 39.9,
+     "dur": 2.258,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v11",
    "text": "Like a rope workshop in Vienna, built on trust.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 31.327,
    "start": 42.6,
    "dur": 2.916,
    "end": 45.516,
@@ -623,13 +728,20 @@
      "s": 45.033,
      "e": 45.516
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 31.327,
+     "start": 42.6,
+     "dur": 2.916,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v12",
    "text": "So before anyone gets a ticket, they answer a few questions.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 34.348,
    "start": 46.4,
    "dur": 3.575,
    "end": 49.975,
@@ -689,13 +801,20 @@
      "s": 49.332,
      "e": 49.892
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 34.348,
+     "start": 46.4,
+     "dur": 3.575,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v13",
    "text": "About experience, the consent guidelines, and why they want to come.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 38.069,
    "start": 50.5,
    "dur": 3.981,
    "end": 54.481,
@@ -755,13 +874,20 @@
      "s": 54.191,
      "e": 54.481
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 38.069,
+     "start": 50.5,
+     "dur": 3.981,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v14",
    "text": "Then a real person reads every answer, and makes the call.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 42.16,
    "start": 57.3,
    "dur": 3.8,
    "end": 61.1,
@@ -821,13 +947,20 @@
      "s": 60.66,
      "e": 61.1
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 42.16,
+     "start": 57.3,
+     "dur": 3.8,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v15",
    "text": "And then, you're in.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 46.119,
    "start": 63.2,
    "dur": 1.525,
    "end": 64.725,
@@ -852,89 +985,110 @@
      "s": 64.361,
      "e": 64.725
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 46.119,
+     "start": 63.2,
+     "dur": 1.525,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v16",
    "text": "Everyone in the room chose to be there. And was welcomed with care.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 47.768,
    "start": 66.2,
-   "dur": 4.135,
-   "end": 70.335,
+   "dur": 4.568,
+   "end": 70.768,
    "words": [
     {
      "w": "Everyone",
-     "s": 66.272,
-     "e": 66.672
+     "s": 66.2,
+     "e": 66.74
     },
     {
      "w": "in",
-     "s": 66.672,
-     "e": 66.832
+     "s": 66.74,
+     "e": 66.9
     },
     {
      "w": "the",
-     "s": 66.832,
-     "e": 66.912
+     "s": 66.9,
+     "e": 67.06
     },
     {
      "w": "room",
-     "s": 66.912,
-     "e": 67.312
+     "s": 67.06,
+     "e": 67.46
     },
     {
      "w": "chose",
-     "s": 67.312,
-     "e": 67.552
+     "s": 67.46,
+     "e": 67.7
     },
     {
      "w": "to",
-     "s": 67.712,
-     "e": 67.872
+     "s": 67.94,
+     "e": 68.18
     },
     {
      "w": "be",
-     "s": 67.872,
-     "e": 68.112
+     "s": 68.18,
+     "e": 68.5
     },
     {
      "w": "there.",
-     "s": 68.112,
-     "e": 68.352
+     "s": 68.5,
+     "e": 68.82
     },
     {
      "w": "And",
-     "s": 68.512,
-     "e": 68.832
+     "s": 68.96,
+     "e": 69.265
     },
     {
      "w": "was",
-     "s": 68.832,
-     "e": 69.072
+     "s": 69.265,
+     "e": 69.505
     },
     {
      "w": "welcomed",
-     "s": 69.072,
-     "e": 69.632
+     "s": 69.505,
+     "e": 70.065
     },
     {
      "w": "with",
-     "s": 69.632,
-     "e": 69.872
+     "s": 70.065,
+     "e": 70.305
     },
     {
      "w": "care.",
-     "s": 69.872,
-     "e": 70.335
+     "s": 70.305,
+     "e": 70.768
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-pickups-d03.wav",
+     "mediaStart": 3.38,
+     "start": 66.2,
+     "dur": 2.62,
+     "volume": 0.562
+    },
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 50.095,
+     "start": 68.96,
+     "dur": 1.808,
+     "volume": 1
     }
    ]
   },
   {
    "id": "v17a",
    "text": "Potlucks.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 51.976,
    "start": 72.056,
    "dur": 0.874,
    "end": 72.93,
@@ -944,13 +1098,20 @@
      "s": 72.056,
      "e": 72.93
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 51.976,
+     "start": 72.056,
+     "dur": 0.874,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17b",
    "text": "Member pricing.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 52.967,
    "start": 73.692,
    "dur": 1.106,
    "end": 74.798,
@@ -965,13 +1126,20 @@
      "s": 74.165,
      "e": 74.798
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 52.967,
+     "start": 73.692,
+     "dur": 1.106,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17c",
    "text": "Pay what you can.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 54.114,
    "start": 75.328,
    "dur": 1.015,
    "end": 76.343,
@@ -996,13 +1164,20 @@
      "s": 75.934,
      "e": 76.343
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 54.114,
+     "start": 75.328,
+     "dur": 1.015,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17d",
    "text": "Waitlists.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 55.212,
    "start": 77.51,
    "dur": 0.941,
    "end": 78.451,
@@ -1017,13 +1192,20 @@
      "s": 77.818,
      "e": 78.451
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 55.212,
+     "start": 77.51,
+     "dur": 0.941,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17e",
    "text": "Check-in at the door.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 56.207,
    "start": 79.691,
    "dur": 1.283,
    "end": 80.974,
@@ -1053,13 +1235,20 @@
      "s": 80.604,
      "e": 80.974
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 56.207,
+     "start": 79.691,
+     "dur": 1.283,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17f",
    "text": "In six languages.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 57.637,
    "start": 81.328,
    "dur": 1.522,
    "end": 82.85,
@@ -1079,13 +1268,20 @@
      "s": 81.931,
      "e": 82.811
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 57.637,
+     "start": 81.328,
+     "dur": 1.522,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v18",
    "text": "Revel. The free, open-source event platform for communities, clubs and independent venues.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 59.321,
    "start": 84,
    "dur": 6.427,
    "end": 90.427,
@@ -1155,13 +1351,20 @@
      "s": 89.609,
      "e": 90.427
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 59.321,
+     "start": 84,
+     "dur": 6.427,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v20",
    "text": "Let's revel.",
-   "file": "audio/vo-en.wav",
-   "mediaStart": 65.789,
    "start": 91.8,
    "dur": 0.95,
    "end": 92.75,
@@ -1175,6 +1378,15 @@
      "w": "revel.",
      "s": 92.141,
      "e": 92.701
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-en.wav",
+     "mediaStart": 65.789,
+     "start": 91.8,
+     "dur": 0.95,
+     "volume": 1
     }
    ]
   }

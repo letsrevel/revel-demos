@@ -62,13 +62,13 @@ Type: "A few people. / And a reason to get together." word by word, Bricolage, l
 - voiceover: "It's open source. Anyone can read it, run it, and make it better."
 - blueprint: kinetic-type-beats
 
-## Frame 6 — The money (contains the pickup gap)
+## Frame 6 — The money
 
 - status: outline
 - src: compositions/s2-different.html
 - duration: 6.5s (26.8 – 33.3)
 - scene: A Revel ticket card: €18, "No fee on top"; then the rope carries the payment from Buyer to The Velvet Cellar
-- voiceover: "Buyers pay the ticket price. No fee on top." + [GAP 30.4–33.0: "The money goes straight to the organizer." — on screen as type, voice pending]
+- voiceover: "Buyers pay the ticket price. No fee on top." + "The money goes straight to the organizer." (Draft 03 pickup, 30.4–33.0)
 - blueprint: comparison-split for the price, then camera-journey (A: action → consequence) for the money path
 
 ## Frame 7 — Private

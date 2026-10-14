@@ -49,8 +49,6 @@
   {
    "id": "v01",
    "text": "Jede Community fängt gleich an.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 0,
    "start": 1.2,
    "dur": 2.243,
    "end": 3.443,
@@ -80,13 +78,20 @@
      "s": 3.12,
      "e": 3.443
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 0,
+     "start": 1.2,
+     "dur": 2.243,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v02",
    "text": "Ein paar Leute. Und ein Grund, zusammenzukommen.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 2.366,
    "start": 4.3,
    "dur": 2.726,
    "end": 7.026,
@@ -126,13 +131,20 @@
      "s": 6.014,
      "e": 7.026
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 2.366,
+     "start": 4.3,
+     "dur": 2.726,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v03",
    "text": "Ein Buchclub. Ein Rope-Kreis. Ein Picknick am Sonntag. Ein Konzert im Keller.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 5.095,
    "start": 7.6,
    "dur": 5.079,
    "end": 12.679,
@@ -197,13 +209,20 @@
      "s": 12.185,
      "e": 12.679
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 5.095,
+     "start": 7.6,
+     "dur": 5.079,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v04",
    "text": "Dann kommen die Plattformen. Gebühren auf jedes Ticket. Aus deinen Leuten werden Daten.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 10.313,
    "start": 13.3,
    "dur": 4.836,
    "end": 18.136,
@@ -273,13 +292,20 @@
      "s": 17.707,
      "e": 18.136
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 10.313,
+     "start": 13.3,
+     "dur": 4.836,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v05",
    "text": "Revel ist anders.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 15.367,
    "start": 19.4,
    "dur": 1.453,
    "end": 20.853,
@@ -299,13 +325,20 @@
      "s": 20.273,
      "e": 20.853
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 15.367,
+     "start": 19.4,
+     "dur": 1.453,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v06",
    "text": "Es ist Open Source. Alle können es lesen, betreiben und besser machen.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 16.874,
    "start": 22.3,
    "dur": 4.12,
    "end": 26.42,
@@ -370,13 +403,20 @@
      "s": 26.066,
      "e": 26.42
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 16.874,
+     "start": 22.3,
+     "dur": 4.12,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v07",
    "text": "Wer kauft, zahlt den Ticketpreis. Keine Gebühr obendrauf.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 21.09,
    "start": 27,
    "dur": 3.424,
    "end": 30.424,
@@ -421,13 +461,20 @@
      "s": 29.67,
      "e": 30.424
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 21.09,
+     "start": 27,
+     "dur": 3.424,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v08",
    "text": "Das Geld geht direkt an die Organisation.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 24.649,
    "start": 30.75,
    "dur": 2.451,
    "end": 33.201,
@@ -467,13 +514,20 @@
      "s": 32.261,
      "e": 33.201
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 24.649,
+     "start": 30.75,
+     "dur": 2.451,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v09",
    "text": "Keine Werbung. Keine Tracker. Und deine Daten werden nie und nimmer verkauft.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 27.13,
    "start": 33.6,
    "dur": 4.806,
    "end": 38.406,
@@ -538,13 +592,20 @@
      "s": 37.75,
      "e": 38.406
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 27.13,
+     "start": 33.6,
+     "dur": 4.806,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v10",
    "text": "Manche Räume brauchen ein bisschen mehr Achtsamkeit.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 32.046,
    "start": 39.9,
    "dur": 3.026,
    "end": 42.926,
@@ -584,13 +645,20 @@
      "s": 41.934,
      "e": 42.926
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 32.046,
+     "start": 39.9,
+     "dur": 3.026,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v11",
    "text": "Wie ein Rope-Workshop in Wien, der auf Vertrauen baut.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 35.189,
    "start": 43.25,
    "dur": 3.01,
    "end": 46.26,
@@ -640,13 +708,20 @@
      "s": 45.821,
      "e": 46.26
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 35.189,
+     "start": 43.25,
+     "dur": 3.01,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v12",
    "text": "Bevor also jemand ein Ticket bekommt, gibt es ein paar Fragen.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 38.252,
    "start": 46.6,
    "dur": 3.052,
    "end": 49.652,
@@ -706,13 +781,20 @@
      "s": 49.228,
      "e": 49.652
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 38.252,
+     "start": 46.6,
+     "dur": 3.052,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v13",
    "text": "Zur Erfahrung, zu den Konsens-Regeln, und warum man kommen möchte.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 41.346,
    "start": 50.5,
    "dur": 3.923,
    "end": 54.423,
@@ -767,13 +849,20 @@
      "s": 54.034,
      "e": 54.423
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 41.346,
+     "start": 50.5,
+     "dur": 3.923,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v14",
    "text": "Dann liest ein echter Mensch jede Antwort und entscheidet.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 45.4,
    "start": 57.3,
    "dur": 3.242,
    "end": 60.542,
@@ -823,13 +912,20 @@
      "s": 59.82,
      "e": 60.542
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 45.4,
+     "start": 57.3,
+     "dur": 3.242,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v15",
    "text": "Und dann: Du bist dabei.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 48.748,
    "start": 63.2,
    "dur": 1.41,
    "end": 64.61,
@@ -859,13 +955,20 @@
      "s": 64.132,
      "e": 64.61
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 48.748,
+     "start": 63.2,
+     "dur": 1.41,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v16",
    "text": "Alle im Raum haben sich entschieden, hier zu sein. Und wurden mit Achtsamkeit empfangen.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 50.195,
    "start": 66.2,
    "dur": 4.572,
    "end": 70.772,
@@ -940,13 +1043,20 @@
      "s": 70.165,
      "e": 70.772
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 50.195,
+     "start": 66.2,
+     "dur": 4.572,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17a",
    "text": "Potlucks.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 54.878,
    "start": 72.056,
    "dur": 0.866,
    "end": 72.922,
@@ -956,13 +1066,20 @@
      "s": 72.058,
      "e": 72.922
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 54.878,
+     "start": 72.056,
+     "dur": 0.866,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17b",
    "text": "Mitgliederpreise.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 55.793,
    "start": 73.692,
    "dur": 1.141,
    "end": 74.833,
@@ -972,13 +1089,20 @@
      "s": 73.692,
      "e": 74.833
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 55.793,
+     "start": 73.692,
+     "dur": 1.141,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17c",
    "text": "Zahl, was du kannst.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 57.071,
    "start": 75.328,
    "dur": 1.241,
    "end": 76.569,
@@ -1003,13 +1127,20 @@
      "s": 76.097,
      "e": 76.569
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 57.071,
+     "start": 75.328,
+     "dur": 1.241,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17d",
    "text": "Wartelisten.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 58.382,
    "start": 77.51,
    "dur": 1.01,
    "end": 78.52,
@@ -1019,13 +1150,20 @@
      "s": 77.528,
      "e": 78.488
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 58.382,
+     "start": 77.51,
+     "dur": 1.01,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17e",
    "text": "Check-in am Einlass.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 59.489,
    "start": 79.691,
    "dur": 1.319,
    "end": 81.01,
@@ -1045,13 +1183,20 @@
      "s": 80.372,
      "e": 81.01
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 59.489,
+     "start": 79.691,
+     "dur": 1.319,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v17f",
    "text": "In sechs Sprachen.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 60.937,
    "start": 81.328,
    "dur": 1.216,
    "end": 82.544,
@@ -1071,16 +1216,23 @@
      "s": 81.921,
      "e": 82.544
     }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 60.937,
+     "start": 81.328,
+     "dur": 1.216,
+     "volume": 1
+    }
    ]
   },
   {
    "id": "v18",
    "text": "Revel. Die kostenlose, quelloffene Event-Plattform für Communities, Vereine und unabhängige Veranstaltungsorte.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 62.236,
    "start": 84,
-   "dur": 6.197,
-   "end": 90.197,
+   "dur": 7.456,
+   "end": 91.456,
    "words": [
     {
      "w": "Revel.",
@@ -1089,61 +1241,75 @@
     },
     {
      "w": "Die",
-     "s": 84.654,
-     "e": 84.814
+     "s": 84.711,
+     "e": 84.861
     },
     {
      "w": "kostenlose,",
-     "s": 84.814,
-     "e": 85.374
+     "s": 84.861,
+     "e": 85.741
     },
     {
      "w": "quelloffene",
-     "s": 85.454,
-     "e": 86.254
+     "s": 85.741,
+     "e": 86.621
     },
     {
      "w": "Event-Plattform",
-     "s": 86.254,
-     "e": 87.134
+     "s": 86.621,
+     "e": 87.501
     },
     {
      "w": "für",
-     "s": 87.134,
-     "e": 87.294
+     "s": 87.501,
+     "e": 87.741
     },
     {
      "w": "Communities,",
-     "s": 87.294,
-     "e": 88.014
+     "s": 87.741,
+     "e": 88.621
     },
     {
      "w": "Vereine",
-     "s": 88.014,
-     "e": 88.494
+     "s": 88.621,
+     "e": 89.261
     },
     {
      "w": "und",
-     "s": 88.494,
-     "e": 88.654
+     "s": 89.261,
+     "e": 89.421
     },
     {
      "w": "unabhängige",
-     "s": 88.654,
-     "e": 89.454
+     "s": 89.421,
+     "e": 90.221
     },
     {
      "w": "Veranstaltungsorte.",
-     "s": 89.454,
-     "e": 90.197
+     "s": 90.221,
+     "e": 91.341
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 62.236,
+     "start": 84,
+     "dur": 0.571,
+     "volume": 1
+    },
+    {
+     "file": "audio/vo-pickups-d03.wav",
+     "mediaStart": 6.97,
+     "start": 84.711,
+     "dur": 6.745,
+     "volume": 0.75
     }
    ]
   },
   {
    "id": "v20",
    "text": "Let’s revel.",
-   "file": "audio/vo-de.wav",
-   "mediaStart": 68.441,
    "start": 91.8,
    "dur": 0.848,
    "end": 92.648,
@@ -1157,6 +1323,15 @@
      "w": "revel.",
      "s": 92.089,
      "e": 92.569
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 68.441,
+     "start": 91.8,
+     "dur": 0.848,
+     "volume": 1
     }
    ]
   }

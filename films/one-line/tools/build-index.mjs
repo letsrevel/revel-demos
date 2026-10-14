@@ -40,8 +40,9 @@ const music = T.music.map((m, i) => {
         data-automation="${attr({ version: 1, lanes: [{ target: 'volume', points: pts }] })}"></audio>`;
 }).join('\n');
 
-const vo = T.lines.filter(l => !l.gap).map(l =>
-  `      <audio id="vo-${l.id}" src="${l.file}" data-start="${l.start}" data-duration="${l.dur}" data-media-start="${l.mediaStart}" data-track-index="10" data-volume="1" data-audio-group="voiceover"></audio>`).join('\n');
+// one clip per source range: a phrase spliced from the take and a pickup has several
+const vo = T.lines.flatMap(l => l.clips.map((c, k) =>
+  `      <audio id="vo-${l.id}${l.clips.length > 1 ? '-' + (k + 1) : ''}" src="${c.file}" data-start="${c.start}" data-duration="${c.dur}" data-media-start="${c.mediaStart}" data-track-index="10" data-volume="${c.volume}" data-audio-group="voiceover"></audio>`)).join('\n');
 
 // voice bus: rumble cut, gentle levelling, lift the take (≈ −21 LUFS) toward the bed
 const voiceBus = attr({ version: 1, nodes: [

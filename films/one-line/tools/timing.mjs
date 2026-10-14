@@ -5,7 +5,8 @@
 //
 //   node tools/timing.mjs [en|de]
 //
-// Re-run after a pickup arrives: drop the file in audio/, add it to PICKUPS.
+// Re-run after a pickup arrives: copy it to audio/vo-pickups-<name>.wav, transcribe it to
+// data/vo-pickups-<name>.words.json, add it to PICKUPS and the line to PICKUP_LINES.
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
@@ -60,7 +61,7 @@ const PHRASES = {
     ['v05', [10, 10], 'Revel is different.', 19.4],
     ['v06', [11, 14], "It's open source. Anyone can read it, run it, and make it better.", 22.3],
     ['v07', [15, 16], 'Buyers pay the ticket price. No fee on top.', 27.0],
-    ['v08', null, 'The money goes straight to the organizer.', 30.4, 2.6],   // GAP — pickup pending
+    ['v08', null, 'The money goes straight to the organizer.', 30.4, 2.6],   // not in the take — Draft 03 pickup
     ['v09', [17, 20], 'No ads. No trackers. And your data is never, ever sold.', 33.6],
     ['v10', [21, 21], 'Some rooms need a little more care.', 39.9],
     ['v11', [22, 23], 'Like a rope workshop in Vienna, built on trust.', 42.6],
@@ -82,8 +83,8 @@ const PHRASES = {
   ],
 };
 // German: same ids and beats as English. Text is what the SCREEN shows (word-
-// synced by index), so the tagline is the website's wording; the take says
-// "Clubs … Spielstätten" until the requested pickup replaces v18.
+// synced by index), so the tagline is the website's wording — the take said
+// "Clubs … Spielstätten"; the Draft 03 pickup replaces it (PICKUP_LINES).
 PHRASES.de = [
   ['v01', [0, 0], 'Jede Community fängt gleich an.', 1.2],
   ['v02', [1, 1], 'Ein paar Leute. Und ein Grund, zusammenzukommen.', 4.3],
@@ -110,8 +111,19 @@ PHRASES.de = [
   ['v18', [38, 39], 'Revel. Die kostenlose, quelloffene Event-Plattform für Communities, Vereine und unabhängige Veranstaltungsorte.', 84.0],
   ['v20', [40, 40], 'Let’s revel.', 91.8],
 ];
-// Pickups recorded separately: { id: { file, from, to } } — source range in that file.
-const PICKUPS = {};
+// Pickups recorded separately: { key: { file, words, from, to, gain } } — source range in
+// that file, gain in dB to sit at the take's level (the pickup session ran ~3–5 dB hotter).
+// A phrase uses one by naming its key among its parts (see PHRASES).
+const PICKUPS = {
+  // Draft 03 (2026-10-14): voice_overs/Draft 03/revel-corrections-14102026.wav
+  'd03-money': { file: 'audio/vo-pickups-d03.wav', words: 'data/vo-pickups-d03.words.json', from: 0.11, to: 2.75, gain: -3 },
+  'd03-there': { file: 'audio/vo-pickups-d03.wav', words: 'data/vo-pickups-d03.words.json', from: 3.38, to: 6.0, gain: -5 },
+  'd03-tagline-de': { file: 'audio/vo-pickups-d03.wav', words: 'data/vo-pickups-d03.words.json', from: 6.97, to: 13.715, gain: -2.5 },
+};
+const PICKUP_LINES = {
+  en: { v08: ['d03-money'], v16: ['d03-there', [32, 32]] },   // "…chose to be there." + the take's "And was welcomed with care."
+  de: { v18: [[38, 38], 'd03-tagline-de'] },                  // the take's „Revel." + the website's tagline
+}[LANG] || {};
 
 if (process.argv.includes('--segs')) {
   segs.forEach(([a, b], i) => console.log(String(i).padStart(2), a.toFixed(2), b.toFixed(2),
@@ -120,28 +132,41 @@ if (process.argv.includes('--segs')) {
 }
 
 const HEAD = 0.06, TAIL = 0.10; // handles: start just before the word, keep the decay
+// a source range: segments [a, b] of the take, or a pickup key
+const source = part => {
+  if (typeof part === 'string') {
+    const p = PICKUPS[part]; if (!p) throw new Error(`unknown pickup ${part}`);
+    return { file: p.file, a: p.from, b: p.to, gain: p.gain || 0, pickup: true, words: JSON.parse(fs.readFileSync(`${ROOT}${p.words}`, 'utf8')) };
+  }
+  let a = Math.max(0, segs[part[0]][0] - HEAD), b = Math.min(takeEnd, segs[part[1]][1] + TAIL);
+  // never reach into the neighbouring phrase
+  if (part[0] > 0) a = Math.max(a, segs[part[0] - 1][1] + 0.02);
+  if (part[1] < segs.length - 1) b = Math.min(b, segs[part[1] + 1][0] - 0.02);
+  return { file: VO, a, b, gain: 0, words };
+};
+const JOIN = 0.14; // silence between spliced parts of one phrase (+ the handles ≈ 0.3 s between words)
 const lines = PHRASES[LANG].map(([id, range, text, at, gapDur]) => {
   const start = typeof at === 'string' ? +(musicToFilm(beat(+at.split(':')[1])) + 0.06).toFixed(3) : at;
-  const pick = PICKUPS[id];
-  if (!range && !pick) return { id, text, start, dur: gapDur, end: +(start + gapDur).toFixed(3), gap: true, words: [] };
-  let file = VO, a, b;
-  if (pick) ({ file, from: a, to: b } = pick);
-  else {
-    a = Math.max(0, segs[range[0]][0] - HEAD);
-    b = Math.min(takeEnd, segs[range[1]][1] + TAIL);
-    // never reach into the neighbouring phrase
-    if (range[0] > 0) a = Math.max(a, segs[range[0] - 1][1] + 0.02);
-    if (range[1] < segs.length - 1) b = Math.min(b, segs[range[1] + 1][0] - 0.02);
+  const parts = PICKUP_LINES[id] || (range && [range]);
+  if (!parts) return { id, text, start, dur: gapDur, end: +(start + gapDur).toFixed(3), gap: true, words: [], clips: [] };
+  const clips = []; let ws = [], t = start;
+  for (const src of parts.map(source)) {
+    const { file, a, b, gain } = src, dur = +(b - a).toFixed(3);
+    clips.push({ file, mediaStart: +a.toFixed(3), start: +t.toFixed(3), dur, volume: +(10 ** (gain / 20)).toFixed(3) });
+    // a word belongs to the phrase its midpoint falls in; a pickup range holds every word it
+    // overlaps (the recogniser's word edges run long into the silence around a pickup)
+    const inside = src.pickup ? w => w.end > a + 0.05 && w.start < b - 0.05 : w => (w.start + w.end) / 2 >= a && (w.start + w.end) / 2 < b;
+    ws.push(...src.words.filter(inside).map(w => ({
+      w: w.text.trim(), s: +(t + Math.max(0, w.start - a)).toFixed(3), e: +(t + Math.min(b, w.end) - a).toFixed(3),
+    })));
+    t += dur + JOIN;
   }
-  const dur = +(b - a).toFixed(3);
-  // a word belongs to the phrase its midpoint falls in
-  let ws = pick ? [] : words.filter(w => (w.start + w.end) / 2 >= a && (w.start + w.end) / 2 < b).map(w => ({
-    w: w.text.trim(), s: +(start + Math.max(0, w.start - a)).toFixed(3), e: +(start + Math.min(b, w.end) - a).toFixed(3),
-  }));
+  const end = +(t - JOIN).toFixed(3);
   // carry the script's spelling when the word counts line up (the recogniser hears "Buy" for "Buyers")
   const canon = text.split(/\s+/);
   if (canon.length === ws.length) ws = ws.map((w, i) => ({ ...w, w: canon[i] }));
-  return { id, text, file, mediaStart: +a.toFixed(3), start, dur, end: +(start + dur).toFixed(3), words: ws };
+  else console.warn('WORDS', id, `screen ${canon.length} ≠ spoken ${ws.length}`);
+  return { id, text, start, dur: +(end - start).toFixed(3), end, words: ws, clips };
 });
 
 for (let i = 1; i < lines.length; i++)

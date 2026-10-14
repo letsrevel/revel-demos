@@ -1,0 +1,152 @@
+[
+{
+"id": "p0",
+"text": "The",
+"start": 0,
+"end": 0.24
+},
+{
+"id": "p1",
+"text": "money",
+"start": 0.24,
+"end": 0.72
+},
+{
+"id": "p2",
+"text": "goes",
+"start": 0.72,
+"end": 1.04
+},
+{
+"id": "p3",
+"text": "straight",
+"start": 1.04,
+"end": 1.44
+},
+{
+"id": "p4",
+"text": "to",
+"start": 1.44,
+"end": 1.68
+},
+{
+"id": "p5",
+"text": "the",
+"start": 1.68,
+"end": 1.92
+},
+{
+"id": "p6",
+"text": "organizer.",
+"start": 1.92,
+"end": 3.28
+},
+{
+"id": "p7",
+"text": "Everyone",
+"start": 3.28,
+"end": 3.92
+},
+{
+"id": "p8",
+"text": "in",
+"start": 3.92,
+"end": 4.08
+},
+{
+"id": "p9",
+"text": "the",
+"start": 4.08,
+"end": 4.24
+},
+{
+"id": "p10",
+"text": "room",
+"start": 4.24,
+"end": 4.64
+},
+{
+"id": "p11",
+"text": "chose",
+"start": 4.64,
+"end": 4.88
+},
+{
+"id": "p12",
+"text": "to",
+"start": 5.12,
+"end": 5.36
+},
+{
+"id": "p13",
+"text": "be",
+"start": 5.36,
+"end": 5.68
+},
+{
+"id": "p14",
+"text": "there.",
+"start": 5.68,
+"end": 6.4
+},
+{
+"id": "p15",
+"text": "Die",
+"start": 6.8,
+"end": 7.12
+},
+{
+"id": "p16",
+"text": "kostenlose,",
+"start": 7.12,
+"end": 8
+},
+{
+"id": "p17",
+"text": "quelloffene",
+"start": 8,
+"end": 8.88
+},
+{
+"id": "p18",
+"text": "Eventplattform",
+"start": 8.88,
+"end": 9.76
+},
+{
+"id": "p19",
+"text": "f\u00fcr",
+"start": 9.76,
+"end": 10
+},
+{
+"id": "p20",
+"text": "Communities,",
+"start": 10,
+"end": 10.88
+},
+{
+"id": "p21",
+"text": "Vereine",
+"start": 10.88,
+"end": 11.52
+},
+{
+"id": "p22",
+"text": "und",
+"start": 11.52,
+"end": 11.68
+},
+{
+"id": "p23",
+"text": "unabh\u00e4ngige",
+"start": 11.68,
+"end": 12.48
+},
+{
+"id": "p24",
+"text": "Veranstaltungsorte.",
+"start": 12.48,
+"end": 13.6
+}
+]

@@ -19,9 +19,9 @@ human voice actor's recordings (voice_overs/), beginning with this film.
   voice-synced type, film finish, sound design).
 - Length ~90 s → lands at 95 s (score cut on bar lines; user accepted "~90").
 - Music: keep score-v5.
-- EN take skipped "The money goes straight to the organizer." — pickup requested
+- EN take skipped "The money goes straight to the organizer." — Draft 03 pickup (2026-10-14)
   from the actor; build with a gap (30.4–33.0 s) and drop it in later.
-- EN take says "chose to be here"; re-record to "there" requested. On screen: "there".
+- EN take says "chose to be here"; the Draft 03 pickup says "there" (spliced before the take's "And was welcomed with care.").
 - Credit "Voice: Tobias Fischbach", small, bottom corner, first seconds — on every
   video that uses his voice.
 - Sketch pass skipped; straight to build.

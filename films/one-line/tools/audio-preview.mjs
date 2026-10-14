@@ -12,7 +12,9 @@ const LANG = process.argv[2] || 'en';
 const T = JSON.parse(fs.readFileSync(`${ROOT}data/timing.${LANG}.json`, 'utf8'));
 fs.mkdirSync(`${ROOT}renders`, { recursive: true });
 
-const inputs = ['-i', `${ROOT}audio/score.mp3`, '-i', `${ROOT}audio/vo-${T.lang}.wav`];
+const clips = T.lines.flatMap(l => l.clips);
+const files = [...new Set(clips.map(c => c.file))];
+const inputs = ['-i', `${ROOT}audio/score.mp3`, ...files.flatMap(f => ['-i', `${ROOT}${f}`])];
 const f = [];
 const ms = s => Math.round(s * 1000);
 
@@ -28,9 +30,9 @@ const mus = T.music.map((m, i) => {
 f.push(`${mus.join('')}amix=inputs=${mus.length}:normalize=0:duration=longest[bed]`);
 
 // narration phrases
-const vo = T.lines.filter(l => !l.gap).map((l, i) => {
-  f.push(`[1:a]atrim=start=${l.mediaStart}:duration=${l.dur},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo,` +
-    `afade=t=in:d=0.01,afade=t=out:st=${(l.dur - 0.04).toFixed(3)}:d=0.04,volume=1.8,adelay=${ms(l.start)}|${ms(l.start)}[v${i}]`);
+const vo = clips.map((l, i) => {
+  f.push(`[${1 + files.indexOf(l.file)}:a]atrim=start=${l.mediaStart}:duration=${l.dur},asetpts=PTS-STARTPTS,aformat=sample_rates=48000:channel_layouts=stereo,` +
+    `afade=t=in:d=0.01,afade=t=out:st=${(l.dur - 0.04).toFixed(3)}:d=0.04,volume=${(1.8 * l.volume).toFixed(3)},adelay=${ms(l.start)}|${ms(l.start)}[v${i}]`);
   return `[v${i}]`;
 });
 f.push(`${vo.join('')}amix=inputs=${vo.length}:normalize=0:duration=longest,highpass=f=80,acompressor=threshold=0.1:ratio=2.5:attack=12:release=220[voice]`);
