@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: 'Bricolage Grotesque'; font-weight: 200 800; src: url('assets/fonts/BricolageGrotesque-latin-normal-200_800.woff2') format('woff2'); }
+        @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url('assets/fonts/InstrumentSerif-latin-italic-400.woff2') format('woff2'); }
+        @font-face { font-family: 'Nata Sans'; font-weight: 100 900; src: url('assets/fonts/NataSans-latin-normal-100_900.woff2') format('woff2'); }
+
+        #root { position: absolute; inset: 0; overflow: hidden; pointer-events: none; font-family: 'Nata Sans', sans-serif; }
+        #root * { box-sizing: border-box; }
+        .abs { position: absolute; }
+
+        /* ---- left column: the serif lines ---- */
+        .s4-serif { position: absolute; left: 110px; width: 600px; font: italic 400 78px/84px 'Instrument Serif', serif; letter-spacing: -0.01em; }
+        #s4-in-t1 { top: 300px; color: #F1ECFA; }
+        #s4-in-t2 { top: 560px; color: #F9B233; }
+
+        /* ---- the review card (dark) ---- */
+        #s4-in-cardwrap { position: absolute; left: 740px; top: 120px; width: 1040px; height: 720px; }
+        #s4-in-card { position: absolute; inset: 0; border-radius: 16px; background: #1E1030;
+          box-shadow: 0 1px 2px rgba(0,0,0,.35), 0 12px 32px rgba(10,2,22,.55), 0 40px 90px rgba(10,2,22,.55), 0 0 0 1px rgba(171,130,219,.20);
+          color: #F1ECFA; overflow: hidden; }
+        #s4-in-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(171,130,219,.10), rgba(171,130,219,0) 30%); }
+        .s4-ttl { left: 48px; top: 38px; font: 800 36px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; }
+        .s4-sub { left: 48px; top: 90px; font: 500 20px/1 'Nata Sans', sans-serif; color: #AB82DB; }
+        .s4-av { border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; }
+        .s4-name { left: 124px; top: 142px; font: 700 27px/1 'Nata Sans', sans-serif; }
+        .s4-when { left: 124px; top: 180px; font: 500 18px/1 'Nata Sans', sans-serif; color: #AB82DB; opacity: .85; }
+        .s4-chip { position: absolute; right: 48px; top: 148px; padding: 10px 18px; border-radius: 999px; font: 700 20px/1 'Nata Sans', sans-serif; white-space: nowrap; }
+        #s4-in-chip-p { background: rgba(249,178,51,.18); color: #F9B233; }
+        #s4-in-chip-a { background: rgba(48,200,140,.18); color: #5BE0AB; opacity: 0; }
+        .s4-rule { left: 48px; width: 944px; height: 1px; background: rgba(171,130,219,.20); }
+        .s4-q { left: 48px; font: 600 20px/1 'Nata Sans', sans-serif; color: #AB82DB; }
+        .s4-a { left: 48px; font: 700 27px/1 'Nata Sans', sans-serif; color: #F1ECFA; }
+        .s4-free { left: 48px; top: 452px; width: 944px; font: 600 28px/44px 'Nata Sans', sans-serif; color: #F1ECFA; }
+        .s4-hl { background-image: linear-gradient(rgba(249,178,51,.42), rgba(249,178,51,.42)); background-repeat: no-repeat; background-position: 0 88%; background-size: 0% 86%; border-radius: 4px; padding: 0 3px; margin: 0 -3px; }
+        .s4-ren { left: 48px; top: 618px; font: 700 24px/1 'Nata Sans', sans-serif; }
+        .s4-btn { position: absolute; top: 616px; height: 64px; border-radius: 32px; display: flex; align-items: center; justify-content: center; font: 700 24px/1 'Nata Sans', sans-serif; }
+        #s4-in-decline { right: 308px; width: 170px; border: 2px solid rgba(171,130,219,.35); color: #D5C2EE; }
+        #s4-in-approve { right: 48px; width: 240px; background: #8C3CDD; color: #fff; box-shadow: 0 8px 24px rgba(140,60,221,.45); }
+        #s4-in-approve-ok { right: 48px; width: 240px; background: #1F9D6A; color: #fff; opacity: 0; box-shadow: 0 8px 24px rgba(31,157,106,.45); }
+        #s4-in-approve-ok svg { margin-right: 10px; }
+        #s4-in-ripple { position: absolute; left: 0; top: 0; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 3px solid #F9B233; opacity: 0; }
+
+        /* ---- cursor ---- */
+        #s4-in-cursor { position: absolute; left: 0; top: 0; width: 34px; height: 34px; opacity: 0; filter: drop-shadow(0 3px 5px rgba(0,0,0,.45)); }
+
+        /* ---- you're in ---- */
+        #s4-in-in { position: absolute; left: 0; right: 0; top: 190px; text-align: center; font: italic 400 96px/100px 'Instrument Serif', serif; color: #F1ECFA; letter-spacing: -0.01em; }
+        #s4-in-ticket { position: absolute; left: 610px; top: 470px; width: 700px; height: 300px; border-radius: 24px; background: #fff; overflow: hidden;
+          box-shadow: 0 1px 2px rgba(13,30,28,.10), 0 14px 36px rgba(10,2,22,.40), 0 44px 90px rgba(10,2,22,.40), 0 0 0 1px rgba(140,60,221,.12); opacity: 0; }
+        #s4-in-tk-l { position: absolute; left: 0; top: 0; width: 180px; height: 100%; background: linear-gradient(0deg, #E6332A, #8C3CDD); display: flex; align-items: center; justify-content: center; }
+        #s4-in-tk-t { left: 220px; top: 70px; font: 800 42px/1 'Nata Sans', sans-serif; color: #0D1E1C; }
+        #s4-in-tk-s { left: 220px; top: 128px; font: 600 24px/1 'Nata Sans', sans-serif; color: #6B5F80; }
+        #s4-in-tk-p { position: absolute; left: 220px; top: 190px; padding: 12px 22px; border-radius: 999px; background: rgba(31,157,106,.14); color: #177A52; font: 700 26px/1 'Nata Sans', sans-serif; white-space: nowrap; opacity: 0; }
+        #s4-in-tk-perf { position: absolute; left: 180px; top: 0; width: 0; height: 100%; border-left: 3px dotted rgba(140,60,221,.22); }
+
+        /* ---- warm bloom ---- */
+        #s4-in-leak { position: absolute; left: -10%; top: -10%; width: 120%; height: 120%; opacity: 0; mix-blend-mode: screen;
+          background: radial-gradient(ellipse 46% 50% at 50% 56%, rgba(249,178,51,.95) 0%, rgba(249,178,51,.55) 30%, rgba(230,51,42,.20) 58%, rgba(230,51,42,0) 78%); }
+        #s4-in-leak2 { position: absolute; left: -10%; top: -10%; width: 120%; height: 120%; opacity: 0; mix-blend-mode: screen;
+          background: radial-gradient(ellipse 30% 36% at 78% 20%, rgba(255,214,150,.9), rgba(255,214,150,0) 70%), radial-gradient(ellipse 28% 34% at 14% 88%, rgba(171,130,219,.55), rgba(171,130,219,0) 70%); }
+        #s4-in-flash { position: absolute; inset: 0; opacity: 0; background: radial-gradient(ellipse 80% 80% at 50% 50%, #FFFBF2 0%, #FFF1D6 55%, #FBE3C4 100%); }
+
+        /* ---- the room ---- */
+        .s4-room { position: absolute; left: 720px; width: 480px; text-align: center; font: 800 60px/64px 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; }
+        #s4-in-r1 { top: 444px; color: #0D1E1C; }
+        #s4-in-r2 { top: 476px; color: #8C3CDD; left: 700px; width: 520px; }
+
+        /* ---- whip streaks ---- */
+        .s4-streak { position: absolute; left: 0; width: 1920px; height: 3px; opacity: 0; background: linear-gradient(90deg, rgba(241,236,250,0), rgba(241,236,250,.7) 40%, rgba(241,236,250,0)); }
+      </style>
+
+      <div data-hf-id="hf-rft4" id="root" data-composition-id="s4-in" data-width="1920" data-height="1080">
+
+        <!-- whip streaks -->
+        <div data-hf-id="hf-tcch" class="s4-streak" id="s4-in-sk1" style="top:520px"></div>
+        <div data-hf-id="hf-obp5" class="s4-streak" id="s4-in-sk2" style="top:556px"></div>
+        <div data-hf-id="hf-w3or" class="s4-streak" id="s4-in-sk3" style="top:498px"></div>
+
+        <!-- warm bloom, under the cards -->
+        <div data-hf-id="hf-qkfs" id="s4-in-leak"></div>
+        <div data-hf-id="hf-y6y2" id="s4-in-leak2"></div>
+
+        <!-- frame 10 -->
+        <div data-hf-id="hf-uve0" class="s4-serif" id="s4-in-t1">A real person reads every answer</div>
+        <div data-hf-id="hf-6wsc" class="s4-serif" id="s4-in-t2">and makes the call.</div>
+
+        <div data-hf-id="hf-9vtr" id="s4-in-cardwrap">
+          <div data-hf-id="hf-lyev" id="s4-in-card">
+            <div data-hf-id="hf-ay7r" class="abs s4-ttl">Submissions</div>
+            <div data-hf-id="hf-jd6x" class="abs s4-sub">Workshop Application · Intro to Shibari — Rope &amp; Trust</div>
+
+            <div data-hf-id="hf-6ued" class="abs s4-av" style="left:48px;top:134px;width:56px;height:56px;background:#E6332A;font-size:22px">NB</div>
+            <div data-hf-id="hf-76s4" class="abs s4-name">Noa Beckmann</div>
+            <div data-hf-id="hf-uncg" class="abs s4-when">just now</div>
+            <div data-hf-id="hf-aiwa" class="s4-chip" id="s4-in-chip-p">Pending review</div>
+            <div data-hf-id="hf-znv5" class="s4-chip" id="s4-in-chip-a">Approved</div>
+
+            <div data-hf-id="hf-01yl" class="abs s4-rule" style="top:222px"></div>
+
+            <div data-hf-id="hf-mjww" class="abs s4-q" style="top:246px">How much rope experience do you have?</div>
+            <div data-hf-id="hf-lvej" class="abs s4-a" style="top:278px">None yet</div>
+            <div data-hf-id="hf-zh52" class="abs s4-q" style="top:330px">Have you read our house rules on consent and aftercare?</div>
+            <div data-hf-id="hf-npm3" class="abs s4-a" style="top:362px">Yes, I have read them</div>
+            <div data-hf-id="hf-blc3" class="abs s4-q" style="top:414px">Tell us about your experience with rope and what you hope to learn.</div>
+            <div data-hf-id="hf-geza" class="abs s4-free" id="s4-in-free">Complete beginner. I'd love to learn to <span data-hf-id="hf-1ton" class="s4-hl" id="s4-in-h1">tie with care,</span><br data-hf-id="hf-x5px">and to be <span data-hf-id="hf-2dxh" class="s4-hl" id="s4-in-h2">someone people feel safe with.</span></div>
+
+            <div data-hf-id="hf-qwyo" class="abs s4-rule" style="top:582px"></div>
+            <div data-hf-id="hf-a13j" class="abs s4-av" style="left:48px;top:614px;width:48px;height:48px;background:#8C3CDD;font-size:20px">R</div>
+            <div data-hf-id="hf-ij3z" class="abs s4-ren" style="left:114px;top:628px" id="s4-in-ren1">Ren is reviewing</div>
+            <div data-hf-id="hf-jl12" class="abs s4-ren" style="left:114px;top:628px;opacity:0;color:#5BE0AB" id="s4-in-ren2">Ren made the call</div>
+
+            <div data-hf-id="hf-svek" class="s4-btn" id="s4-in-decline">Decline</div>
+            <div data-hf-id="hf-ppc0" class="s4-btn" id="s4-in-approve">Approve</div>
+            <div data-hf-id="hf-m8dp" class="s4-btn" id="s4-in-approve-ok"><svg data-hf-id="hf-52gl" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-ubsc" d="M4 12.5l5 5L20 6.5" /></svg>Approved</div>
+            <div data-hf-id="hf-jnab" id="s4-in-ripple"></div>
+          </div>
+        </div>
+
+        <!-- frame 11 -->
+        <div data-hf-id="hf-zkvu" id="s4-in-in">And then, you're in.</div>
+        <div data-hf-id="hf-odqp" id="s4-in-ticket">
+          <div data-hf-id="hf-9ua9" id="s4-in-tk-l"><svg data-hf-id="hf-pwa6" width="84" height="84" viewBox="0 0 24 24"><path data-hf-id="hf-942g" fill="#fff" d="M12 21.2s-7.4-4.7-9.9-9.5C.5 8.4 2.3 4.8 5.9 4.8c2.1 0 3.6 1 6.1 3.6 2.5-2.6 4-3.6 6.1-3.6 3.6 0 5.4 3.6 3.8 6.9-2.5 4.8-9.9 9.5-9.9 9.5z" /></svg></div>
+          <div data-hf-id="hf-6t6y" id="s4-in-tk-perf"></div>
+          <div data-hf-id="hf-hn9t" class="abs" id="s4-in-tk-t">Workshop Spot</div>
+          <div data-hf-id="hf-spo0" class="abs" id="s4-in-tk-s">Intro to Shibari — Rope &amp; Trust</div>
+          <div data-hf-id="hf-p08u" id="s4-in-tk-p">You're going</div>
+        </div>
+
+        <!-- cursor (a human hand on the mouse) -->
+        <svg data-hf-id="hf-apd9" id="s4-in-cursor" viewBox="0 0 24 24"><path data-hf-id="hf-cbsb" d="M3 2.2l16.5 9.6-7.2 1.6-3.6 6.6z" fill="#fff" stroke="#0D1E1C" stroke-width="1.5" stroke-linejoin="round" /></svg>
+
+        <!-- frame 12 -->
+        <div data-hf-id="hf-zgse" class="s4-room" id="s4-in-r1">Everyone in the room chose to be there.</div>
+        <div data-hf-id="hf-4eua" class="s4-room" id="s4-in-r2">And was welcomed with care.</div>
+
+        <div data-hf-id="hf-u0nl" id="s4-in-flash"></div>
+      </div>
+
+      <script>
+        (function () {
+          const S = 56.724;
+          const L = (t) => t - S;
+          const F = FILM;
+          const tl = gsap.timeline({ paused: true });
+          const wa = (id, w) => F.wordAt(id, w);
+
+          // ------------------------------------------------ seam in: whip streaks
+          ['sk1', 'sk2', 'sk3'].forEach((k, i) => {
+            tl.fromTo('#s4-in-' + k, { opacity: 0, x: 500 + i * 120 }, { opacity: 0.85, x: -700 - i * 200, duration: 0.2, ease: 'power2.out' }, 0 + i * 0.04);
+            tl.to('#s4-in-' + k, { opacity: 0, duration: 0.2, ease: 'power2.in' }, 0.2 + i * 0.04);
+          });
+
+          // ------------------------------------------------ frame 10: serif lines
+          const r1 = F.revealWords(tl, document.getElementById('s4-in-t1'), 'v14', S, { from: 1, to: 6, dur: 0.6 });
+          const r2 = F.revealWords(tl, document.getElementById('s4-in-t2'), 'v14', S, { from: 7, to: 10, dur: 0.6 });
+          tl.to('#s4-in-t1, #s4-in-t2', { opacity: 0, filter: 'blur(8px)', y: -10, duration: 0.4, ease: 'power2.in' }, L(62.35));
+
+          // ------------------------------------------------ the review card
+          tl.fromTo('#s4-in-cardwrap', { opacity: 0, y: 90, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 1.0, ease: 'power3.out' }, L(57.0));
+          tl.fromTo('#s4-in-card', { y: 0 }, { y: -8, duration: L(62.6) - L(58.0), ease: 'sine.inOut' }, L(58.0));
+          // children arrive in a soft cascade
+          tl.fromTo('#s4-in-card .abs:not(#s4-in-ren2), #s4-in-chip-p', { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out', stagger: 0.025, immediateRender: false }, L(57.25));
+
+          // highlighter marks the phrases while he says "reads every answer"
+          tl.to('#s4-in-h1', { backgroundSize: '100% 86%', duration: wa('v14', 'every') - wa('v14', 'reads') + 0.1, ease: 'sine.inOut' }, L(wa('v14', 'reads')));
+          tl.to('#s4-in-h2', { backgroundSize: '100% 86%', duration: wa('v14', 'and') - wa('v14', 'answer,') + 0.2, ease: 'sine.inOut' }, L(wa('v14', 'answer,') + 0.02));
+
+          // cursor path (screen px). Card origin is (740,120).
+          const cur = '#s4-in-cursor';
+          tl.set(cur, { x: 1640, y: 960, opacity: 0 }, 0);
+          tl.to(cur, { opacity: 1, duration: 0.4, ease: 'power2.out' }, L(57.55));
+          tl.to(cur, { x: 1318, y: 598, duration: 0.95, ease: 'power2.inOut' }, L(57.6));      // to the start of "tie with care"
+          tl.to(cur, { x: 1520, y: 604, duration: 0.7, ease: 'sine.inOut' }, L(wa('v14', 'reads') + 0.05));  // along phrase 1
+          tl.to(cur, { x: 790, y: 650, duration: 0.18, ease: 'power2.inOut' }, L(59.36));      // down to line 2
+          tl.to(cur, { x: 1350, y: 650, duration: 0.55, ease: 'sine.inOut' }, L(59.44));       // along phrase 2
+          tl.to(cur, { x: 1618, y: 786, duration: 0.55, ease: 'power2.inOut' }, L(wa('v14', 'call') - 0.7)); // to Approve
+          // press + ripple on "call"
+          const callT = L(wa('v14', 'call'));
+          tl.to(cur, { scale: 0.86, duration: 0.07, ease: 'power2.out', transformOrigin: '4px 3px' }, callT - 0.06);
+          tl.to(cur, { scale: 1, duration: 0.2, ease: 'power2.out' }, callT + 0.04);
+          tl.to('#s4-in-approve', { scale: 0.95, duration: 0.07, ease: 'power2.out' }, callT - 0.06);
+          tl.fromTo('#s4-in-ripple', { x: 872, y: 648, scale: 0.4, opacity: 0.9 }, { scale: 2.6, opacity: 0, duration: 0.7, ease: 'power2.out' }, callT);
+          // state flips
+          tl.fromTo('#s4-in-approve-ok', { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.25, ease: 'back.out(1.6)' }, callT + 0.02);
+          tl.to('#s4-in-approve', { opacity: 0, duration: 0.15 }, callT + 0.06);
+          tl.to('#s4-in-decline', { opacity: 0.3, duration: 0.3 }, callT + 0.05);
+          tl.to('#s4-in-chip-p', { opacity: 0, y: -8, duration: 0.25, ease: 'power2.in' }, callT + 0.06);
+          tl.fromTo('#s4-in-chip-a', { opacity: 0, y: 8, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: 'back.out(1.8)', immediateRender: false }, callT + 0.16);
+          tl.to('#s4-in-ren1', { opacity: 0, duration: 0.2 }, callT + 0.1);
+          tl.fromTo('#s4-in-ren2', { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, callT + 0.25);
+          tl.to(cur, { x: 1700, y: 905, opacity: 0, duration: 0.8, ease: 'power2.inOut' }, callT + 0.55);
+
+          // card leaves, quick
+          tl.to('#s4-in-cardwrap', { opacity: 0, scale: 0.94, y: -34, filter: 'blur(6px)', duration: 0.42, ease: 'power2.in' }, L(62.72));
+
+          // ------------------------------------------------ frame 11: you're in
+          F.revealWords(tl, document.getElementById('s4-in-in'), 'v15', S, { dur: 0.6, y: 18 });
+          tl.fromTo('#s4-in-ticket', { opacity: 0, scale: 0.55, rotation: -9, y: 40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.85, ease: 'back.out(1.9)' }, L(63.12));
+          tl.to('#s4-in-ticket', { y: -10, duration: L(65.1) - L(64.0), ease: 'sine.inOut' }, L(64.0));
+          tl.fromTo('#s4-in-tk-p', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(2.2)' }, L(wa('v15', "you're")));
+          // heart beat on "in"
+          tl.to('#s4-in-tk-l svg', { scale: 1.22, duration: 0.14, ease: 'power2.out', yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, L(wa('v15', 'in')));
+          // bloom
+          tl.fromTo('#s4-in-leak', { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 1.45, duration: 2.3, ease: 'power2.in' }, L(63.1));
+          tl.fromTo('#s4-in-leak2', { opacity: 0, x: 120 }, { opacity: 0.9, x: 0, duration: 2.2, ease: 'power2.in' }, L(63.2));
+          // everything yields to the flood
+          tl.to('#s4-in-in', { opacity: 0, filter: 'blur(10px)', duration: 0.3, ease: 'power2.in' }, L(65.0));
+          tl.to('#s4-in-ticket', { opacity: 0, scale: 1.08, duration: 0.3, ease: 'power2.in' }, L(65.1));
+          tl.fromTo('#s4-in-flash', { opacity: 0 }, { opacity: 1, duration: 0.42, ease: 'power3.in' }, L(65.03));
+          // ... and clears on the climax
+          tl.to('#s4-in-flash', { opacity: 0, duration: 1.15, ease: 'power2.out' }, L(65.47));
+          tl.to('#s4-in-leak, #s4-in-leak2', { opacity: 0, duration: 0.2 }, L(65.46));
+
+          // ------------------------------------------------ frame 12: the room
+          F.revealWords(tl, document.getElementById('s4-in-r1'), 'v16', S, { from: 0, to: 7, dur: 0.55, y: 16 });
+          F.revealWords(tl, document.getElementById('s4-in-r2'), 'v16', S, { from: 8, to: 12, dur: 0.55, y: 16 });
+          tl.to('#s4-in-r1', { opacity: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power2.in' }, L(68.32));
+          tl.to('#s4-in-r2', { opacity: 0, filter: 'blur(8px)', duration: 0.4, ease: 'power2.in' }, L(70.85));
+
+          window.__timelines['s4-in'] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
