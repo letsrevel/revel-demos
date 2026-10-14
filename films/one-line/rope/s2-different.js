@@ -7,9 +7,11 @@
 (function () {
   const F = FILM, { clamp, lerp, prog, E, spring } = F, C = F.C;
   const FROM = 19.0, TO = 39.671, TAU = Math.PI * 2;
-  const T = { cut: 19.2, drop: 21.817, c5: 22.3, c6: 26.728, c6b: 30.45, c7: 33.27, c7b: 35.46, end: 39.27 };
-  const VERBS = [24.088, 24.728, 25.608];      // "read" "run" "make" — camera punches
-  const SLAMS = [36.708, 37.108];              // "never," "ever"
+  const DE = F.T.lang === 'de';
+  // German: the "Und" of v09 lands at 35.43, so the cut to the slam layout moves to 35.38
+  const T = { cut: 19.2, drop: 21.817, c5: 22.3, c6: 26.728, c6b: 30.45, c7: 33.27, c7b: DE ? 35.38 : 35.46, end: 39.27 };
+  const VERBS = DE ? [24.626, 25.106, 25.746] : [24.088, 24.728, 25.608];   // read/lesen, run/betreiben, make/besser — camera punches
+  const SLAMS = DE ? [36.79, 37.27] : [36.708, 37.108];                      // never,/nie  ever/nimmer
 
   const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
   const mix = (a, b, u) => { const A = hex(a), B = hex(b); return '#' + A.map((v, i) => Math.round(lerp(v, B[i], clamp(u))).toString(16).padStart(2, '0')).join(''); };
@@ -91,7 +93,7 @@
     const p = f6bPath(t);
     return { pts: p.pts, w: 18, from: 0, to: E.outCubic(prog(30.6, 31.3, t)), colA: C.purple, colB: C.crimson, smooth: false };
   }
-  const COIN = { go: 31.4, arrive: 32.75 };
+  const COIN = DE ? { go: 31.45, arrive: 32.95 } : { go: 31.4, arrive: 32.75 };
 
   // ------------------------------------------------------------ frame 7: tags on the rope, then exit right
   const f7y = (x, t) => 820 + 38 * Math.sin(x / 300 + t * 0.8) + 12 * Math.sin(x / 120 - t * 0.6);
@@ -126,8 +128,8 @@
     if (t < T.c6b) return { x: 960, y: 540, zoom: 1 + 0.02 * prog(T.c6, T.c6b, t) };
     if (t < T.c7) {
       return {
-        x: lerp(760, 1390, E.inOutCubic(prog(31.15, 32.85, t))), y: 540,
-        zoom: lerp(1.14, 1.0, E.inOutCubic(prog(T.c6b, 32.9, t))),
+        x: lerp(760, 1390, E.inOutCubic(prog(COIN.go - 0.25, COIN.arrive + 0.1, t))), y: 540,
+        zoom: lerp(1.14, 1.0, E.inOutCubic(prog(T.c6b, COIN.arrive + 0.15, t))),
       };
     }
     let bump = 0, sx = 0, sy = 0;

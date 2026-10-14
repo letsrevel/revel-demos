@@ -13,7 +13,7 @@
 },
 {
 "id": "w2",
-"text": "f\u00e4ngt",
+"text": "fängt",
 "start": 1.04,
 "end": 1.52
 },
@@ -169,7 +169,7 @@
 },
 {
 "id": "w28",
-"text": "Geb\u00fchren",
+"text": "Gebühren",
 "start": 11.84,
 "end": 12.32
 },
@@ -271,7 +271,7 @@
 },
 {
 "id": "w45",
-"text": "k\u00f6nnen",
+"text": "können",
 "start": 18.64,
 "end": 18.96
 },
@@ -349,7 +349,7 @@
 },
 {
 "id": "w58",
-"text": "Geb\u00fchr",
+"text": "Gebühr",
 "start": 23.28,
 "end": 23.76
 },
@@ -481,7 +481,7 @@
 },
 {
 "id": "w80",
-"text": "R\u00e4ume",
+"text": "Räume",
 "start": 32.48,
 "end": 32.96
 },
@@ -691,7 +691,7 @@
 },
 {
 "id": "w115",
-"text": "m\u00f6chte.",
+"text": "möchte.",
 "start": 44.88,
 "end": 45.44
 },
@@ -840,9 +840,21 @@
 "end": 52.96
 },
 {
-"id": "w140",
-"text": "wurmkeit",
+"id": "w140_0",
+"text": "wurden",
 "start": 52.96,
+"end": 53.32
+},
+{
+"id": "w140_1",
+"text": "mit",
+"start": 53.32,
+"end": 53.464
+},
+{
+"id": "w140_2",
+"text": "Achtsamkeit",
+"start": 53.464,
 "end": 54.16
 },
 {
@@ -895,14 +907,8 @@
 },
 {
 "id": "w149",
-"text": "Check",
+"text": "Check-in",
 "start": 59.45,
-"end": 59.77
-},
-{
-"id": "w150",
-"text": "in",
-"start": 59.77,
 "end": 59.85
 },
 {
@@ -942,12 +948,6 @@
 "end": 62.73
 },
 {
-"id": "w157",
-"text": "-",
-"start": 62.73,
-"end": 62.81
-},
-{
 "id": "w158",
 "text": "Die",
 "start": 62.89,
@@ -973,7 +973,7 @@
 },
 {
 "id": "w162",
-"text": "f\u00fcr",
+"text": "für",
 "start": 65.37,
 "end": 65.53
 },
@@ -997,13 +997,13 @@
 },
 {
 "id": "w166",
-"text": "unabh\u00e4ngige",
+"text": "unabhängige",
 "start": 66.89,
 "end": 67.69
 },
 {
 "id": "w167",
-"text": "Spielst\u00e4tten.",
+"text": "Spielstätten.",
 "start": 67.69,
 "end": 68.49
 },

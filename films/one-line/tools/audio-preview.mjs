@@ -1,14 +1,15 @@
-// Quick listening draft of the soundtrack, straight from data/timing.json with
+// Quick listening draft of the soundtrack, straight from data/timing.<lang>.json with
 // ffmpeg: the three music passes with their splices, the narration phrases, and
 // a sidechain duck standing in for the HyperFrames carve. Not the final mix —
 // it exists so the cuts and pacing can be judged by ear before any render.
 //
-//   node tools/audio-preview.mjs  → renders/audio-preview.m4a
+//   node tools/audio-preview.mjs [lang]  → renders/audio-preview-<lang>.m4a
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
 const ROOT = new URL('..', import.meta.url).pathname;
-const T = JSON.parse(fs.readFileSync(`${ROOT}data/timing.json`, 'utf8'));
+const LANG = process.argv[2] || 'en';
+const T = JSON.parse(fs.readFileSync(`${ROOT}data/timing.${LANG}.json`, 'utf8'));
 fs.mkdirSync(`${ROOT}renders`, { recursive: true });
 
 const inputs = ['-i', `${ROOT}audio/score.mp3`, '-i', `${ROOT}audio/vo-${T.lang}.wav`];
@@ -38,7 +39,7 @@ f.push(`[voice]asplit=2[vk][vm]`);
 f.push(`[bed][vk]sidechaincompress=threshold=0.03:ratio=4:attack=20:release=450:makeup=1[ducked]`);
 f.push(`[ducked][vm]amix=inputs=2:normalize=0:duration=longest,atrim=duration=${T.duration},loudnorm=I=-14:TP=-1.5:LRA=11[out]`);
 
-const out = `${ROOT}renders/audio-preview.m4a`;
+const out = `${ROOT}renders/audio-preview-${LANG}.m4a`;
 execFileSync('ffmpeg', ['-y', '-hide_banner', '-loglevel', 'error', ...inputs, '-filter_complex', f.join(';'), '-map', '[out]',
   '-c:a', 'aac', '-b:a', '256k', out], { stdio: 'inherit' });
 console.log('wrote', out);

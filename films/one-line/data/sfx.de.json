@@ -1,0 +1,993 @@
+[
+ {
+  "t": 0.3,
+  "kind": "ropeDraw",
+  "gain": 0.45,
+  "dur": 3.6,
+  "file": "audio/sfx-de/000-ropeDraw.wav"
+ },
+ {
+  "t": 4.754,
+  "kind": "blip",
+  "gain": 0.55,
+  "note": 62,
+  "file": "audio/sfx-de/001-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 4.874,
+  "kind": "blip",
+  "gain": 0.55,
+  "note": 66,
+  "file": "audio/sfx-de/002-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 4.994,
+  "kind": "blip",
+  "gain": 0.55,
+  "note": 69,
+  "file": "audio/sfx-de/003-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 5.2,
+  "kind": "ropeDraw",
+  "gain": 0.35,
+  "dur": 1.8,
+  "file": "audio/sfx-de/004-ropeDraw.wav"
+ },
+ {
+  "t": 6.064,
+  "kind": "close",
+  "gain": 0.6,
+  "file": "audio/sfx-de/005-close.wav",
+  "dur": 1.6
+ },
+ {
+  "t": 7.026,
+  "kind": "swish",
+  "gain": 0.45,
+  "file": "audio/sfx-de/006-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 8.225,
+  "kind": "close",
+  "gain": 0.35,
+  "file": "audio/sfx-de/007-close.wav",
+  "dur": 1.6
+ },
+ {
+  "t": 8.275,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 64,
+  "file": "audio/sfx-de/008-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 8.345,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 68,
+  "file": "audio/sfx-de/009-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 8.415,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 71,
+  "file": "audio/sfx-de/010-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 8.425,
+  "kind": "swish",
+  "gain": 0.45,
+  "file": "audio/sfx-de/011-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 9.185,
+  "kind": "close",
+  "gain": 0.35,
+  "file": "audio/sfx-de/012-close.wav",
+  "dur": 1.6
+ },
+ {
+  "t": 9.235,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 67,
+  "file": "audio/sfx-de/013-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 9.305,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 71,
+  "file": "audio/sfx-de/014-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 9.375,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 74,
+  "file": "audio/sfx-de/015-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 9.465,
+  "kind": "swish",
+  "gain": 0.45,
+  "file": "audio/sfx-de/016-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 10.385,
+  "kind": "close",
+  "gain": 0.35,
+  "file": "audio/sfx-de/017-close.wav",
+  "dur": 1.6
+ },
+ {
+  "t": 10.435,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 71,
+  "file": "audio/sfx-de/018-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 10.505,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 75,
+  "file": "audio/sfx-de/019-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 10.575,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 78,
+  "file": "audio/sfx-de/020-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 10.665,
+  "kind": "swish",
+  "gain": 0.45,
+  "file": "audio/sfx-de/021-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 11.985,
+  "kind": "close",
+  "gain": 0.35,
+  "file": "audio/sfx-de/022-close.wav",
+  "dur": 1.6
+ },
+ {
+  "t": 12.035,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 74,
+  "file": "audio/sfx-de/023-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 12.105,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 78,
+  "file": "audio/sfx-de/024-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 12.175,
+  "kind": "blip",
+  "gain": 0.35,
+  "note": 81,
+  "file": "audio/sfx-de/025-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 13.09,
+  "kind": "tension",
+  "gain": 0.5,
+  "dur": 6.0,
+  "file": "audio/sfx-de/026-tension.wav"
+ },
+ {
+  "t": 14.862,
+  "kind": "stamp",
+  "gain": 0.75,
+  "file": "audio/sfx-de/027-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 15.002,
+  "kind": "ropeSnap",
+  "gain": 0.85,
+  "file": "audio/sfx-de/028-ropeSnap.wav",
+  "dur": 0.4
+ },
+ {
+  "t": 15.362,
+  "kind": "stamp",
+  "gain": 0.75,
+  "file": "audio/sfx-de/029-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 15.502,
+  "kind": "ropeSnap",
+  "gain": 0.85,
+  "file": "audio/sfx-de/030-ropeSnap.wav",
+  "dur": 0.4
+ },
+ {
+  "t": 15.892,
+  "kind": "stamp",
+  "gain": 0.75,
+  "file": "audio/sfx-de/031-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 16.032,
+  "kind": "ropeSnap",
+  "gain": 0.85,
+  "file": "audio/sfx-de/032-ropeSnap.wav",
+  "dur": 0.4
+ },
+ {
+  "t": 16.902,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/033-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.012,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/034-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.122,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/035-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.232,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/036-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.342,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/037-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.452,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/038-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.562,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/039-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.672,
+  "kind": "datatick",
+  "gain": 0.8,
+  "file": "audio/sfx-de/040-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 17.707,
+  "kind": "glitch",
+  "gain": 0.7,
+  "dur": 0.5,
+  "file": "audio/sfx-de/041-glitch.wav"
+ },
+ {
+  "t": 19.45,
+  "kind": "riser",
+  "gain": 0.7,
+  "dur": 2.367,
+  "file": "audio/sfx-de/042-riser.wav"
+ },
+ {
+  "t": 21.817,
+  "kind": "boom",
+  "gain": 0.8,
+  "file": "audio/sfx-de/043-boom.wav",
+  "dur": 1.2
+ },
+ {
+  "t": 21.837,
+  "kind": "chime",
+  "gain": 0.55,
+  "file": "audio/sfx-de/044-chime.wav",
+  "dur": 2.32
+ },
+ {
+  "t": 22,
+  "kind": "whoosh",
+  "gain": 0.55,
+  "dur": 0.55,
+  "file": "audio/sfx-de/045-whoosh.wav"
+ },
+ {
+  "t": 23.606,
+  "kind": "pop",
+  "gain": 0.6,
+  "file": "audio/sfx-de/046-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 24.626,
+  "kind": "slam",
+  "gain": 0.35,
+  "file": "audio/sfx-de/047-slam.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 25.106,
+  "kind": "slam",
+  "gain": 0.35,
+  "file": "audio/sfx-de/048-slam.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 25.746,
+  "kind": "slam",
+  "gain": 0.35,
+  "file": "audio/sfx-de/049-slam.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 26.75,
+  "kind": "swish",
+  "gain": 0.5,
+  "file": "audio/sfx-de/050-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 29.19,
+  "kind": "ding",
+  "gain": 0.7,
+  "file": "audio/sfx-de/051-ding.wav",
+  "dur": 1.2
+ },
+ {
+  "t": 30.5,
+  "kind": "pop",
+  "gain": 0.5,
+  "file": "audio/sfx-de/052-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 31.45,
+  "kind": "coinTravel",
+  "gain": 0.8,
+  "dur": 1.5,
+  "file": "audio/sfx-de/053-coinTravel.wav"
+ },
+ {
+  "t": 32.95,
+  "kind": "chime",
+  "gain": 0.5,
+  "file": "audio/sfx-de/054-chime.wav",
+  "dur": 2.32
+ },
+ {
+  "t": 33.94,
+  "kind": "pop",
+  "gain": 0.55,
+  "file": "audio/sfx-de/055-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 34.09,
+  "kind": "pop",
+  "gain": 0.55,
+  "file": "audio/sfx-de/056-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 34.82,
+  "kind": "pop",
+  "gain": 0.55,
+  "file": "audio/sfx-de/057-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 34.97,
+  "kind": "pop",
+  "gain": 0.55,
+  "file": "audio/sfx-de/058-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 35.12,
+  "kind": "pop",
+  "gain": 0.55,
+  "file": "audio/sfx-de/059-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 36.79,
+  "kind": "slam",
+  "gain": 0.9,
+  "file": "audio/sfx-de/060-slam.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 37.11,
+  "kind": "slam",
+  "gain": 0.35,
+  "file": "audio/sfx-de/061-slam.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 37.27,
+  "kind": "slam",
+  "gain": 0.75,
+  "file": "audio/sfx-de/062-slam.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 39.5,
+  "kind": "ropeDraw",
+  "gain": 0.3,
+  "dur": 3.2,
+  "file": "audio/sfx-de/063-ropeDraw.wav"
+ },
+ {
+  "t": 43.5,
+  "kind": "swish",
+  "gain": 0.3,
+  "file": "audio/sfx-de/064-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 46,
+  "kind": "ropeDraw",
+  "gain": 0.35,
+  "dur": 1.6,
+  "file": "audio/sfx-de/065-ropeDraw.wav"
+ },
+ {
+  "t": 47.6,
+  "kind": "ropeTighten",
+  "gain": 0.6,
+  "file": "audio/sfx-de/066-ropeTighten.wav",
+  "dur": 0.45
+ },
+ {
+  "t": 51.174,
+  "kind": "click",
+  "gain": 0.8,
+  "file": "audio/sfx-de/067-click.wav",
+  "dur": 0.06
+ },
+ {
+  "t": 51.204,
+  "kind": "ropeTighten",
+  "gain": 0.45,
+  "file": "audio/sfx-de/068-ropeTighten.wav",
+  "dur": 0.45
+ },
+ {
+  "t": 52.744,
+  "kind": "click",
+  "gain": 0.8,
+  "file": "audio/sfx-de/069-click.wav",
+  "dur": 0.06
+ },
+ {
+  "t": 53.624,
+  "kind": "typing",
+  "gain": 0.8,
+  "dur": 1.95,
+  "chars": 70,
+  "file": "audio/sfx-de/070-typing.wav"
+ },
+ {
+  "t": 55.724,
+  "kind": "click",
+  "gain": 0.8,
+  "file": "audio/sfx-de/071-click.wav",
+  "dur": 0.06
+ },
+ {
+  "t": 55.764,
+  "kind": "ding",
+  "gain": 0.6,
+  "file": "audio/sfx-de/072-ding.wav",
+  "dur": 1.2
+ },
+ {
+  "t": 55.784,
+  "kind": "ropeTighten",
+  "gain": 0.5,
+  "file": "audio/sfx-de/073-ropeTighten.wav",
+  "dur": 0.45
+ },
+ {
+  "t": 56.3,
+  "kind": "whoosh",
+  "gain": 0.6,
+  "dur": 0.65,
+  "file": "audio/sfx-de/074-whoosh.wav"
+ },
+ {
+  "t": 57.05,
+  "kind": "swish",
+  "gain": 0.4,
+  "file": "audio/sfx-de/075-swish.wav",
+  "dur": 0.36
+ },
+ {
+  "t": 59.82,
+  "kind": "click",
+  "gain": 0.9,
+  "file": "audio/sfx-de/076-click.wav",
+  "dur": 0.06
+ },
+ {
+  "t": 59.9,
+  "kind": "chime",
+  "gain": 0.55,
+  "file": "audio/sfx-de/077-chime.wav",
+  "dur": 2.32
+ },
+ {
+  "t": 63.12,
+  "kind": "pop",
+  "gain": 0.7,
+  "file": "audio/sfx-de/078-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 63.3,
+  "kind": "riser",
+  "gain": 0.55,
+  "dur": 2.15,
+  "file": "audio/sfx-de/079-riser.wav"
+ },
+ {
+  "t": 63.732,
+  "kind": "softpop",
+  "gain": 0.6,
+  "file": "audio/sfx-de/080-softpop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 65.45,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 62,
+  "file": "audio/sfx-de/081-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.505,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 69,
+  "file": "audio/sfx-de/082-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.559,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 76,
+  "file": "audio/sfx-de/083-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.614,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 83,
+  "file": "audio/sfx-de/084-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.668,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 66,
+  "file": "audio/sfx-de/085-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.722,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 74,
+  "file": "audio/sfx-de/086-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.777,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 81,
+  "file": "audio/sfx-de/087-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.832,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 64,
+  "file": "audio/sfx-de/088-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.886,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 71,
+  "file": "audio/sfx-de/089-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.941,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 78,
+  "file": "audio/sfx-de/090-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 65.995,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 62,
+  "file": "audio/sfx-de/091-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.05,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 69,
+  "file": "audio/sfx-de/092-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.104,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 76,
+  "file": "audio/sfx-de/093-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.159,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 83,
+  "file": "audio/sfx-de/094-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.213,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 66,
+  "file": "audio/sfx-de/095-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.267,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 74,
+  "file": "audio/sfx-de/096-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.322,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 81,
+  "file": "audio/sfx-de/097-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.377,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 64,
+  "file": "audio/sfx-de/098-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.431,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 71,
+  "file": "audio/sfx-de/099-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.486,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 78,
+  "file": "audio/sfx-de/100-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.54,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 62,
+  "file": "audio/sfx-de/101-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.594,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 69,
+  "file": "audio/sfx-de/102-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.649,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 76,
+  "file": "audio/sfx-de/103-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 66.704,
+  "kind": "blip",
+  "gain": 0.32,
+  "note": 83,
+  "file": "audio/sfx-de/104-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 71.976,
+  "kind": "stamp",
+  "gain": 0.4,
+  "file": "audio/sfx-de/105-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 72.546,
+  "kind": "click",
+  "gain": 0.7,
+  "file": "audio/sfx-de/106-click.wav",
+  "dur": 0.06
+ },
+ {
+  "t": 72.616,
+  "kind": "ding",
+  "gain": 0.45,
+  "file": "audio/sfx-de/107-ding.wav",
+  "dur": 1.2
+ },
+ {
+  "t": 73.612,
+  "kind": "stamp",
+  "gain": 0.4,
+  "file": "audio/sfx-de/108-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 73.982,
+  "kind": "datatick",
+  "gain": 0.6,
+  "file": "audio/sfx-de/109-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 74.052,
+  "kind": "datatick",
+  "gain": 0.6,
+  "file": "audio/sfx-de/110-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 74.122,
+  "kind": "datatick",
+  "gain": 0.6,
+  "file": "audio/sfx-de/111-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 74.192,
+  "kind": "datatick",
+  "gain": 0.6,
+  "file": "audio/sfx-de/112-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 74.262,
+  "kind": "datatick",
+  "gain": 0.6,
+  "file": "audio/sfx-de/113-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 74.332,
+  "kind": "datatick",
+  "gain": 0.6,
+  "file": "audio/sfx-de/114-datatick.wav",
+  "dur": 0.05
+ },
+ {
+  "t": 74.482,
+  "kind": "pop",
+  "gain": 0.45,
+  "file": "audio/sfx-de/115-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 75.248,
+  "kind": "stamp",
+  "gain": 0.4,
+  "file": "audio/sfx-de/116-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 75.568,
+  "kind": "coinTravel",
+  "gain": 0.5,
+  "dur": 0.7,
+  "file": "audio/sfx-de/117-coinTravel.wav"
+ },
+ {
+  "t": 76.318,
+  "kind": "pop",
+  "gain": 0.45,
+  "file": "audio/sfx-de/118-pop.wav",
+  "dur": 0.18
+ },
+ {
+  "t": 77.43,
+  "kind": "stamp",
+  "gain": 0.4,
+  "file": "audio/sfx-de/119-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 78.55,
+  "kind": "ding",
+  "gain": 0.5,
+  "file": "audio/sfx-de/120-ding.wav",
+  "dur": 1.2
+ },
+ {
+  "t": 78.85,
+  "kind": "click",
+  "gain": 0.7,
+  "file": "audio/sfx-de/121-click.wav",
+  "dur": 0.06
+ },
+ {
+  "t": 79.611,
+  "kind": "stamp",
+  "gain": 0.4,
+  "file": "audio/sfx-de/122-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 79.881,
+  "kind": "coinTravel",
+  "gain": 0.4,
+  "dur": 0.5,
+  "file": "audio/sfx-de/123-coinTravel.wav"
+ },
+ {
+  "t": 80.431,
+  "kind": "ding",
+  "gain": 0.6,
+  "file": "audio/sfx-de/124-ding.wav",
+  "dur": 1.2
+ },
+ {
+  "t": 81.248,
+  "kind": "stamp",
+  "gain": 0.4,
+  "file": "audio/sfx-de/125-stamp.wav",
+  "dur": 0.35
+ },
+ {
+  "t": 81.368,
+  "kind": "blip",
+  "gain": 0.3,
+  "note": 74,
+  "file": "audio/sfx-de/126-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 81.628,
+  "kind": "blip",
+  "gain": 0.3,
+  "note": 76,
+  "file": "audio/sfx-de/127-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 81.888,
+  "kind": "blip",
+  "gain": 0.3,
+  "note": 78,
+  "file": "audio/sfx-de/128-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 82.148,
+  "kind": "blip",
+  "gain": 0.3,
+  "note": 81,
+  "file": "audio/sfx-de/129-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 82.408,
+  "kind": "blip",
+  "gain": 0.3,
+  "note": 83,
+  "file": "audio/sfx-de/130-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 82.668,
+  "kind": "blip",
+  "gain": 0.3,
+  "note": 86,
+  "file": "audio/sfx-de/131-blip.wav",
+  "dur": 0.5
+ },
+ {
+  "t": 83.2,
+  "kind": "ropeDraw",
+  "gain": 0.4,
+  "dur": 1.2,
+  "file": "audio/sfx-de/132-ropeDraw.wav"
+ },
+ {
+  "t": 84,
+  "kind": "chime",
+  "gain": 0.55,
+  "file": "audio/sfx-de/133-chime.wav",
+  "dur": 2.32
+ },
+ {
+  "t": 91.849,
+  "kind": "softpop",
+  "gain": 0.35,
+  "file": "audio/sfx-de/134-softpop.wav",
+  "dur": 0.18
+ }
+]

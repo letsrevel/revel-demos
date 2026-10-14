@@ -235,6 +235,36 @@
           const A = t => t - L;
           const $ = s => document.querySelector(s);
 
+          // ---- language: visible text keyed by its English source (English is untouched)
+          const LANG = FILM.T.lang || 'en', DE = LANG === 'de';
+          const DEX = {
+            'Potlucks.': 'Potlucks.', 'Member pricing.': 'Mitgliederpreise.', 'Pay what you can.': 'Zahl, was du kannst.', 'Waitlists.': 'Wartelisten.',
+            'Check-in at the door.': 'Check-in am Einlass.', 'In six languages.': 'In sechs Sprachen.',
+            'Who brings what': 'Wer bringt was mit', 'Sourdough loaf': 'Sauerteigbrot', 'Lemon cake': 'Zitronenkuchen', 'Oat milk': 'Hafermilch',
+            'I’ll bring this': 'Ich bringe das mit', 'You': 'Du', '2 of 3 dishes claimed': '2 von 3 Gerichten vergeben', 'Sat 14 Jun · 15:00': 'Sa., 14. Juni · 15:00',
+            'General admission': 'Allgemeiner Eintritt', 'Members': 'Mitglieder', 'per person': 'pro Person', 'Everyone': 'Alle', 'Members only': 'Nur für Mitglieder', 'Save €6': '6 € gespart',
+            '€18': '18 €', 'per ticket': 'pro Ticket', 'The Velvet Cellar · Choose your price': 'The Velvet Cellar · Zahle, was du kannst',
+            'min €5': 'min. 5 €', 'max €25': 'max. 25 €', '€5': '5 €', '€10': '10 €', '€15': '15 €', '€25': '25 €',
+            'Analog Photo Walks · Sold out': 'Analog Photo Walks · Ausgebucht', 'Waitlist': 'Warteliste',
+            'You’re #3': 'Du bist #3', 'You’re #2': 'Du bist #2', 'You’re #1': 'Du bist #1', 'People ahead of you leave the list': 'Wer vor dir steht, rückt nach',
+            'A spot opened up for you': 'Ein Platz ist frei geworden', 'It is yours if you want it. Claim it within 24 hours.': 'Er gehört dir, wenn du ihn willst. Sichere ihn dir innerhalb von 24 Stunden.',
+            'Claim spot': 'Platz sichern', 'Door check-in': 'Einlass', 'Tier': 'Ticketart', 'Ready to scan': 'Bereit zum Scannen', 'Checked in': 'Eingecheckt',
+            '3 of 3 dishes claimed': '3 von 3 Gerichten vergeben',
+          };
+          const tr = x => (DE && DEX[x] !== undefined) ? DEX[x] : x;
+          const eur = n => DE ? n + ' €' : '€' + n;
+          if (DE) {
+            const wk = document.createTreeWalker($('#root'), NodeFilter.SHOW_TEXT), nodes = [];
+            while (wk.nextNode()) nodes.push(wk.currentNode);
+            nodes.forEach(n => { const k = n.nodeValue.trim(); if (k && DEX[k] !== undefined) n.nodeValue = n.nodeValue.replace(k, DEX[k]); });
+            // long German labels: step the type down so they stay inside the safe area
+            $('#s5-p2 .s5-lbl').style.fontSize = '100px';
+            $('#s5-p3 .s5-lbl').style.fontSize = '116px';
+            $('#s5-p5 .s5-lbl').style.fontSize = '116px';
+            $('#s5-tag').style.cssText += ';top:628px;font-size:56px';
+            $('#s5-url').style.top = '905px';
+          }
+
           // ---- QR (seeded, deterministic)
           (function () {
             const r = FILM.rng(4242), n = 21; let s = '<svg viewBox="0 0 ' + n + ' ' + n + '" shape-rendering="crispEdges"><g fill="#0D1E1C">';
@@ -284,10 +314,10 @@
 
           // ---- labels, on his words
           words($('#s5-p1 .s5-lbl'), [W('v17a', 0)]);
-          words($('#s5-p2 .s5-lbl'), [W('v17b', 0), W('v17b', 1)]);
+          words($('#s5-p2 .s5-lbl'), DE ? [W('v17b', 0)] : [W('v17b', 0), W('v17b', 1)]);
           words($('#s5-p3 .s5-lbl'), [W('v17c', 0), W('v17c', 1), W('v17c', 2), W('v17c', 3)]);
           words($('#s5-p4 .s5-lbl'), [W('v17d', 0)]);
-          words($('#s5-p5 .s5-lbl'), [W('v17e', 0), W('v17e', 2), W('v17e', 3), W('v17e', 4)]);
+          words($('#s5-p5 .s5-lbl'), DE ? [W('v17e', 0), W('v17e', 1), W('v17e', 2)] : [W('v17e', 0), W('v17e', 2), W('v17e', 3), W('v17e', 4)]);
           words($('#s5-p6 .s5-lbl'), [W('v17f', 0), W('v17f', 1), W('v17f', 2)]);
 
           // ---- 1 potluck: a dish gets claimed
@@ -301,7 +331,7 @@
             tl.fromTo('#s5-p1-r3', { backgroundColor: '#F6F2FC' }, { backgroundColor: '#E9DBF9', duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut' }, A(s + 0.97));
             tl.to('#s5-p1-cur', { opacity: 0, x: 40, y: 30, duration: 0.3, ease: 'power2.in' }, A(s + 1.15));
             tl.to('#s5-p1-fill', { scaleX: 1, duration: 0.5, ease: 'power3.out' }, A(s + 1.0));
-            tl.set('#s5-p1-cnt', { textContent: '3 of 3 dishes claimed' }, A(s + 1.0));
+            tl.set('#s5-p1-cnt', { textContent: tr('3 of 3 dishes claimed') }, A(s + 1.0));
           })();
 
           // ---- 2 member pricing: the members price lands
@@ -310,7 +340,7 @@
             tl.fromTo('#s5-t-gen', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.4)' }, A(s) + 0.05);
             tl.fromTo('#s5-t-mem', { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.4)' }, A(s) + 0.15);
             const p = { v: 18 };
-            tl.fromTo(p, { v: 18 }, { v: 12, duration: 0.5, ease: 'power3.inOut', onUpdate: () => { $('#s5-mem-pr').textContent = '€' + Math.round(p.v); } }, A(s) + 0.6);
+            tl.fromTo(p, { v: 18 }, { v: 12, duration: 0.5, ease: 'power3.inOut', onUpdate: () => { $('#s5-mem-pr').textContent = eur(Math.round(p.v)); } }, A(s) + 0.6);
             tl.fromTo('#s5-mem-pr', { scale: 1 }, { scale: 1.1, duration: 0.14, yoyo: true, repeat: 1, ease: 'power2.out', transformOrigin: '0% 50%' }, A(s) + 1.08);
             pop('#s5-mem-save', s + 1.12, 0.4, 0.45);
             tl.to('#s5-t-mem', { y: -14, scale: 1.05, duration: 0.4, ease: 'back.out(2)' }, A(s) + 1.1);
@@ -323,7 +353,7 @@
             const apply = () => {
               const f = (p.v - 5) / 20;
               $('#s5-p3-th').style.left = (f * 100) + '%'; $('#s5-p3-fl').style.width = (f * 100) + '%';
-              $('#s5-p3-amt').textContent = '€' + Math.round(p.v);
+              $('#s5-p3-amt').textContent = eur(Math.round(p.v));
             };
             tl.fromTo(p, { v: 5 }, { v: 15, duration: 0.9, ease: 'power3.inOut', onUpdate: apply, onComplete: apply }, A(s) + 0.45);
             cursor('#s5-p3-cur', s + 0.15, s + 0.45, 90, 60);
@@ -361,7 +391,7 @@
             tl.to('#s5-qr-svg', { opacity: 0.16, duration: 0.25 }, A(s) + 0.78);
             tl.fromTo('#s5-ok', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.2)' }, A(s) + 0.78);
             tl.to('#s5-ok-p', { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, A(s) + 0.95);
-            tl.set('#s5-p5-chip', { backgroundColor: '#8C3CDD', color: '#fff', textContent: 'Checked in' }, A(s + 0.8));
+            tl.set('#s5-p5-chip', { backgroundColor: '#8C3CDD', color: '#fff', textContent: tr('Checked in') }, A(s + 0.8));
             tl.fromTo('#s5-p5-chip', { scale: 0.7 }, { scale: 1, duration: 0.4, ease: 'back.out(2.4)' }, A(s + 0.8));
             tl.set('#s5-p5-n', { textContent: '37' }, A(s + 0.85));
             tl.fromTo('#s5-p5-n', { scale: 1.5 }, { scale: 1, duration: 0.35, ease: 'power3.out' }, A(s + 0.85));
@@ -371,14 +401,15 @@
           (function () {
             const s = M[5] + 0.03, step = 0.26;
             const lg = document.querySelectorAll('#s5-p6 .s5-lg'), ch = document.querySelectorAll('#s5-sw .c');
-            lg.forEach((g, i) => {
-              const t0 = s + i * step, last = i === lg.length - 1;
+            const order = DE ? [1, 0, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5];
+            order.forEach((gi, i) => {
+              const g = lg[gi], t0 = s + i * step, last = i === order.length - 1;
               tl.set(g, { opacity: 1 }, A(t0));
               if (!last) tl.set(g, { opacity: 0 }, A(t0 + step));
               tl.fromTo(g, { y: 18, scale: 0.97 }, { y: 0, scale: 1, duration: 0.28, ease: 'back.out(2)' }, A(t0));
-              tl.set(ch[i], { backgroundColor: '#8C3CDD', color: '#fff' }, A(t0));
-              if (i > 0) tl.set(ch[i - 1], { backgroundColor: '#F6F2FC', color: '#6B5F7E' }, A(t0));
-              tl.fromTo(ch[i], { scale: 1.18 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' }, A(t0));
+              tl.set(ch[gi], { backgroundColor: '#8C3CDD', color: '#fff' }, A(t0));
+              if (i > 0) tl.set(ch[order[i - 1]], { backgroundColor: '#F6F2FC', color: '#6B5F7E' }, A(t0));
+              tl.fromTo(ch[gi], { scale: 1.18 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' }, A(t0));
             });
           })();
 
@@ -402,7 +433,13 @@
                 tl.fromTo(sp, { opacity: 0, y: 14, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power3.out' }, A(W('v18', keys[i])) - 0.04);
               });
             };
-            build($('#s5-tag1'), t1, k1); build($('#s5-tag2'), t2, k2);
+            if (DE) {
+              // „Die kostenlose, quelloffene Event-Plattform für Communities, Vereine und unabhängige Veranstaltungsorte." — by spoken word index (v18: Revel.=0)
+              const ln3 = document.createElement('span'); ln3.className = 'ln'; ln3.id = 's5-tag3'; $('#s5-tag').appendChild(ln3);
+              build($('#s5-tag1'), ['Die', 'kostenlose,', 'quelloffene'], [1, 2, 3]);
+              build($('#s5-tag2'), ['Event-Plattform', 'für', 'Communities,'], [4, 5, 6]);
+              build($('#s5-tag3'), ['Vereine', 'und', 'unabhängige', 'Veranstaltungsorte.'], [7, 8, 9, 10]);
+            } else { build($('#s5-tag1'), t1, k1); build($('#s5-tag2'), t2, k2); }
           })();
           tl.fromTo('#s5-url', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, A(90.6));
           // the tagline leaves, the wordmark answers him: "Let’s revel."

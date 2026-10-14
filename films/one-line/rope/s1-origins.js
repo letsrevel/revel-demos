@@ -18,8 +18,32 @@
   const PEOPLE = [C.purple, C.amber, C.peri, C.crimson, C.lavender, C.purple, C.amber, C.peri];
 
   // ---- timing anchors (film time)
-  const w2 = F.T.lines.find(l => l.id === 'v02').words, w3 = F.T.lines.find(l => l.id === 'v03').words;
-  const TOG = w2[8].s;                       // "together."
+  const EN = F.T.lang !== 'de';
+  const sent = id => {                       // sentences of a line: word index range + times
+    const ws = F.T.lines.find(l => l.id === id).words, out = []; let a = 0;
+    ws.forEach((w, i) => { if (/[.!?]$/.test(w.w) || i === ws.length - 1) { out.push({ from: a, to: i, s: ws[a].s, e: w.e, ls: w.s }); a = i + 1; } });
+    return out;
+  };
+  const SENT = { v02: sent('v02'), v03: sent('v03'), v04: sent('v04') };
+  const w2 = F.T.lines.find(l => l.id === 'v02').words, w4 = F.T.lines.find(l => l.id === 'v04').words;
+  const TOG = SENT.v02[1].ls;                // last word of v02 ("together." / "zusammenzukommen.")
+  // beat times: English values are the hand-tuned ones; German derives from its word times
+  const TM = (() => {
+    if (EN) return {
+      CL: [null, 7.8, 8.9, 10.1, 11.3], LS: [null, 6.96, 7.98, 9.18, 10.38], ARR: [null, 7.35, 8.4, 9.6, 10.8], DEP: [null, 7.95, 9.15, 10.35],
+      LE: [null, 7.3, 8.38, 9.58, 10.78], TAIL: 12.3, TAG: [15.12, 15.62, 16.07], FLY0: 17.0, CHIP: 18.125,
+      OUT: { v01: 4.0, v02: 6.98, lab: [8.3, 9.42, 10.5, 12.7], plat: 14.83, fees: 16.43 },
+    };
+    const S3 = SENT.v03, S4 = SENT.v04, CL = [null, S3[0].s + 0.6, S3[1].s + 0.6, S3[2].s + 0.6, S3[3].s + 0.6];
+    const LS = [null, SENT.v02[1].e, CL[1] + 0.2, CL[2] + 0.28, CL[3] + 0.28];
+    const T1 = w4[SENT.v04[1].from].s + 0.035;
+    return {
+      CL, LS, LE: CL.map(c => c && c - 0.5), ARR: [null, CL[1] - 0.45, CL[2] - 0.5, CL[3] - 0.5, CL[4] - 0.5],
+      DEP: [null, LS[2] - 0.03, LS[3] - 0.03, LS[4] - 0.03], TAIL: CL[4] + 1.0,
+      TAG: [T1, T1 + 0.5, w4[SENT.v04[1].to].s + 0.025], FLY0: w4[SENT.v04[2].from + 2].s - 0.005, CHIP: w4[w4.length - 1].s,
+      OUT: { v01: 4.0, v02: SENT.v02[1].e + 0.02, lab: [S3[1].s - 0.2, S3[2].s - 0.2, S3[3].s - 0.2, 13.2], plat: S4[1].s - 0.255, fees: S4[2].s - 0.255 },
+    };
+  })();
   const COLD = 13.09;                        // drums enter
   const OUT0 = 19.0, OUT1 = 19.18;           // everything of ours goes before the hard cut
   const cold = t => E.inOutCubic(prog(COLD, COLD + 0.85, t));
@@ -82,7 +106,7 @@
   const colAt = f => mix(C.purple, C.crimson, clamp(f));
 
   // ---- draw schedule: [linkStart, linkEnd, loopEnd, (tailEnd)]
-  const SCHED = [null, [6.96, 7.3, 7.8], [7.98, 8.38, 8.9], [9.18, 9.58, 10.1], [10.38, 10.78, 11.3, 12.3]];
+  const SCHED = [null, 1, 2, 3, 4].map((k, i) => k && (k === 4 ? [TM.LS[4], TM.LE[4], TM.CL[4], TM.TAIL] : [TM.LS[k], TM.LE[k], TM.CL[k]]));
   const A0 = 900, TIP0 = A0 + 300;           // macro focus (arc length on the approach) and where the tip starts
   function drawn(k, t) {                     // arc length drawn on chunk k
     const c = chunks[k];
@@ -110,8 +134,8 @@
     [[-120, -62], [-18, -128], [104, -86], [128, 22], [58, 112], [-70, 118], [-132, 30]],
     [[0, -40], [-100, 40], [-36, 40], [36, 40], [100, 40], [-72, 104], [0, 110], [72, 104]],   // performer + crowd
   ];
-  const CL = [null, 7.8, 8.9, 10.1, 11.3];   // loop-close time per station: people and props appear here
-  const BORN = [w2[2].s - 0.25, CL[1] - 0.04, CL[2] - 0.04, CL[3] - 0.04, CL[4] - 0.04];
+  const CL = TM.CL;   // loop-close time per station: people and props appear here
+  const BORN = [w2[SENT.v02[0].to].s - 0.25, CL[1] - 0.04, CL[2] - 0.04, CL[3] - 0.04, CL[4] - 0.04];
   const BCOL = [
     [PEOPLE[0], PEOPLE[1], PEOPLE[2]],
     PEOPLE, [PEOPLE[1], PEOPLE[2], PEOPLE[0], PEOPLE[3], PEOPLE[4], PEOPLE[5], PEOPLE[2]],
@@ -127,13 +151,13 @@
   const soft = p => lerp(p, E.inOutSine(p), 0.8);
   const KEYS = [
     { t: 6.9, c: HOME, e: E.inOutCubic },
-    { t: 7.35, c: stPose(1), e: E.inOutCubic },
-    { t: 7.95, c: stPose(1), e: E.inOutCubic },
-    { t: 8.4, c: stPose(2), e: E.inOutCubic },
-    { t: 9.15, c: stPose(2), e: E.inOutCubic },
-    { t: 9.6, c: stPose(3), e: E.inOutCubic },
-    { t: 10.35, c: stPose(3), e: E.inOutCubic },
-    { t: 10.8, c: stPose(4), e: E.inOutSine },
+    { t: TM.ARR[1], c: stPose(1), e: E.inOutCubic },
+    { t: TM.DEP[1], c: stPose(1), e: E.inOutCubic },
+    { t: TM.ARR[2], c: stPose(2), e: E.inOutCubic },
+    { t: TM.DEP[2], c: stPose(2), e: E.inOutCubic },
+    { t: TM.ARR[3], c: stPose(3), e: E.inOutCubic },
+    { t: TM.DEP[3], c: stPose(3), e: E.inOutCubic },
+    { t: TM.ARR[4], c: stPose(4), e: E.inOutSine },
     { t: COLD, c: stPose(4, 1.2), e: E.inOutCubic },
     { t: 14.5, c: P3, e: E.inOutSine },
     { t: 19.2, c: { x: P3.x + 24, y: P3.y - 6, zoom: 0.94 } },
@@ -155,7 +179,7 @@
   // ---- fee tags: anchors on the gig chunk, cut times
   const G = chunks[4];
   const CUT_S = [G.llink - 190, G.llink + 0.5 * G.lloop, G.llink + 0.8 * G.lloop];
-  const TAG_T = [15.12, 15.62, 16.07];
+  const TAG_T = TM.TAG;
   const CUT_T = TAG_T.map(x => x + 0.14);
   const TAGS = CUT_S.map((s, i) => { const p = F.pointAt(G.M, s); return { x: p.x, y: p.y, ang: p.ang, dir: ['down', 'up', 'left'][i], t: TAG_T[i] }; });
   const cutD = (i, t) => 20 * E.outExpo(prog(CUT_T[i], CUT_T[i] + 0.45, t));
@@ -164,7 +188,7 @@
   const TBL = { x: 1030, y: 230, w: 760, pad: 28, head: 56, row: 54 };
   const rowCY = j => TBL.y + TBL.pad + TBL.head + j * TBL.row + TBL.row / 2;
   const rowCX = TBL.x - 6;
-  const FLY0 = 17.0, FLY_STEP = 0.11, FLY_DUR = 0.55;
+  const FLY0 = TM.FLY0, FLY_STEP = 0.11, FLY_DUR = 0.55;
   const flyStart = j => FLY0 + j * FLY_STEP;
 
   const strand = (pts, k, a, b, alpha, c0) => ({
@@ -254,6 +278,6 @@
   window.S1 = {
     LOOPS, FORM, BORN, BCOL, TAGS, CUT_T, TAG_T, TBL, rowCY, rowCX, flyStart, FLY_DUR,
     cold, mix, GREY, PEOPLE, TOG, COLD, OUT0, OUT1, toWorld, cam,
-    stationT: CL, CL,
+    stationT: CL, CL, TM, SENT, EN,
   };
 })();

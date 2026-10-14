@@ -1,7 +1,7 @@
 // Single source of truth for timing. Reads the actor's take + its word
 // transcript, cuts it into phrases at the silences, places each phrase on the
-// film timeline, and lays out the music edit. Writes data/timing.json (for
-// tools) and data/timing.js (window.TIMING, for the compositions).
+// film timeline, and lays out the music edit. Writes data/timing.<lang>.json
+// (for tools) and data/timing.<lang>.js (window.TIMING, for the compositions).
 //
 //   node tools/timing.mjs [en|de]
 //
@@ -81,6 +81,35 @@ const PHRASES = {
     ['v20', [42, 42], "Let's revel.", 91.8],
   ],
 };
+// German: same ids and beats as English. Text is what the SCREEN shows (word-
+// synced by index), so the tagline is the website's wording; the take says
+// "Clubs … Spielstätten" until the requested pickup replaces v18.
+PHRASES.de = [
+  ['v01', [0, 0], 'Jede Community fängt gleich an.', 1.2],
+  ['v02', [1, 1], 'Ein paar Leute. Und ein Grund, zusammenzukommen.', 4.3],
+  ['v03', [2, 5], 'Ein Buchclub. Ein Rope-Kreis. Ein Picknick am Sonntag. Ein Konzert im Keller.', 7.6],
+  ['v04', [6, 8], 'Dann kommen die Plattformen. Gebühren auf jedes Ticket. Aus deinen Leuten werden Daten.', 13.3],
+  ['v05', [9, 10], 'Revel ist anders.', 19.4],
+  ['v06', [11, 12], 'Es ist Open Source. Alle können es lesen, betreiben und besser machen.', 22.3],
+  ['v07', [13, 14], 'Wer kauft, zahlt den Ticketpreis. Keine Gebühr obendrauf.', 27.0],
+  ['v08', [15, 15], 'Das Geld geht direkt an die Organisation.', 30.75],
+  ['v09', [16, 19], 'Keine Werbung. Keine Tracker. Und deine Daten werden nie und nimmer verkauft.', 33.6],
+  ['v10', [20, 20], 'Manche Räume brauchen ein bisschen mehr Achtsamkeit.', 39.9],
+  ['v11', [21, 22], 'Wie ein Rope-Workshop in Wien, der auf Vertrauen baut.', 43.25],
+  ['v12', [23, 23], 'Bevor also jemand ein Ticket bekommt, gibt es ein paar Fragen.', 46.6],
+  ['v13', [24, 26], 'Zur Erfahrung, zu den Konsens-Regeln, und warum man kommen möchte.', 50.5],
+  ['v14', [27, 27], 'Dann liest ein echter Mensch jede Antwort und entscheidet.', 57.3],
+  ['v15', [28, 29], 'Und dann: Du bist dabei.', 63.2],
+  ['v16', [30, 31], 'Alle im Raum haben sich entschieden, hier zu sein. Und wurden mit Achtsamkeit empfangen.', 66.2],
+  ['v17a', [32, 32], 'Potlucks.', 'beat:156'],
+  ['v17b', [33, 33], 'Mitgliederpreise.', 'beat:159'],
+  ['v17c', [34, 34], 'Zahl, was du kannst.', 'beat:162'],
+  ['v17d', [35, 35], 'Wartelisten.', 'beat:166'],
+  ['v17e', [36, 36], 'Check-in am Einlass.', 'beat:170'],
+  ['v17f', [37, 37], 'In sechs Sprachen.', 'beat:173'],
+  ['v18', [38, 39], 'Revel. Die kostenlose, quelloffene Event-Plattform für Communities, Vereine und unabhängige Veranstaltungsorte.', 84.0],
+  ['v20', [40, 40], 'Let’s revel.', 91.8],
+];
 // Pickups recorded separately: { id: { file, from, to } } — source range in that file.
 const PICKUPS = {};
 
@@ -121,8 +150,8 @@ for (let i = 1; i < lines.length; i++)
 const montage = [156, 159, 162, 166, 170, 173].map(k => musicToFilm(beat(k)));
 const out = { lang: LANG, duration: DURATION, fps: 60, sections: S, music: MUSIC, montage, montageEnd: musicToFilm(beat(176)),
   musicBeat: PERIOD, lines };
-fs.writeFileSync(`${ROOT}data/timing.json`, JSON.stringify(out, null, 1));
-fs.writeFileSync(`${ROOT}data/timing.js`, 'window.TIMING = ' + JSON.stringify(out) + ';\n');
+fs.writeFileSync(`${ROOT}data/timing.${LANG}.json`, JSON.stringify(out, null, 1));
+fs.writeFileSync(`${ROOT}data/timing.${LANG}.js`, 'window.TIMING = ' + JSON.stringify(out) + ';\n');
 console.log('sections', S);
 console.log('music', MUSIC.map(m => `${m.id} film ${m.start}+${m.dur} ← music ${m.from}`).join(' | '));
 for (const l of lines) console.log(l.id.padEnd(5), String(l.start).padStart(6), '→', String(l.end).padStart(6), l.gap ? '[GAP]' : '', '|', l.words.map(w => w.w).join(' '));

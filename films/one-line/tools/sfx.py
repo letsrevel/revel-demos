@@ -1,19 +1,20 @@
 """Render the sound-design cues in data/sfx.json to one short WAV each
-(audio/sfx/<NNN>-<kind>.wav). build-index places them as <audio> clips in the
+(audio/sfx-<lang>/<NNN>-<kind>.wav). build-index places them as <audio> clips in the
 "sfx" group. Synthesis is ported from manifesto/mix.py (the 2026-09 film), plus
 a rope snap. Deterministic: every cue is seeded by its index.
 
-    uv run --with numpy --with scipy --with soundfile python tools/sfx.py
+    uv run --with numpy --with scipy --with soundfile python tools/sfx.py [lang]
 """
-import json, os, glob
+import json, os, glob, sys
 import numpy as np
 import soundfile as sf
 from scipy import signal
 
 ROOT = os.path.join(os.path.dirname(__file__), '..')
 SR = 48000
-cues = json.load(open(os.path.join(ROOT, 'data/sfx.json')))
-OUT = os.path.join(ROOT, 'audio/sfx')
+LANG = sys.argv[1] if len(sys.argv) > 1 else 'en'
+cues = json.load(open(os.path.join(ROOT, f'data/sfx.{LANG}.json')))
+OUT = os.path.join(ROOT, f'audio/sfx-{LANG}')
 os.makedirs(OUT, exist_ok=True)
 for f in glob.glob(os.path.join(OUT, '*.wav')): os.remove(f)
 
@@ -130,6 +131,6 @@ for i, c in enumerate(cues):
     m = min(len(st), int(0.01 * SR)); st[-m:] *= np.linspace(1, 0, m)[:, None]
     name = f'{i:03d}-{c["kind"]}.wav'
     sf.write(os.path.join(OUT, name), st.astype(np.float32), SR, subtype='PCM_16')
-    c['file'] = f'audio/sfx/{name}'; c['dur'] = round(len(st) / SR, 3)
-json.dump(cues, open(os.path.join(ROOT, 'data/sfx.json'), 'w'), indent=1)
-print(len(cues), 'sfx rendered to audio/sfx/')
+    c['file'] = f'audio/sfx-{LANG}/{name}'; c['dur'] = round(len(st) / SR, 3)
+json.dump(cues, open(os.path.join(ROOT, f'data/sfx.{LANG}.json'), 'w'), indent=1)
+print(len(cues), f'sfx rendered to audio/sfx-{LANG}/')

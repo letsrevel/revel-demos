@@ -101,6 +101,25 @@
           const tl = gsap.timeline({ paused: true });
           const world = $('world'), fg = $('fg'), tbl = $('tbl');
           const NS = 'http://www.w3.org/2000/svg';
+          const DE = !S.EN, TM = S.TM, SE = S.SENT;
+          const Ltxt = DE ? {
+            tags: ['<b>+ 2,49 €</b>Servicegebühr', '<b>+</b>Buchungsgebühr', '<b>+</b>Bearbeitungsgebühr'],
+            head: ['Alter', 'Stadt', 'Interessen'], score: 'Score',
+            rows: [['#48213', '34', 'Wien', 'Seile, Bücher', 214], ['#48214', '27', 'Graz', 'Livemusik', 187], ['#48215', '41', 'Linz', 'Picknicks, Wein', 302], ['#48216', '23', 'Wien', 'Fotografie', 95],
+              ['#48217', '38', 'Salzburg', 'Bücher, Theater', 266], ['#48218', '30', 'Wien', 'Seile, Tanz', 148], ['#48219', '45', 'Innsbruck', 'Wandern', 71], ['#48220', '29', 'Wien', 'Konzerte, Vinyl', 233]],
+          } : {
+            tags: ['<b>+€2.49</b>service fee', '<b>+</b>booking fee', '<b>+</b>processing fee'],
+            head: ['age', 'city', 'interests'], score: 'score',
+            rows: [['#48213', '34', 'Vienna', 'rope, books', 214], ['#48214', '27', 'Graz', 'live music', 187], ['#48215', '41', 'Linz', 'picnics, wine', 302], ['#48216', '23', 'Vienna', 'photography', 95],
+              ['#48217', '38', 'Salzburg', 'books, theatre', 266], ['#48218', '30', 'Vienna', 'rope, dance', 148], ['#48219', '45', 'Innsbruck', 'hiking', 71], ['#48220', '29', 'Vienna', 'gigs, vinyl', 233]],
+          };
+          const wordsOf = id => F.line(id).words;
+          const sentTxt = (id, k) => { const sn = SE[id][k]; return wordsOf(id).slice(sn.from, sn.to + 1).map(w => w.w).join(' '); };
+          $('v01').textContent = F.line('v01').text;
+          if (F.T.lang === 'de') $('v01').style.width = '900px';   // „…fängt gleich an.“ — keep „an.“ off a line of its own
+          $('v02a').textContent = sentTxt('v02', 0); $('v02b').textContent = sentTxt('v02', 1);
+          ['lab1', 'lab2', 'lab3', 'lab4'].forEach((id, k) => { $(id).textContent = sentTxt('v03', k); });
+          $('plat').textContent = sentTxt('v04', 0); $('fees').textContent = sentTxt('v04', 1); $('data').textContent = sentTxt('v04', 2);
 
           // ------------------------------------------------------------ world props
           const L = S.LOOPS;
@@ -132,7 +151,7 @@
           const tagTxt = [['+€2.49', 'service fee'], ['+', 'booking fee'], ['+', 'processing fee']];
           const tagEls = S.TAGS.map((a, i) => {
             const d = document.createElement('div'); d.className = 'tag'; d.style.left = a.x + 'px'; d.style.top = a.y + 'px';
-            const price = i === 0 ? '<b>+€2.49</b>service fee' : i === 1 ? '<b>+</b>booking fee' : '<b>+</b>processing fee';
+            const price = Ltxt.tags[i];
             const bodyPos = a.dir === 'down' ? 'left:-190px;top:14px' : a.dir === 'up' ? 'left:-170px;bottom:14px' : 'right:14px;top:-40px';
             const jawPos = a.dir === 'left' ? 'left:-17px;top:-12px;transform:rotate(90deg)' : 'left:-17px;top:-12px';
             d.innerHTML = '<div class="in" style="position:absolute;left:0;top:0"><div class="body" style="' + bodyPos + '">' + price + '</div><div class="jaw" style="' + jawPos + '"></div></div>';
@@ -151,30 +170,25 @@
           }
 
           // table
-          const rows = [['#48213', '34', 'Vienna', 'rope, books', 214], ['#48214', '27', 'Graz', 'live music', 187], ['#48215', '41', 'Linz', 'picnics, wine', 302], ['#48216', '23', 'Vienna', 'photography', 95],
-            ['#48217', '38', 'Salzburg', 'books, theatre', 266], ['#48218', '30', 'Vienna', 'rope, dance', 148], ['#48219', '45', 'Innsbruck', 'hiking', 71], ['#48220', '29', 'Vienna', 'gigs, vinyl', 233]];
-          tbl.innerHTML = '<div class="s1-tr h"><span></span><span>id</span><span>age</span><span>city</span><span>interests</span><span class="sc">score</span></div>' +
+          const rows = Ltxt.rows;
+          tbl.innerHTML = '<div class="s1-tr h"><span></span><span>id</span><span>' + Ltxt.head.join('</span><span>') + '</span></div>'.replace('</span></div>', '</span><span class="sc">' + Ltxt.score + '</span></div>') +
             rows.map((r, j) => `<div class="s1-tr r" id="s1-origins-r${j}"><span class="chip"></span><span>${r[0]}</span><span>${r[1]}</span><span>${r[2]}</span><span>${r[3]}</span><span class="sc">0</span></div>`).join('');
+          if (DE) tbl.querySelectorAll('.s1-tr').forEach(r => { r.style.gridTemplateColumns = '34px 108px 84px 140px 210px 1fr'; });
           const rowEls = rows.map((r, j) => $('r' + j));
 
           // ------------------------------------------------------------ voice-synced type
           const lines = F.T.lines;
+          const RV = (id, line, k) => F.revealWords(tl, $(id), line, 0, { from: SE[line][k].from, to: SE[line][k].to });
           F.revealWords(tl, $('v01'), 'v01', 0, { y: 10, blur: 8 });
-          F.revealWords(tl, $('v02a'), 'v02', 0, { from: 0, to: 2 });
-          F.revealWords(tl, $('v02b'), 'v02', 0, { from: 3, to: 8 });
-          F.revealWords(tl, $('lab1'), 'v03', 0, { from: 0, to: 2 });
-          F.revealWords(tl, $('lab2'), 'v03', 0, { from: 3, to: 5 });
-          F.revealWords(tl, $('lab3'), 'v03', 0, { from: 6, to: 8 });
-          F.revealWords(tl, $('lab4'), 'v03', 0, { from: 9, to: 11 });
-          F.revealWords(tl, $('plat'), 'v04', 0, { from: 0, to: 3 });
-          F.revealWords(tl, $('fees'), 'v04', 0, { from: 4, to: 7 });
-          F.revealWords(tl, $('data'), 'v04', 0, { from: 8, to: 12 });
+          RV('v02a', 'v02', 0); RV('v02b', 'v02', 1);
+          RV('lab1', 'v03', 0); RV('lab2', 'v03', 1); RV('lab3', 'v03', 2); RV('lab4', 'v03', 3);
+          RV('plat', 'v04', 0); RV('fees', 'v04', 1); RV('data', 'v04', 2);
 
           const out = (el, t, d = 0.28) => tl.to(el, { opacity: 0, y: -10, filter: 'blur(6px)', duration: d, ease: 'power2.in' }, t);
-          out($('v01'), 4.0, 0.3);
-          out($('v02a'), 6.98, 0.3); out($('v02b'), 6.98, 0.3);
-          out($('lab1'), 8.3); out($('lab2'), 9.42); out($('lab3'), 10.5); out($('lab4'), 12.7, 0.35);
-          out($('plat'), 14.83, 0.25); out($('fees'), 16.43, 0.25);
+          out($('v01'), TM.OUT.v01, 0.3);
+          out($('v02a'), TM.OUT.v02, 0.3); out($('v02b'), TM.OUT.v02, 0.3);
+          out($('lab1'), TM.OUT.lab[0]); out($('lab2'), TM.OUT.lab[1]); out($('lab3'), TM.OUT.lab[2]); out($('lab4'), TM.OUT.lab[3], 0.35);
+          out($('plat'), TM.OUT.plat, 0.25); out($('fees'), TM.OUT.fees, 0.25);
           tl.to($('data'), { opacity: 0, duration: 0.17, ease: 'power2.in' }, S.OUT0);
 
           // ------------------------------------------------------------ per-frame state (pure function of film time)
@@ -227,7 +241,7 @@
               for (let q = 1; q < 5; q++) el.children[q].style.opacity = p;
               el.children[5].style.opacity = p;
               el.children[5].textContent = Math.round(rows[j][4] * E.outCubic(prog(arrive, arrive + 0.9, t)));
-              el.children[0].style.background = S.mix(F.C.concreteDark, F.C.crimson, prog(18.125, 18.6, t) * (j % 2 ? 0.55 : 0.85));
+              el.children[0].style.background = S.mix(F.C.concreteDark, F.C.crimson, prog(TM.CHIP, TM.CHIP + 0.475, t) * (j % 2 ? 0.55 : 0.85));
             });
           }
           const p = { t: 0 };

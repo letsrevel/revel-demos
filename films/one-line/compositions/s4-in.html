@@ -44,6 +44,15 @@
         #s4-in-approve-ok svg { margin-right: 10px; }
         #s4-in-ripple { position: absolute; left: 0; top: 0; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 3px solid #F9B233; opacity: 0; }
 
+        /* ---- German runs longer ---- */
+        #root.de #s4-in-t1 { font-size: 68px; line-height: 74px; top: 270px; }
+        #root.de #s4-in-t2 { font-size: 68px; line-height: 74px; top: 560px; }
+        #root.de .s4-room { font-size: 52px; line-height: 56px; }
+        #root.de #s4-in-r1 { top: 412px; }
+        #root.de #s4-in-r2 { top: 484px; }
+        #root.de #s4-in-in { font-size: 88px; }
+        #root.de .s4-q { font-size: 19px; }
+        #root.de .s4-free { font-size: 27px; line-height: 42px; }
         /* ---- cursor ---- */
         #s4-in-cursor { position: absolute; left: 0; top: 0; width: 34px; height: 34px; opacity: 0; filter: drop-shadow(0 3px 5px rgba(0,0,0,.45)); }
 
@@ -143,6 +152,37 @@
       <script>
         (function () {
           const S = 56.724;
+          const LANG = (FILM.T && FILM.T.lang) || 'en', DE = LANG === 'de';
+          if (DE) document.getElementById('root').classList.add('de');
+          // German copy, keyed by the English text it replaces (English is left untouched)
+          const DICT_DE = {
+            'Submissions': 'Einreichungen', 'Workshop Application · Intro to Shibari — Rope & Trust': 'Workshop-Bewerbung · Intro to Shibari — Rope & Trust',
+            'just now': 'gerade eben', 'Pending review': 'Prüfung ausstehend', 'Approved': 'Genehmigt',
+            'How much rope experience do you have?': 'Wie viel Erfahrung mit Seilen hast du?', 'None yet': 'Noch keine',
+            'Have you read our house rules on consent and aftercare?': 'Hast du unsere Hausregeln zu Konsens und Aftercare gelesen?',
+            'Yes, I have read them': 'Ja, habe ich gelesen',
+            'Tell us about your experience with rope and what you hope to learn.': 'Erzähl uns von deiner Erfahrung mit Seilen und was du lernen möchtest.',
+            'Ren is reviewing': 'Ren prüft gerade', 'Ren made the call': 'Ren hat entschieden', 'Decline': 'Ablehnen', 'Approve': 'Genehmigen',
+            'Workshop Spot': 'Workshop-Platz', 'You’re going': 'Du bist dabei' };
+          if (DE) {
+            const norm = (x) => x.replace(/\s+/g, ' ').trim();
+            document.querySelectorAll('#s4-in-card div, #s4-in-ticket div').forEach((el) => {
+              if (el.children.length) return;
+              const v = DICT_DE[norm(el.textContent)]; if (v) el.textContent = v;
+            });
+            document.getElementById('s4-in-free').innerHTML = 'Absolute Anfängerin. Ich möchte lernen, <span class="s4-hl" id="s4-in-h1">mit Sorgfalt zu fesseln,</span> und <span class="s4-hl" id="s4-in-h2">jemand sein, bei dem sich andere sicher fühlen.</span>';
+            document.getElementById('s4-in-approve-ok').lastChild.textContent = 'Genehmigt';
+            document.getElementById('s4-in-t1').textContent = 'Dann liest ein echter Mensch jede Antwort';
+            document.getElementById('s4-in-t2').textContent = 'und entscheidet.';
+            document.getElementById('s4-in-in').textContent = 'Und dann: Du bist dabei.';
+            document.getElementById('s4-in-r1').textContent = 'Alle im Raum haben sich entschieden, hier zu sein.';
+            document.getElementById('s4-in-r2').textContent = 'Und wurden mit Achtsamkeit empfangen.';
+          }
+          // per-language word indexes of v14 / v15 / v16
+          const IX = DE ? { t1: [0, 6], t2: [7, 8], h1a: 1, h1b: 3, h2a: 6, h2b: 7, call: 8, pill: 2, heart: 4, r1: [0, 8], r2: [9, 13], r2first: 9 }
+                        : { t1: [1, 6], t2: [7, 10], h1a: 4, h1b: 5, h2a: 6, h2b: 7, call: 10, pill: 2, heart: 3, r1: [0, 7], r2: [8, 12], r2first: 8 };
+          const DE_CUR = { a: [1318, 598], b: [1610, 600], c: [790, 640], d: [1400, 642] };
+          const w14 = (i) => wa('v14', i);
           const L = (t) => t - S;
           const F = FILM;
           const tl = gsap.timeline({ paused: true });
@@ -155,8 +195,8 @@
           });
 
           // ------------------------------------------------ frame 10: serif lines
-          const r1 = F.revealWords(tl, document.getElementById('s4-in-t1'), 'v14', S, { from: 1, to: 6, dur: 0.6 });
-          const r2 = F.revealWords(tl, document.getElementById('s4-in-t2'), 'v14', S, { from: 7, to: 10, dur: 0.6 });
+          const r1 = F.revealWords(tl, document.getElementById('s4-in-t1'), 'v14', S, { from: IX.t1[0], to: IX.t1[1], dur: 0.6 });
+          const r2 = F.revealWords(tl, document.getElementById('s4-in-t2'), 'v14', S, { from: IX.t2[0], to: IX.t2[1], dur: 0.6 });
           tl.to('#s4-in-t1, #s4-in-t2', { opacity: 0, filter: 'blur(8px)', y: -10, duration: 0.4, ease: 'power2.in' }, L(62.35));
 
           // ------------------------------------------------ the review card
@@ -166,20 +206,30 @@
           tl.fromTo('#s4-in-card .abs:not(#s4-in-ren2), #s4-in-chip-p', { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out', stagger: 0.025, immediateRender: false }, L(57.25));
 
           // highlighter marks the phrases while he says "reads every answer"
-          tl.to('#s4-in-h1', { backgroundSize: '100% 86%', duration: wa('v14', 'every') - wa('v14', 'reads') + 0.1, ease: 'sine.inOut' }, L(wa('v14', 'reads')));
-          tl.to('#s4-in-h2', { backgroundSize: '100% 86%', duration: wa('v14', 'and') - wa('v14', 'answer,') + 0.2, ease: 'sine.inOut' }, L(wa('v14', 'answer,') + 0.02));
+          tl.to('#s4-in-h1', { backgroundSize: '100% 86%', duration: w14(IX.h1b) - w14(IX.h1a) + 0.1, ease: 'sine.inOut' }, L(w14(IX.h1a)));
+          tl.to('#s4-in-h2', { backgroundSize: '100% 86%', duration: w14(IX.h2b) - w14(IX.h2a) + 0.2, ease: 'sine.inOut' }, L(w14(IX.h2a) + 0.02));
 
           // cursor path (screen px). Card origin is (740,120).
           const cur = '#s4-in-cursor';
           tl.set(cur, { x: 1640, y: 960, opacity: 0 }, 0);
+          if (!DE) {
           tl.to(cur, { opacity: 1, duration: 0.4, ease: 'power2.out' }, L(57.55));
           tl.to(cur, { x: 1318, y: 598, duration: 0.95, ease: 'power2.inOut' }, L(57.6));      // to the start of "tie with care"
-          tl.to(cur, { x: 1520, y: 604, duration: 0.7, ease: 'sine.inOut' }, L(wa('v14', 'reads') + 0.05));  // along phrase 1
+          tl.to(cur, { x: 1520, y: 604, duration: 0.7, ease: 'sine.inOut' }, L(w14(IX.h1a) + 0.05));  // along phrase 1
           tl.to(cur, { x: 790, y: 650, duration: 0.18, ease: 'power2.inOut' }, L(59.36));      // down to line 2
           tl.to(cur, { x: 1350, y: 650, duration: 0.55, ease: 'sine.inOut' }, L(59.44));       // along phrase 2
-          tl.to(cur, { x: 1618, y: 786, duration: 0.55, ease: 'power2.inOut' }, L(wa('v14', 'call') - 0.7)); // to Approve
+          tl.to(cur, { x: 1618, y: 786, duration: 0.55, ease: 'power2.inOut' }, L(w14(IX.call) - 0.7)); // to Approve
+          } else {
+          const P = DE_CUR;
+          tl.to(cur, { opacity: 1, duration: 0.35, ease: 'power2.out' }, L(57.0));
+          tl.to(cur, { x: P.a[0], y: P.a[1], duration: 0.55, ease: 'power2.inOut' }, L(57.02));
+          tl.to(cur, { x: P.b[0], y: P.b[1], duration: w14(IX.h1b) - w14(IX.h1a) + 0.3, ease: 'sine.inOut' }, L(w14(IX.h1a) + 0.05));
+          tl.to(cur, { x: P.c[0], y: P.c[1], duration: 0.3, ease: 'power2.inOut' }, L(w14(IX.h2a) - 0.4));
+          tl.to(cur, { x: P.d[0], y: P.d[1], duration: 0.4, ease: 'sine.inOut' }, L(w14(IX.h2a) - 0.08));
+          tl.to(cur, { x: 1618, y: 786, duration: 0.42, ease: 'power2.inOut' }, L(w14(IX.call) - 0.5));
+          }
           // press + ripple on "call"
-          const callT = L(wa('v14', 'call'));
+          const callT = L(w14(IX.call));
           tl.to(cur, { scale: 0.86, duration: 0.07, ease: 'power2.out', transformOrigin: '4px 3px' }, callT - 0.06);
           tl.to(cur, { scale: 1, duration: 0.2, ease: 'power2.out' }, callT + 0.04);
           tl.to('#s4-in-approve', { scale: 0.95, duration: 0.07, ease: 'power2.out' }, callT - 0.06);
@@ -201,9 +251,9 @@
           F.revealWords(tl, document.getElementById('s4-in-in'), 'v15', S, { dur: 0.6, y: 18 });
           tl.fromTo('#s4-in-ticket', { opacity: 0, scale: 0.55, rotation: -9, y: 40 }, { opacity: 1, scale: 1, rotation: 0, y: 0, duration: 0.85, ease: 'back.out(1.9)' }, L(63.12));
           tl.to('#s4-in-ticket', { y: -10, duration: L(65.1) - L(64.0), ease: 'sine.inOut' }, L(64.0));
-          tl.fromTo('#s4-in-tk-p', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(2.2)' }, L(wa('v15', "you're")));
+          tl.fromTo('#s4-in-tk-p', { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.55, ease: 'back.out(2.2)' }, L(wa('v15', IX.pill)));
           // heart beat on "in"
-          tl.to('#s4-in-tk-l svg', { scale: 1.22, duration: 0.14, ease: 'power2.out', yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, L(wa('v15', 'in')));
+          tl.to('#s4-in-tk-l svg', { scale: 1.22, duration: 0.14, ease: 'power2.out', yoyo: true, repeat: 1, transformOrigin: '50% 50%' }, L(wa('v15', IX.heart)));
           // bloom
           tl.fromTo('#s4-in-leak', { opacity: 0, scale: 0.55 }, { opacity: 1, scale: 1.45, duration: 2.3, ease: 'power2.in' }, L(63.1));
           tl.fromTo('#s4-in-leak2', { opacity: 0, x: 120 }, { opacity: 0.9, x: 0, duration: 2.2, ease: 'power2.in' }, L(63.2));
@@ -216,9 +266,9 @@
           tl.to('#s4-in-leak, #s4-in-leak2', { opacity: 0, duration: 0.2 }, L(65.46));
 
           // ------------------------------------------------ frame 12: the room
-          F.revealWords(tl, document.getElementById('s4-in-r1'), 'v16', S, { from: 0, to: 7, dur: 0.55, y: 16 });
-          F.revealWords(tl, document.getElementById('s4-in-r2'), 'v16', S, { from: 8, to: 12, dur: 0.55, y: 16 });
-          tl.to('#s4-in-r1', { opacity: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power2.in' }, L(68.32));
+          F.revealWords(tl, document.getElementById('s4-in-r1'), 'v16', S, { from: IX.r1[0], to: IX.r1[1], dur: 0.55, y: 16 });
+          F.revealWords(tl, document.getElementById('s4-in-r2'), 'v16', S, { from: IX.r2[0], to: IX.r2[1], dur: 0.55, y: 16 });
+          tl.to('#s4-in-r1', { opacity: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power2.in' }, L(DE ? wa('v16', IX.r2first) - 0.19 : 68.32));
           tl.to('#s4-in-r2', { opacity: 0, filter: 'blur(8px)', duration: 0.4, ease: 'power2.in' }, L(70.85));
 
           window.__timelines['s4-in'] = tl;

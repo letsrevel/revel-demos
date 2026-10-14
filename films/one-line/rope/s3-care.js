@@ -11,22 +11,22 @@
   const FROM = 39.271, TO = 57.124;
 
   // ---- the beats (film seconds, all from data/timing.json via FILM.wordAt)
+  // word indexes per language (never English words in lookups); EN values reproduce the original beats exactly
+  const lang = F.T.lang === 'de' ? 'de' : 'en';
+  const IX = { en: { vienna: 5, experience: 1, consent: 3, why: 6 }, de: { vienna: 4, experience: 1, consent: 4, why: 6 } }[lang];
   const T = {
     from: FROM,
-    care: F.wordAt('v10', 'care'),
-    vienna: F.wordAt('v11', 'Vienna'),
-    trust: F.wordAt('v11', 'trust'),
-    ticket: F.wordAt('v12', 'ticket'),
-    experience: F.wordAt('v13', 'experience'),
-    consent: F.wordAt('v13', 'consent'),
-    why: F.wordAt('v13', 'why'),
-    come: F.wordAt('v13', 'come'),
+    vienna: F.wordAt('v11', IX.vienna),
+    experience: F.wordAt('v13', IX.experience),
+    consent: F.wordAt('v13', IX.consent),
+    why: F.wordAt('v13', IX.why),
     f8end: 45.8,            // end of frame 8
     knot0: 46.0,            // the knot starts to form
     whip0: 56.30, whipMid: 56.52, seam: 56.724,
   };
+  T.typeOut = Math.max(T.f8end, F.line('v11').end + 0.15) + 0.05;   // the type clears after v11 has finished
   // answers (picked / ticked / typed) — each lands just after its spoken phrase begins
-  T.pick1 = T.experience + 0.42;     // None yet
+  T.pick1 = T.experience + 0.42;     // first answer
   T.card2 = T.consent - 0.18;        // question 2 rises to the front
   T.pick2 = T.consent + 0.95;        // tick
   T.card3 = T.why - 0.2;             // question 3 rises to the front

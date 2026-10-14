@@ -150,14 +150,14 @@
           <div data-hf-id="hf-8czh" id="s2-f6a-b" class="t">No fee on top.</div>
           <div data-hf-id="hf-bch2" id="s2-card-wrap">
             <div data-hf-id="hf-s77h" id="s2-card">
-              <div data-hf-id="hf-kf0a" class="org"><i data-hf-id="hf-wt6k"></i><span data-hf-id="hf-6h5t">The Velvet Cellar</span></div>
+              <div data-hf-id="hf-kf0a" class="org"><i data-hf-id="hf-wt6k"></i><span data-hf-id="hf-6h5t" id="s2-c-org">The Velvet Cellar</span></div>
               <h4 data-hf-id="hf-ghbp">Basement Sessions — Live &amp; Loud</h4>
               <div data-hf-id="hf-6wrd" class="perf"></div>
-              <div data-hf-id="hf-2ttr" class="row" id="s2-row-ga"><div data-hf-id="hf-mgcl" class="rowbg"></div><span data-hf-id="hf-3st2">General admission</span><span data-hf-id="hf-ov47" class="am" id="s2-ga-am">€18.00</span></div>
-              <div data-hf-id="hf-f5t5" class="row" id="s2-row-fee"><span data-hf-id="hf-17fu" class="fee">Fees</span><span data-hf-id="hf-60j4" class="tag" id="s2-tag">No fee on top</span><span data-hf-id="hf-t3zq" class="am fee" id="s2-fee-am">€0.00</span></div>
+              <div data-hf-id="hf-2ttr" class="row" id="s2-row-ga"><div data-hf-id="hf-mgcl" class="rowbg"></div><span data-hf-id="hf-3st2" id="s2-c-ga">General admission</span><span data-hf-id="hf-ov47" class="am" id="s2-ga-am">€18.00</span></div>
+              <div data-hf-id="hf-f5t5" class="row" id="s2-row-fee"><span data-hf-id="hf-17fu" class="fee" id="s2-c-fee">Fees</span><span data-hf-id="hf-60j4" class="tag" id="s2-tag">No fee on top</span><span data-hf-id="hf-t3zq" class="am fee" id="s2-fee-am">€0.00</span></div>
               <div data-hf-id="hf-2whe" class="hr"></div>
-              <div data-hf-id="hf-1xx5" class="row tot"><span data-hf-id="hf-7qep">Total</span><span data-hf-id="hf-lxna" class="am" id="s2-tot-am">€18.00</span></div>
-              <div data-hf-id="hf-spj4" class="btn"><span data-hf-id="hf-t50x">Get ticket</span><svg data-hf-id="hf-b8eh" class="chk" id="s2-chk" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-s5bw" d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
+              <div data-hf-id="hf-1xx5" class="row tot"><span data-hf-id="hf-7qep" id="s2-c-tot">Total</span><span data-hf-id="hf-lxna" class="am" id="s2-tot-am">€18.00</span></div>
+              <div data-hf-id="hf-spj4" class="btn"><span data-hf-id="hf-t50x" id="s2-c-btn">Get ticket</span><svg data-hf-id="hf-b8eh" class="chk" id="s2-chk" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-s5bw" d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
             </div>
           </div>
         </div>
@@ -174,7 +174,7 @@
         </div>
         <div data-hf-id="hf-zgmb" id="s2-f7b" class="fr">
           <div data-hf-id="hf-wc81" id="s2-f7b-1" class="t">And your data is</div>
-          <div data-hf-id="hf-d8ai" id="s2-f7b-2" class="t"><span data-hf-id="hf-rr1l" class="nv" id="s2-nv1" style="margin-right:.2em">never,</span><span data-hf-id="hf-0i39" class="nv" id="s2-nv2">ever</span></div>
+          <div data-hf-id="hf-d8ai" id="s2-f7b-2" class="t"></div>
           <div data-hf-id="hf-1gzt" id="s2-f7b-3" class="t">sold.</div>
           <div data-hf-id="hf-8vdk" id="s2-slashflash"></div>
         </div>
@@ -188,6 +188,41 @@
           const SS = window.S2, T = SS.T;
           const $ = id => document.getElementById(id);
           const tl = gsap.timeline({ paused: true });
+          // ---- language: every visible string + every word index lives here (EN is the original, unchanged)
+          const LANG = F.T.lang === 'de' ? 'de' : 'en';
+          const DICT = {
+            en: {
+              f4: 'Revel is different.', f5h: "It's open source.", verbs: ['Read it.', 'Run it.', 'Make it better.'], pill: 'MIT License',
+              f6aa: 'Buyers pay the ticket price.', f6ab: 'No fee on top.', org: 'The Velvet Cellar', ga: 'General admission', gaAm: '€18.00', fee: 'Fees', feeAm: '€0.00',
+              tag: 'No fee on top', tot: 'Total', btn: 'Get ticket', buyer: 'Buyer', chip: '+ €18.00', f6b: 'The money goes straight to the organizer.',
+              f7a1: 'No ads.', f7a2: 'No trackers.', f7b1: 'And your data is', never: ['never,', 'ever'], f7b3: 'sold.', ad: 'AD', adSmall: 'SPONSORED',
+              verbW: ['read', 'run', 'make'], srcW: 'source', priceW: 'price', feeW: 'fee', topW: 'top', soldW: 'sold',
+              r: { f4: [0, 2], f5h: [0, 2], f6aa: [0, 4], f6ab: [5, 8], f7a1: [0, 1], f7a2: [2, 3], f7b1: [4, 7], f6b: [0, 6] },
+              adPop: [33.86, 34.01], trPop: [34.66, 34.81, 34.96],
+              f5hSize: 190, verbSize: 112, f6abSize: 176, f6abW: 700, nvSize: 290, tagLeft: 118,
+            },
+            de: {
+              f4: 'Revel ist anders.', f5h: 'Es ist Open Source.', verbs: ['Lesen.', 'Betreiben.', 'Besser machen.'], pill: 'MIT-Lizenz',
+              f6aa: 'Wer kauft, zahlt den Ticketpreis.', f6ab: 'Keine Gebühr obendrauf.', org: 'The Velvet Cellar', ga: 'Allgemeiner Eintritt', gaAm: '18,00 €', fee: 'Gebühren', feeAm: '0,00 €',
+              tag: 'Keine Gebühr obendrauf', tot: 'Gesamt', btn: 'Ticket sichern', buyer: 'Käufer*in', chip: '+ 18,00 €', f6b: 'Das Geld geht direkt an die Organisation.',
+              f7a1: 'Keine Werbung.', f7a2: 'Keine Tracker.', f7b1: 'Und deine Daten werden', never: ['nie', 'und', 'nimmer'], f7b3: 'verkauft.', ad: 'AD', adSmall: 'ANZEIGE',
+              verbW: [7, 8, 10], srcW: 3, priceW: 4, feeW: 6, topW: 7, soldW: 11,
+              r: { f4: [0, 2], f5h: [0, 3], f6aa: [0, 4], f6ab: [5, 7], f7a1: [0, 1], f7a2: [2, 3], f7b1: [4, 7], f6b: [0, 6] },
+              adPop: [33.94, 34.09], trPop: [34.82, 34.97, 35.12],
+              f5hSize: 170, verbSize: 92, f6abSize: 112, f6abW: 780, nvSize: 230, tagLeft: 168,
+            },
+          };
+          const D = DICT[LANG];
+          const setT = (id, s) => { $(id).textContent = s; };
+          setT('s2-f4-type', D.f4); setT('s2-f5-h', D.f5h);
+          ['s2-v1', 's2-v2', 's2-v3'].forEach((id, i) => setT(id, D.verbs[i]));
+          setT('s2-f5-pill', D.pill); setT('s2-f6a-a', D.f6aa); setT('s2-f6a-b', D.f6ab);
+          setT('s2-c-org', D.org); setT('s2-c-ga', D.ga); setT('s2-ga-am', D.gaAm); setT('s2-c-fee', D.fee); setT('s2-fee-am', D.feeAm);
+          setT('s2-tag', D.tag); setT('s2-c-tot', D.tot); setT('s2-tot-am', D.gaAm); setT('s2-c-btn', D.btn); setT('s2-buyer-l', D.buyer); setT('s2-chip', D.chip);
+          setT('s2-f6b-t', D.f6b); setT('s2-f7a-1', D.f7a1); setT('s2-f7a-2', D.f7a2); setT('s2-f7b-1', D.f7b1); setT('s2-f7b-3', D.f7b3);
+          $('s2-f5-h').style.fontSize = D.f5hSize + 'px'; $('s2-f5-verbs').style.fontSize = D.verbSize + 'px';
+          $('s2-f6a-b').style.fontSize = D.f6abSize + 'px'; $('s2-f6a-b').style.width = D.f6abW + 'px';
+          $('s2-f7b-2').style.fontSize = D.nvSize + 'px'; $('s2-tag').style.left = D.tagLeft + 'px';
           // word spans carry their own gap (the bare space nodes between inline-blocks render unreliably at display sizes)
           const gap = (el, em) => {
             const kids = Array.from(el.childNodes), sp = kids.filter(n => n.nodeType === 1);
@@ -207,7 +242,7 @@
           show('s2-g7', T.c7, 39.671); show('s2-f7a', T.c7, T.c7b); show('s2-f7b', T.c7b, 39.671);
 
           // ------------------------------------------------ FRAME 4  —  "Revel is different."
-          F.revealWords(tl, $('s2-f4-type'), 'v05', S, { from: 0, to: 2, y: 20, blur: 14, dur: 0.5 }); gap($('s2-f4-type'));
+          F.revealWords(tl, $('s2-f4-type'), 'v05', S, { from: D.r.f4[0], to: D.r.f4[1], y: 20, blur: 14, dur: 0.5 }); gap($('s2-f4-type'));
           tl.fromTo('#s2-f4-type', { opacity: 1, y: 0 }, { opacity: 0, y: -14, duration: 0.25, ease: 'power2.in' }, L(21.3));
           // the R is drawn on in the dip (assembled from its own outline), then hit on the drop
           tl.fromTo('#s2-R', { scale: 0.6 }, { scale: 0.6, duration: 0.01 }, 0);
@@ -246,23 +281,23 @@
               el.appendChild(pre);
             });
           });
-          F.revealWords(tl, $('s2-f5-h'), 'v06', S, { from: 0, to: 2, y: 22, blur: 14, dur: 0.5 }); gap($('s2-f5-h'));
+          F.revealWords(tl, $('s2-f5-h'), 'v06', S, { from: D.r.f5h[0], to: D.r.f5h[1], y: 22, blur: 14, dur: 0.5 }); gap($('s2-f5-h'));
           // verbs snap in on his words, each a hard punch
-          [['s2-v1', 'read'], ['s2-v2', 'run'], ['s2-v3', 'make']].forEach(([id, w], i) => {
-            const t0 = F.wordAt('v06', w);
+          ['s2-v1', 's2-v2', 's2-v3'].forEach((id, i) => {
+            const t0 = F.wordAt('v06', D.verbW[i]);
             tl.fromTo('#' + id, { opacity: 0, scale: 1.28, y: 24, filter: 'blur(10px)' },
               { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.3, ease: 'power4.out' }, L(t0 - 0.03));
           });
-          const msT = F.wordAt('v06', 'source') + 0.5;
+          const msT = F.wordAt('v06', D.srcW) + 0.5;
           tl.fromTo('#s2-f5-pill', { opacity: 0, scale: 0.6, y: 18 }, { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: 'back.out(1.8)' }, L(msT));
 
           // ------------------------------------------------ FRAME 6a  —  the price
-          F.revealWords(tl, $('s2-f6a-a'), 'v07', S, { from: 0, to: 4 }); gap($('s2-f6a-a'));
-          F.revealWords(tl, $('s2-f6a-b'), 'v07', S, { from: 5, to: 8, y: 22, blur: 12, dur: 0.5 }); gap($('s2-f6a-b'));
+          F.revealWords(tl, $('s2-f6a-a'), 'v07', S, { from: D.r.f6aa[0], to: D.r.f6aa[1] }); gap($('s2-f6a-a'));
+          F.revealWords(tl, $('s2-f6a-b'), 'v07', S, { from: D.r.f6ab[0], to: D.r.f6ab[1], y: 22, blur: 12, dur: 0.5 }); gap($('s2-f6a-b'));
           tl.fromTo('#s2-card', { opacity: 0, x: 260, y: 40, rotationY: -26, rotationX: 6, scale: 0.92, transformPerspective: 1700 },
             { opacity: 1, x: 0, y: 0, rotationY: -6, rotationX: 2, scale: 1, duration: 0.95, ease: 'expo.out' }, L(T.c6 + 0.06));
           tl.to('#s2-card', { rotationY: -2, rotationX: 0, y: -8, duration: 3.1, ease: 'sine.inOut' }, L(T.c6 + 1.0));
-          const wp = F.wordAt('v07', 'price'), wf = F.wordAt('v07', 'fee'), wt = F.wordAt('v07', 'top');
+          const wp = F.wordAt('v07', D.priceW), wf = F.wordAt('v07', D.feeW), wt = F.wordAt('v07', D.topW);
           tl.fromTo('#s2-row-ga .rowbg', { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' }, L(wp));
           tl.fromTo('#s2-ga-am', { scale: 1 }, { scale: 1.22, color: '#8C3CDD', duration: 0.18, yoyo: true, repeat: 1, ease: 'power2.out' }, L(wp));
           tl.fromTo('#s2-fee-am', { color: '#6B5F80' }, { color: '#8C3CDD', duration: 0.25 }, L(wf));
@@ -273,7 +308,9 @@
           // ------------------------------------------------ FRAME 6b  —  the money goes straight to the organizer
           // Pace of the pickup line. When his take of v08 is in timing.json (7 words) its own times win.
           const own = (F.line('v08') || { words: [] }).words;
-          if (own.length === 7) { F.revealWords(tl, $('s2-f6b-t'), 'v08', S, { from: 0, to: 6 }); gap($('s2-f6b-t'), 0.22); }
+          if (own.length === 7) {
+            const sps = F.revealWords(tl, $('s2-f6b-t'), 'v08', S, { from: 0, to: 6 }).spans; gap($('s2-f6b-t'), 0.22); sps[6].style.color = '#8C3CDD';
+          }
           else {
             const base = 30.52, offs = [0, 0.22, 0.62, 0.92, 1.36, 1.5, 1.66];   // The money goes straight to the organizer.
             const el = $('s2-f6b-t'), toks = el.textContent.trim().split(' ');
@@ -302,11 +339,11 @@
           // ------------------------------------------------ FRAME 7  —  private
           // tags clipped to the rope
           const PINS = [
-            { k: 'ad', x: 400,  pop: 33.86, lab: 'AD', fx: -1 },
-            { k: 'ad', x: 760,  pop: 34.01, lab: 'AD', fx: 1 },
-            { k: 'pin', x: 1100, pop: 34.66, fx: -1 },
-            { k: 'eye', x: 1420, pop: 34.81, fx: 1 },
-            { k: 'xh',  x: 1740, pop: 34.96, fx: -1 },
+            { k: 'ad', x: 400,  pop: D.adPop[0], lab: D.ad, fx: -1 },
+            { k: 'ad', x: 760,  pop: D.adPop[1], lab: D.ad, fx: 1 },
+            { k: 'pin', x: 1100, pop: D.trPop[0], fx: -1 },
+            { k: 'eye', x: 1420, pop: D.trPop[1], fx: 1 },
+            { k: 'xh',  x: 1740, pop: D.trPop[2], fx: -1 },
           ];
           const g7 = $('s2-g7');
           const svgPin = '<svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0113 0c0 5.4-6.5 11-6.5 11z" fill="#E6332A" stroke="#E6332A"/><circle cx="12" cy="10" r="2.6" stroke="#fff" fill="none"/></svg>';
@@ -315,7 +352,7 @@
           PINS.forEach((p, i) => {
             const w = document.createElement('div'); w.className = 'pinw'; p.w = w;
             let body = '';
-            if (p.k === 'ad') body = `<div class="body ad">${p.lab}<small>SPONSORED</small></div>`;
+            if (p.k === 'ad') body = `<div class="body ad">${p.lab}<small>${D.adSmall}</small></div>`;
             else if (p.k === 'pin') body = `<div class="body rd" style="background:#fff;border:0;">${svgPin}</div>`;
             else if (p.k === 'eye') body = `<div class="body rd" style="background:#AB82DB;">${svgEye}</div>`;
             else body = `<div class="body rd" style="background:#9AB2FF;">${svgXh}</div>`;
@@ -331,15 +368,23 @@
             tl.fromTo(p.bu, { opacity: 0.9, scale: 0.4 }, { opacity: 0, scale: 2.1, duration: 0.5, ease: 'power3.out', immediateRender: false }, L(p.pop));
             tl.set(p.w, { opacity: 0 }, L(p.pop + 0.7));
           });
-          F.revealWords(tl, $('s2-f7a-1'), 'v09', S, { from: 0, to: 1, y: 24, blur: 14, dur: 0.5 }); gap($('s2-f7a-1'));
-          F.revealWords(tl, $('s2-f7a-2'), 'v09', S, { from: 2, to: 3, y: 24, blur: 14, dur: 0.5 }); gap($('s2-f7a-2'));
-          F.revealWords(tl, $('s2-f7b-1'), 'v09', S, { from: 4, to: 7, y: 18, blur: 10 }); gap($('s2-f7b-1'));
+          F.revealWords(tl, $('s2-f7a-1'), 'v09', S, { from: D.r.f7a1[0], to: D.r.f7a1[1], y: 24, blur: 14, dur: 0.5 }); gap($('s2-f7a-1'));
+          F.revealWords(tl, $('s2-f7a-2'), 'v09', S, { from: D.r.f7a2[0], to: D.r.f7a2[1], y: 24, blur: 14, dur: 0.5 }); gap($('s2-f7a-2'));
+          F.revealWords(tl, $('s2-f7b-1'), 'v09', S, { from: D.r.f7b1[0], to: D.r.f7b1[1], y: 18, blur: 10 }); gap($('s2-f7b-1'));
           // the slam
-          [['s2-nv1', 36.708, 1.75], ['s2-nv2', 37.108, 1.95]].forEach(([id, t0, sc]) => {
-            tl.fromTo('#' + id, { opacity: 0, scale: sc, filter: 'blur(18px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.22, ease: 'power4.out' }, L(t0 - 0.02));
-            tl.fromTo('#s2-slashflash', { opacity: 0.22 }, { opacity: 0, duration: 0.3, ease: 'power2.out', immediateRender: false }, L(t0));
-          });
-          tl.fromTo('#s2-f7b-3', { opacity: 0, y: 26, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power3.out' }, L(F.wordAt('v09', 'sold') - 0.04));
+          {
+            const host = $('s2-f7b-2'), slamT = LANG === 'de' ? [F.wordAt('v09', 8), F.wordAt('v09', 9), F.wordAt('v09', 10)] : [36.708, 37.108];
+            D.never.forEach((w, i) => {
+              const sp = document.createElement('span'); sp.className = 'nv'; sp.textContent = w;
+              if (i < D.never.length - 1) sp.style.marginRight = '.2em';
+              host.appendChild(sp);
+              const mid = LANG === 'de' && i === 1;             // "und" is the beat between the two slams: a lighter hit
+              const t0 = slamT[i], sc = mid ? 1.25 : (i === 0 ? 1.75 : 1.95);
+              tl.fromTo(sp, { opacity: 0, scale: sc, filter: mid ? 'blur(8px)' : 'blur(18px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: mid ? 0.18 : 0.22, ease: 'power4.out' }, L(t0 - 0.02));
+              if (!mid) tl.fromTo('#s2-slashflash', { opacity: 0.22 }, { opacity: 0, duration: 0.3, ease: 'power2.out', immediateRender: false }, L(t0));
+            });
+          }
+          tl.fromTo('#s2-f7b-3', { opacity: 0, y: 26, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power3.out' }, L(F.wordAt('v09', D.soldW) - 0.04));
           tl.to('#s2-f7b', { opacity: 0, duration: 0.4, ease: 'power2.in' }, L(38.85));
           tl.fromTo('#s2-f7b', { opacity: 1 }, { opacity: 1, duration: 0.01 }, L(T.c7b));
 

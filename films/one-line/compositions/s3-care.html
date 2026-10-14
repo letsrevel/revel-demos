@@ -132,6 +132,41 @@
       <script>
         (function () {
           const F = FILM, S = window.S3, T = S.T, START = 39.271;
+          const LANG = F.T.lang === 'de' ? 'de' : 'en';
+          const D = {
+            en: { m: ['Vienna', 'Thursday, 7 pm', '24 spots'], pill: 'Questionnaire required', btn: 'Get ticket', h1: 'Workshop Application', h2: 'Intro to Shibari — Rope & Trust',
+              qn: ['Question 1 of 3', 'Question 2 of 3', 'Question 3 of 3'], q1: 'How much rope experience do you have?', o: ['None yet', 'A little', 'Quite a lot'],
+              q2: 'Have you read our house rules on consent and aftercare?', cl: 'Yes, I have read them',
+              q3: 'Tell us about your experience with rope and what you hope to learn.', hint: 'There is no wrong answer — complete beginners are exactly who this evening is for.',
+              ans: "Complete beginner. I’d love to learn to tie with care, and to be someone people feel safe with.", sub: 'Submit application', done: 'Submitted' },
+            de: { m: ['Wien', 'Donnerstag, 19 Uhr', '24 Plätze'], pill: 'Fragebogen erforderlich', btn: 'Ticket sichern', h1: 'Workshop-Bewerbung', h2: 'Intro to Shibari — Rope & Trust',
+              qn: ['Frage 1 von 3', 'Frage 2 von 3', 'Frage 3 von 3'], q1: 'Wie viel Erfahrung mit Seilen hast du?', o: ['Noch keine', 'Ein bisschen', 'Ziemlich viel'],
+              q2: 'Hast du unsere Hausregeln zu Konsens und Aftercare gelesen?', cl: 'Ja, habe ich gelesen',
+              q3: 'Erzähl uns von deiner Erfahrung mit Seilen und was du lernen möchtest.', hint: 'Es gibt keine falsche Antwort — Anfänger*innen sind genau richtig an diesem Abend.',
+              ans: 'Absolute Anfängerin. Ich möchte lernen, mit Sorgfalt zu fesseln, und jemand sein, bei dem sich andere sicher fühlen.', sub: 'Bewerbung absenden', done: 'Abgesendet' },
+          }[LANG];
+          const q = (sel) => document.querySelector(sel);
+          const lastText = (el) => { const n = Array.from(el.childNodes).filter(c => c.nodeType === 3 && c.nodeValue.trim()); return n[n.length - 1]; };
+          const firstText = (el) => Array.from(el.childNodes).find(c => c.nodeType === 3 && c.nodeValue.trim());
+          if (LANG === 'de') {
+            document.querySelectorAll('.s3-meta').forEach((e, i) => { lastText(e).nodeValue = D.m[i]; });
+            q('#s3-care-pill').textContent = D.pill; lastText(q('#s3-care-btn')).nodeValue = D.btn;
+            q('#s3-care-head b').textContent = D.h1; lastText(q('#s3-care-head')).nodeValue = D.h2;
+            [1, 2, 3].forEach(i => { q('#s3-care-q' + i + ' .s3-qn').textContent = D.qn[i - 1]; });
+            q('#s3-care-q1 .s3-qt').textContent = D.q1; q('#s3-care-q2 .s3-qt').textContent = D.q2; q('#s3-care-q3 .s3-qt').textContent = D.q3;
+            q('#s3-care-q3 .s3-hint').textContent = D.hint; q('#s3-care-q2 .s3-checklab').textContent = D.cl;
+            document.querySelectorAll('#s3-care-q1 .lab').forEach((e, i) => { e.textContent = D.o[i]; });
+            firstText(q('#s3-care-submit')).nodeValue = D.sub; lastText(q('#s3-care-submit .done')).nodeValue = D.done;
+            const t1 = q('#s3-care-t1'), t2 = q('#s3-care-t2');
+            t1.style.fontSize = '88px'; t2.style.fontSize = '52px'; t2.style.width = '760px'; t2.style.top = '450px';
+            const W = [206, 214, 220], X = [44, 268, 500];
+            document.querySelectorAll('#s3-care-q1 .s3-chip').forEach((c, i) => { c.style.width = W[i] + 'px'; c.style.left = X[i] + 'px'; c.querySelector('.lab').style.cssText += 'font-size:22px;white-space:nowrap;'; });
+            const ta = q('#s3-care-ta'); ta.style.fontSize = '23px'; ta.style.padding = '16px 24px';
+            document.getElementById('s3-care-caret').style.height = '25px';
+          }
+          // the spoken lines, exactly as spoken (word i on screen = word i in the take)
+          q('#s3-care-t1').textContent = F.line('v10').text;
+          q('#s3-care-t2').textContent = F.line('v11').text;
           const L = t => t - START;
           const tl = gsap.timeline({ paused: true });
           const $ = id => document.getElementById(id);
@@ -169,7 +204,7 @@
           // ---- frame 8: the line of type (his words, his moment)
           const w1 = F.revealWords(tl, $('s3-care-t1'), 'v10', START, {});
           const w2 = F.revealWords(tl, $('s3-care-t2'), 'v11', START, {});
-          tl.to(['#s3-care-t1', '#s3-care-t2'], { opacity: 0, y: -14, filter: 'blur(8px)', duration: .45, ease: 'power2.in', stagger: .06 }, L(T.f8end + .05));
+          tl.to(['#s3-care-t1', '#s3-care-t2'], { opacity: 0, y: -14, filter: 'blur(8px)', duration: .45, ease: 'power2.in', stagger: .06 }, L(T.typeOut));
 
           // ---- the door and its lamp
           tl.fromTo('#s3-care-door', { opacity: 0 }, { opacity: 1, duration: 3.2, ease: 'sine.inOut' }, L(40.2));
@@ -216,7 +251,7 @@
           tl.fromTo('#s3-care-q2 .s3-check .fill', { opacity: 0 }, { opacity: 1, duration: .2 }, L(T.pick2));
           tl.fromTo('#s3-care-q2 .s3-check svg', { opacity: 0, scale: .4 }, { opacity: 1, scale: 1, duration: .3, ease: 'back.out(2.2)' }, L(T.pick2));
           // answer 3: type it
-          const ANSWER = "Complete beginner. I’d love to learn to tie with care, and to be someone people feel safe with.";
+          const ANSWER = D.ans;
           const typed = $('s3-care-typed'), p = { n: 0 };
           tl.fromTo('#s3-care-ta .focus', { opacity: 0 }, { opacity: 1, duration: .25 }, L(T.type0 - .45));
           tl.set('#s3-care-caret', { opacity: 1 }, L(T.type0 - .4));
@@ -233,7 +268,7 @@
           fromTo(560, 330, chip[0], chip[1], 49.4, 1.7);
           fromTo(chip[0], chip[1], box[0], box[1], T.card2 + .35, 1.0);       // follows question 2 up to the front
           fromTo(box[0], box[1], ta[0], ta[1], T.card3 + .25, .9);
-          fromTo(ta[0], ta[1], sub[0], sub[1], T.type1 + .05, .7);
+          { const d = Math.max(.3, T.submit - (T.type1 + .05) + .03); fromTo(ta[0], ta[1], sub[0], sub[1], T.type1 + .05, Math.min(.7, d)); }
           tl.to(cur, { opacity: 0, duration: .4 }, L(T.submit + .9));
           const click = at => {
             tl.fromTo('#s3-care-cursor svg', { scale: 1 }, { scale: .86, duration: .07, yoyo: true, repeat: 1, transformOrigin: '3px 2px', ease: 'power2.out' }, L(at - .07));
