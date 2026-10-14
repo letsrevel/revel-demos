@@ -402,9 +402,11 @@ Each of these cost a failed take at least once.
   the pre-encoded copy.
 - **Never hand-set the "let's revel." wordmark** in a system font. Use a real
   logo asset, or no wordmark at all.
-- **The apostrophe in "let's" is a straight apostrophe ( ' )**, everywhere —
-  wordmark, titles, narration scripts, captions. The designer's original SVGs
-  draw it as ‘; the copies in `assets/brand/` are corrected (see its README).
+- **The apostrophe in "let’s" is the typographic apostrophe ’ (U+2019)**,
+  everywhere — wordmark, titles, on-screen text, captions. Never the opening
+  quote ‘ (the designer's original files drew that — a typo, now fixed in
+  `assets/brand/`, see its README) and not the straight ' either. Revel no
+  longer works with the designer: we maintain the brand files ourselves.
 - **Interstitials and end cards use soft brand surfaces** — lavender paper,
   gentle gradients — not loud saturated walls. This applies to surfaces you
   paint yourself; argo's own overlay cards choose their theme from the sampled

@@ -100,8 +100,10 @@
   function wordAt(id, which) {
     const l = line(id); if (!l || !l.words.length) return l ? l.start : 0;
     if (typeof which === 'number') return (l.words[which] || l.words[l.words.length - 1]).s;
-    const k = String(which).toLowerCase().replace(/[^\p{L}\p{N}']/gu, '');
-    const w = l.words.find(w => w.w.toLowerCase().replace(/[^\p{L}\p{N}']/gu, '') === k);
+    // ’ and ' are the same word: on-screen text uses the typographic apostrophe
+    const norm = x => String(x).toLowerCase().replace(/’/g, "'").replace(/[^\p{L}\p{N}']/gu, '');
+    const k = norm(which);
+    const w = l.words.find(w => norm(w.w) === k);
     return w ? w.s : l.start;
   }
 
