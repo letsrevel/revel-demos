@@ -268,7 +268,7 @@
           // ------------------------------------------------ frame 12: the room
           F.revealWords(tl, document.getElementById('s4-in-r1'), 'v16', S, { from: IX.r1[0], to: IX.r1[1], dur: 0.55, y: 16 });
           F.revealWords(tl, document.getElementById('s4-in-r2'), 'v16', S, { from: IX.r2[0], to: IX.r2[1], dur: 0.55, y: 16 });
-          tl.to('#s4-in-r1', { opacity: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power2.in' }, L(DE ? wa('v16', IX.r2first) - 0.19 : 68.32));
+          tl.to('#s4-in-r1', { opacity: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power2.in' }, L(wa('v16', IX.r2first) - 0.19));   // just before the second sentence's first word
           tl.to('#s4-in-r2', { opacity: 0, filter: 'blur(8px)', duration: 0.4, ease: 'power2.in' }, L(70.85));
 
           window.__timelines['s4-in'] = tl;
