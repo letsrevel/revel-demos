@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // Stitch rendered clips into one video.
 //   node stitch.mjs <out.mp4> <clipName> [<clipName> ...]
-// Clip names resolve to videos/<name>.mp4. All clips share the same recording
+// Clip names are looked up in videos/tour, videos/clips and videos/in-depth;
+// the result lands in the first clip's folder. All clips share the same recording
 // profile (1920x1080@30, H.264/AAC via argo), so we normalize + concat with
 // the ffmpeg concat filter (re-encode, safe across argo versions).
 import { execFileSync } from 'node:child_process';
@@ -16,14 +17,16 @@ if (!out || names.length === 0) {
 	process.exit(1);
 }
 
+const FOLDERS = ['tour', 'clips', 'in-depth'];
 const inputs = names.map((n) => {
-	const p = resolve(here, 'videos', `${n}.mp4`);
-	if (!existsSync(p)) {
-		console.error(`missing clip: ${p} — render it first (npx argo pipeline ${n})`);
+	const p = FOLDERS.map((f) => resolve(here, 'videos', f, `${n}.mp4`)).find(existsSync);
+	if (!p) {
+		console.error(`missing clip: ${n}.mp4 in videos/{${FOLDERS}} — render it first (npm run pipeline -- ${n})`);
 		process.exit(1);
 	}
 	return p;
 });
+const outPath = resolve(dirname(inputs[0]), out);
 
 const args = ['-y'];
 for (const p of inputs) args.push('-i', p);
@@ -54,8 +57,8 @@ args.push(
 	'192k',
 	'-movflags',
 	'+faststart',
-	resolve(here, 'videos', out)
+	outPath
 );
 
 execFileSync('ffmpeg', args, { stdio: 'inherit' });
-console.log(`\nStitched ${names.length} clips → videos/${out}`);
+console.log(`\nStitched ${names.length} clips → ${outPath}`);

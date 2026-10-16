@@ -8,7 +8,7 @@ mode: collaborative
 ---
 
 Rebuild of the 2026-09 Canvas film (`manifesto/`, reference render
-`videos/revel-one-line.mp4`) with the human actor's EN take. Same script and scene
+`videos/archive/one-line-drafts/revel-one-line.mp4`) with the human actor's EN take. Same script and scene
 order; ~95 s instead of 121 s. Timing truth: `data/timing.json` (film seconds).
 Old-film time of each line, for looking up the reference render:
 v01 1.6 · v02 5.2 · v03 10.3 · v04 16.85 · v05 23.88 · v06 26.6 · v07 31.0 · v08 34.3 ·

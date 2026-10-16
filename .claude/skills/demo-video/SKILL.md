@@ -31,7 +31,7 @@ Everything needed lives in this repository.
 4. **Write the demo** — `demos/<name>.demo.ts` + `demos/<name>.scenes.json` —
    then `npx argo validate <name>`, then `npm run pipeline -- <name>`.
 5. **Verify the output.** Read the scene report for runaway durations, extract
-   frames at every story beat (`ffmpeg -ss <t> -i videos/<name>.mp4 -frames:v 1
+   frames at every story beat (`ffmpeg -ss <t> -i videos/<folder>/<name>.mp4 -frames:v 1
    /tmp/f.png`) and actually Read them, before telling the user it is done.
 
 ## The environment

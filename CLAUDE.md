@@ -70,7 +70,13 @@ probes/                   Headless selector-walkers — run before every render
 scripts/                  doctor, purge-clips, validate-all, seeding, fake certs
 assets/                   Brand marks (committed — these are inputs)
 tts-samples/              Voice audition clips (audio is not committed)
-videos/                   Rendered output (not committed)
+videos/                   Rendered output (not committed), sorted by project:
+  one-line/                 the brand film: EN/DE × 4k/1080p/discord, thumbnails/
+  in-depth/                 the episode series
+  tour/                     the standing tour, its clips and revel-tour-full
+  clips/                    every other clip
+  archive/                  drafts and superseded versions — nothing is deleted
+  (each has subtitles/ for .srt/.vtt and a hidden .meta/ for argo's json)
 .argo/                    argo's working cache (not committed)
 
 EPISODES.md               Storyboards + house rules of the episode series
@@ -269,13 +275,20 @@ npx argo validate <name>        # scene names must match the marks — offline, 
 npm run pipeline -- <name>      # tts → record → align → export
 ```
 
+argo renders into the hidden `videos/.renders/`; `npm run pipeline` and `npm
+run episode` then file the result into its folder (`ep-*` → `in-depth/`, the
+tour clips → `tour/`, everything else → `clips/`). If you ever run `npx argo
+pipeline` directly, finish with `node scripts/file-videos.mjs`. Finished One
+Line renders are copied by hand from `films/one-line/renders/` into
+`videos/one-line/` as `one-line-<EN|DE>-<4k|1080p|discord>.mp4`.
+
 ### 5. Verify before claiming anything
 
 - Read the scene report for runaway durations.
 - `ffprobe` each file in `.argo/<name>/clips/` — a one-line scene that produced
   90 seconds of audio is a runaway generation.
 - Extract a frame at every story beat and **actually look at it**:
-  `ffmpeg -ss <seconds> -i videos/<name>.mp4 -frames:v 1 /tmp/frame.png`
+  `ffmpeg -ss <seconds> -i videos/<folder>/<name>.mp4 -frames:v 1 /tmp/frame.png`
 - Only then report, with the file path and what you verified.
 
 ### 6. Stitch
@@ -284,8 +297,9 @@ npm run pipeline -- <name>      # tts → record → align → export
 npm run stitch -- compilation.mp4 clip-intro clip-a clip-b clip-outro
 ```
 
-Clip names resolve to `videos/<name>.mp4`. Keep `clip-intro` first and
-`clip-outro` last unless the user asks otherwise. Output lands in `videos/`.
+Clip names are looked up in `videos/tour/`, `videos/clips/` and
+`videos/in-depth/`. Keep `clip-intro` first and `clip-outro` last unless the
+user asks otherwise. Output lands in the first clip's folder.
 
 Re-rendering a clip does **not** update a compilation that already contains it.
 Re-stitch after every clip render — otherwise you hand over the old cut, and the
@@ -299,7 +313,7 @@ the same frame. `EPISODES.md` holds the house rules and every storyboard;
 `.claude/EPISODE-BRIEF.md` is the brief an episode author works from. Render
 with `npm run episode -- ep-<slug>`: it takes one of two render slots (so
 several authors can render at once without starving the recorder) and writes
-to `videos/in-depth/` via `ARGO_OUT`. Episodes stand alone — each carries its
+into `videos/in-depth/`. Episodes stand alone — each carries its
 own title card and end card, so they are not stitched with clip-intro/outro.
 
 The standing full tour, in order:
@@ -329,7 +343,7 @@ audio and gives you a video in the wrong voice, having reported success. So:
 
 ```bash
 npm run purge-clips -- <demo>          # ALWAYS, before a re-voice
-ARGO_TTS=elevenlabs npx argo pipeline <demo>
+ARGO_TTS=elevenlabs npm run pipeline -- <demo>
 ```
 
 Re-run the whole `pipeline`, not just `tts generate` — recording holds are timed

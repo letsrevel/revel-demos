@@ -37,7 +37,7 @@ editing, say so and offer to wait.
    must be green first):
 
    ```bash
-   ARGO_TTS=elevenlabs npx argo pipeline <clip>
+   ARGO_TTS=elevenlabs npm run pipeline -- <clip>
    ```
 
    The full pipeline (not just `tts generate`): recording holds are timed to
@@ -47,10 +47,10 @@ editing, say so and offer to wait.
    - `ffprobe` each file in `.argo/<clip>/clips/` — a scene far longer than its
      line means a runaway generation; re-run that clip.
    - Extract a frame at a couple of story beats
-     (`ffmpeg -ss <t> -i videos/<clip>.mp4 -frames:v 1 /tmp/f.png`) and Read
+     (`ffmpeg -ss <t> -i videos/<folder>/<clip>.mp4 -frames:v 1 /tmp/f.png`) and Read
      them — overlays and framing must still be right.
    - Listen-check is the user's job: tell them which files to play
-     (`ffplay -autoexit -nodisp videos/<clip>.mp4`, or `afplay` on macOS).
+     (`ffplay -autoexit -nodisp videos/<folder>/<clip>.mp4`, or `afplay` on macOS).
      Never claim to have judged the audio yourself.
 
 6. **Restitch if asked.** With `--stitch <out.mp4>`:

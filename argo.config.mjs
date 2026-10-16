@@ -69,9 +69,10 @@ const { engine, voice } = selected();
 export default defineConfig({
 	baseURL: process.env.BASE_URL || 'http://localhost:5173',
 	demosDir: 'demos',
-	// ARGO_OUT lets a series render into its own folder (videos/in-depth for
-	// the "Revel, in depth" episodes) without touching the standing clips.
-	outputDir: process.env.ARGO_OUT || 'videos',
+	// Renders land in a hidden staging folder; scripts/file-videos.mjs then
+	// moves each into videos/in-depth, videos/tour or videos/clips (npm run
+	// pipeline and npm run episode do this for you).
+	outputDir: process.env.ARGO_OUT || 'videos/.renders',
 	tts: {
 		engine,
 		// ARGO_VOICE overrides for either engine (ElevenLabs voices are IDs).

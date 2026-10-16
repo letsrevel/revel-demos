@@ -83,7 +83,7 @@ npm run doctor
 npm run pipeline -- clip-intro
 
 # 4. Watch it.
-ffplay -autoexit videos/clip-intro.mp4      # or just open videos/clip-intro.mp4
+ffplay -autoexit videos/tour/clip-intro.mp4      # or just open it in Finder
 ```
 
 That is the whole loop. While it is running you can open the app yourself at
@@ -122,7 +122,9 @@ world away and build it again from nothing:
 FORCE_RESEED=1 docker compose run --rm bootstrap
 ```
 
-Finished videos land in `videos/`.
+Finished videos land in `videos/`, one folder per project: `one-line/`,
+`in-depth/`, `tour/`, `clips/`, plus `archive/` for drafts. Subtitles sit in
+each folder's `subtitles/`.
 
 ## The demo world
 
@@ -188,7 +190,7 @@ final pass, once the words are settled.
 npm run pipeline -- my-clip                       # draft, free
 
 npm run purge-clips -- my-clip                    # ← do not skip this
-ARGO_TTS=elevenlabs npx argo pipeline my-clip     # final, paid
+ARGO_TTS=elevenlabs npm run pipeline -- my-clip     # final, paid
 ```
 
 That middle line matters. Narration audio is cached by the *text* of each line —

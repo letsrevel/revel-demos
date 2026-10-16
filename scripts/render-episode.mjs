@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 /*
- * Render one "Revel, in depth" episode into videos/in-depth/, through a small
+ * Render one "Revel, in depth" episode (filed into videos/in-depth/ when it
+ * finishes — see file-videos.mjs), through a small
  * concurrency gate so several authors can render at once without three
  * recorders fighting one emulated Docker stack.
  *
@@ -14,6 +15,7 @@ import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { fileVideo } from './file-videos.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const name = process.argv[2];
@@ -69,10 +71,10 @@ process.on('SIGTERM', () => process.exit(143));
 
 const child = spawn('npx', ['argo', 'pipeline', name], {
 	cwd: root,
-	stdio: 'inherit',
-	env: { ...process.env, ARGO_OUT: process.env.ARGO_OUT || 'videos/in-depth' }
+	stdio: 'inherit'
 });
 child.on('exit', (code) => {
 	release();
+	if (code === 0) fileVideo(name);
 	process.exit(code ?? 1);
 });

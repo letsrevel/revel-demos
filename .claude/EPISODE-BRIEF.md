@@ -22,7 +22,7 @@ Read-only references you may consult for selectors and field names:
 1. **Probe**: write `probes/ep-<slug>.mjs` — a headless Playwright script (see `probes/`) that arranges state through `demos/arrange-lib.mjs`, logs in, and walks EVERY page and selector your scenes will touch, printing what it found. `node probes/ep-<slug>.mjs`. Iterate there until every step passes. Verify arranged state via the API in the probe.
 2. **Write** `demos/ep-<slug>.demo.ts` and `demos/ep-<slug>.scenes.json`, copying the skeleton's framing exactly: scene `title` first (title card), your scenes, scene `close` last (end card). Use `withOverlay` for scenes that act, `showOverlay` only for pure holds. Mark AFTER cuts and loads, never before.
 3. `npx argo validate ep-<slug>`.
-4. **Render**: `npm run episode -- ep-<slug>`. It waits for one of two render slots, then runs the pipeline into `videos/in-depth/`. Run it with `run_in_background: true` and wait for the completion notification (do not poll with sleep). A full render is 5–20 minutes.
+4. **Render**: `npm run episode -- ep-<slug>`. It waits for one of two render slots, then runs the pipeline and files the result into `videos/in-depth/`. Run it with `run_in_background: true` and wait for the completion notification (do not poll with sleep). A full render is 5–20 minutes.
 5. **Verify before claiming anything**:
    - Scene report: total 60–80 s; no scene wildly longer than its line.
    - `ffprobe -v error -show_entries format=duration -of csv=p=0 .argo/ep-<slug>/clips/*` — a short line that produced 60 s of audio is a runaway.
