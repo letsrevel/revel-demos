@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: 'Bricolage Grotesque'; font-weight: 200 800; src: url(assets/fonts/BricolageGrotesque-latin-normal-200_800.woff2) format('woff2'); }
+        @font-face { font-family: 'Nata Sans'; font-weight: 100 900; src: url(assets/fonts/NataSans-latin-normal-100_900.woff2) format('woff2'); }
+        #root { position: absolute; inset: 0; pointer-events: none; overflow: hidden; color: #0D1E1C; font-family: 'Nata Sans', sans-serif; }
+        #root * { box-sizing: border-box; }
+
+        /* ---------- montage ---------- */
+        #s5-mont { position: absolute; inset: 0; }
+        .s5-pnl { position: absolute; inset: 0; opacity: 0; }
+        .s5-blob { position: absolute; width: 1000px; height: 1000px; border-radius: 50%; left: 760px; top: 300px; }
+        .s5-lbl { position: absolute; left: 700px; bottom: 700px; width: 1150px; font: 800 128px/0.98 'Bricolage Grotesque', sans-serif; letter-spacing: -0.025em; color: #0D1E1C; }
+        .s5-bar { position: absolute; left: 704px; top: 396px; width: 220px; height: 14px; border-radius: 7px; transform-origin: 0 50%; }
+        .s5-cw { position: absolute; left: 700px; top: 440px; }
+        .s5-card { position: relative; zoom: 1.75; width: 560px; background: #fff; border-radius: 16px; padding: 22px; border: 1px solid rgba(140,60,221,.12);
+          box-shadow: 0 1px 2px rgba(13,30,28,.06), 0 12px 32px rgba(44,16,72,.14), 0 40px 80px rgba(44,16,72,.10); }
+        .s5-hd { display: flex; align-items: center; gap: 12px; }
+        .s5-tile { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; flex: none; }
+        .s5-t1 { font-size: 16px; font-weight: 700; line-height: 1.2; }
+        .s5-t2 { font-size: 12.5px; color: #6B5F7E; line-height: 1.3; }
+        .s5-sec { margin-top: 16px; font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; font-weight: 700; color: #8A7FA0; }
+        .s5-row { position: relative; display: flex; align-items: center; justify-content: space-between; height: 48px; margin-top: 8px; padding: 0 12px 0 14px; border-radius: 12px; background: #F6F2FC; font-size: 16px; font-weight: 600; }
+        .s5-who { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #6B5F7E; }
+        .s5-av { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; color: #fff; flex: none; }
+        .s5-btn { display: inline-flex; align-items: center; justify-content: center; height: 34px; padding: 0 14px; border-radius: 10px; background: #8C3CDD; color: #fff; font-size: 14px; font-weight: 700; white-space: nowrap; }
+        .s5-chip { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 12px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+        .s5-prog { height: 8px; border-radius: 4px; background: #EFE8F7; margin-top: 8px; overflow: hidden; }
+        .s5-prog > i { display: block; height: 100%; border-radius: 4px; background: #8C3CDD; transform-origin: 0 50%; }
+        .s5-cur { position: absolute; width: 22px; height: 22px; z-index: 5; filter: drop-shadow(0 2px 3px rgba(13,30,28,.35)); }
+
+        /* panel 2 */
+        .s5-tiers { display: flex; gap: 22px; }
+        .s5-tier { position: relative; width: 262px; height: 300px; border-radius: 16px; padding: 22px; background: #fff; border: 1px solid rgba(140,60,221,.12);
+          box-shadow: 0 1px 2px rgba(13,30,28,.06), 0 12px 32px rgba(44,16,72,.14), 0 40px 80px rgba(44,16,72,.10); }
+        .s5-tier .nm { font-size: 16px; font-weight: 700; }
+        .s5-tier .pr { margin-top: 36px; font: 800 78px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.04em; }
+        .s5-tier .sub { margin-top: 8px; font-size: 13px; opacity: .7; }
+        #s5-t-mem { background: #8C3CDD; color: #fff; border-color: rgba(255,255,255,.2); }
+        #s5-t-mem .nm, #s5-t-mem .pr { color: #fff; }
+
+        /* panel 3 */
+        .s5-amt { font: 800 74px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.04em; margin-top: 14px; }
+        .s5-sl { position: relative; margin: 20px 8px 0; height: 28px; }
+        .s5-sl .tr { position: absolute; left: 0; right: 0; top: 10px; height: 8px; border-radius: 4px; background: #E7DEF6; }
+        .s5-sl .fl { position: absolute; left: 0; top: 10px; height: 8px; border-radius: 4px; background: #8C3CDD; width: 0; }
+        .s5-sl .th { position: absolute; top: 0; width: 28px; height: 28px; margin-left: -14px; border-radius: 50%; background: #fff; border: 3px solid #8C3CDD; box-shadow: 0 3px 8px rgba(44,16,72,.25); }
+        .s5-mm { display: flex; justify-content: space-between; margin: 6px 8px 0; font-size: 12px; color: #8A7FA0; font-weight: 600; }
+        .s5-pre { display: flex; gap: 8px; margin-top: 14px; }
+        .s5-pre .p { flex: 1; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 14px; font-weight: 700; background: #F6F2FC; color: #0D1E1C; border: 1.5px solid transparent; }
+
+        /* panel 4 */
+        #s5-p4-card { height: 262px; }
+        .s5-big { font: 800 62px/1 'Bricolage Grotesque', sans-serif; letter-spacing: -0.035em; }
+        .s5-stack { position: relative; height: 66px; margin-top: 16px; }
+        .s5-stack > div { position: absolute; left: 0; top: 0; }
+        .s5-q { display: flex; gap: 12px; margin-top: 14px; align-items: center; }
+        .s5-open { position: absolute; left: 22px; right: 22px; top: 22px; opacity: 0; }
+        .s5-lay { position: absolute; left: 22px; right: 22px; top: 22px; }
+
+        /* panel 5 */
+        .s5-tk { display: flex; gap: 20px; align-items: center; margin-top: 16px; }
+        .s5-qr { position: relative; width: 168px; height: 168px; flex: none; padding: 10px; background: #fff; border-radius: 12px; border: 1px solid rgba(13,30,28,.1); overflow: hidden; }
+        .s5-qr svg { width: 100%; height: 100%; display: block; }
+        .s5-scan { position: absolute; left: 0; right: 0; top: 0; height: 36px; background: linear-gradient(180deg, rgba(140,60,221,0), rgba(140,60,221,.42)); border-bottom: 3px solid #8C3CDD; }
+        .s5-ok { position: absolute; left: 50%; top: 50%; width: 92px; height: 92px; margin: -46px 0 0 -46px; border-radius: 50%; background: #8C3CDD; display: grid; place-items: center; box-shadow: 0 10px 28px rgba(140,60,221,.4); }
+        .s5-stat { margin-top: 16px; display: flex; justify-content: space-between; align-items: center; height: 42px; padding: 0 14px; border-radius: 12px; background: #F6F2FC; font-size: 14px; font-weight: 600; }
+
+        /* panel 6 */
+        #s5-p6-card { height: 330px; }
+        .s5-sw { display: flex; gap: 6px; margin-top: 4px; }
+        .s5-sw .c { flex: 1; height: 34px; border-radius: 9px; display: grid; place-items: center; font-size: 13px; font-weight: 800; letter-spacing: .04em; background: #F6F2FC; color: #6B5F7E; }
+        .s5-lg { position: absolute; left: 22px; right: 22px; top: 126px; opacity: 0; }
+        .s5-lg .gr { font: 800 56px/1.05 'Bricolage Grotesque', sans-serif; letter-spacing: -0.03em; }
+        .s5-lg .nm { margin-top: 6px; font-size: 13px; color: #8A7FA0; font-weight: 600; }
+        .s5-lg .s5-btn { margin-top: 18px; height: 40px; padding: 0 18px; font-size: 16px; }
+
+        /* ---------- close ---------- */
+        #s5-glow { position: absolute; left: 460px; top: -70px; width: 1000px; height: 1000px; border-radius: 50%;
+          background: radial-gradient(circle, rgba(171,130,219,.34) 0%, rgba(171,130,219,0) 62%); opacity: 0; }
+        #s5-lock { position: absolute; inset: 0; transform-origin: 960px 420px; }
+        #s5-lock img { position: absolute; left: 600px; top: 90px; width: 720px; height: 720px; }
+        #s5-lock-r { clip-path: inset(0 0 26% 0); opacity: 0; }
+        #s5-lock-w { clip-path: inset(74% 100% 0 0); opacity: 0; }
+        #s5-tag { position: absolute; left: 0; width: 1920px; top: 650px; text-align: center; font: 600 60px/1.2 'Bricolage Grotesque', sans-serif; letter-spacing: -0.015em; color: #0D1E1C; }
+        #s5-tag .ln { display: block; }
+        #s5-url { position: absolute; left: 0; width: 1920px; top: 890px; text-align: center; font: 600 30px/1 'Nata Sans', sans-serif; letter-spacing: .06em; color: #8C3CDD; opacity: 0; }
+      </style>
+
+      <div data-hf-id="hf-6z2z" id="root" data-composition-id="s5-everything" data-width="1920" data-height="1080">
+        <div data-hf-id="hf-gkvx" id="s5-glow"></div>
+
+        <div data-hf-id="hf-6plo" id="s5-mont">
+          <!-- 1 Potlucks -->
+          <div data-hf-id="hf-bod1" class="s5-pnl" id="s5-p1">
+            <div data-hf-id="hf-os7x" class="s5-blob" style="background:radial-gradient(circle, rgba(249,178,51,.55) 0%, rgba(249,178,51,0) 66%)"></div>
+            <div data-hf-id="hf-0hh8" class="s5-bar" style="background:#F9B233"></div>
+            <div data-hf-id="hf-8fd4" class="s5-lbl">Potlucks.</div>
+            <div data-hf-id="hf-mfr3" class="s5-cw"><div data-hf-id="hf-svq7" class="s5-card">
+              <div data-hf-id="hf-zw19" class="s5-hd"><div data-hf-id="hf-xq5b" class="s5-tile" style="background:#F9B233"><svg data-hf-id="hf-qa32" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D1E1C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-zi9s" d="M4 11h16l-1.5 8h-13z" /><path data-hf-id="hf-2kzr" d="M8 11a4 4 0 0 1 8 0" /></svg></div>
+                <div data-hf-id="hf-yeow"><div data-hf-id="hf-d6r6" class="s5-t1">Picnic in the Park</div><div data-hf-id="hf-h301" class="s5-t2">Sunday Slow Picnic Club · Potluck</div></div></div>
+              <div data-hf-id="hf-tevl" class="s5-sec">Who brings what</div>
+              <div data-hf-id="hf-ooxb" class="s5-row" id="s5-p1-r1"><span data-hf-id="hf-xyhj">Sourdough loaf</span><span data-hf-id="hf-topy" class="s5-who"><span data-hf-id="hf-6f7y" class="s5-av" style="background:#9AB2FF">T</span>Tobias</span></div>
+              <div data-hf-id="hf-dtfo" class="s5-row" id="s5-p1-r2"><span data-hf-id="hf-84jk">Lemon cake</span><span data-hf-id="hf-793d" class="s5-who"><span data-hf-id="hf-t6no" class="s5-av" style="background:#AB82DB">M</span>Mira</span></div>
+              <div data-hf-id="hf-el3h" class="s5-row" id="s5-p1-r3"><span data-hf-id="hf-imqy">Oat milk</span>
+                <span data-hf-id="hf-v44t" id="s5-p1-btn" class="s5-btn">I’ll bring this</span>
+                <span data-hf-id="hf-whym" id="s5-p1-you" class="s5-chip" style="position:absolute;right:12px;background:rgba(140,60,221,.14);color:#8C3CDD;opacity:0"><svg data-hf-id="hf-m7sm" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8C3CDD" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-s5bw" d="M5 12.5l4.5 4.5L19 7.5" /></svg>You</span>
+                <svg data-hf-id="hf-vwpf" id="s5-p1-cur" class="s5-cur" style="right:36px;top:20px" viewBox="0 0 24 24"><path data-hf-id="hf-zvpk" d="M5 3l14 8-6 1.6L10.5 19z" fill="#0D1E1C" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" /></svg>
+              </div>
+              <div data-hf-id="hf-ss2p" style="display:flex;justify-content:space-between;margin-top:16px;font-size:13px;font-weight:600;color:#6B5F7E"><span data-hf-id="hf-tyxf" id="s5-p1-cnt">2 of 3 dishes claimed</span><span data-hf-id="hf-oy7w">Sat 14 Jun · 15:00</span></div>
+              <div data-hf-id="hf-7j65" class="s5-prog"><i data-hf-id="hf-sz42" id="s5-p1-fill" style="width:100%;transform:scaleX(.667)"></i></div>
+            </div></div>
+          </div>
+
+          <!-- 2 Member pricing -->
+          <div data-hf-id="hf-fmh2" class="s5-pnl" id="s5-p2">
+            <div data-hf-id="hf-nbp1" class="s5-blob" style="background:radial-gradient(circle, rgba(171,130,219,.6) 0%, rgba(171,130,219,0) 66%)"></div>
+            <div data-hf-id="hf-sfzw" class="s5-bar" style="background:#8C3CDD"></div>
+            <div data-hf-id="hf-erz5" class="s5-lbl">Member pricing.</div>
+            <div data-hf-id="hf-yurj" class="s5-cw"><div data-hf-id="hf-xhqb" class="s5-card" style="padding:0;background:none;border:0;box-shadow:none">
+              <div data-hf-id="hf-ix2g" class="s5-tiers">
+                <div data-hf-id="hf-zav5" class="s5-tier" id="s5-t-gen"><div data-hf-id="hf-r0bo" class="nm">General admission</div><div data-hf-id="hf-k7xp" class="pr" id="s5-gen-pr">€18</div><div data-hf-id="hf-j3jm" class="sub">per person</div>
+                  <div data-hf-id="hf-o8py" class="s5-chip" style="position:absolute;left:22px;bottom:22px;background:#F1ECFA;color:#6B5F7E">Everyone</div></div>
+                <div data-hf-id="hf-igsc" class="s5-tier" id="s5-t-mem"><div data-hf-id="hf-ie42" class="nm">Members</div><div data-hf-id="hf-mits" class="pr" id="s5-mem-pr">€18</div><div data-hf-id="hf-npfa" class="sub">per person</div>
+                  <div data-hf-id="hf-rbxe" class="s5-chip" id="s5-mem-chip" style="position:absolute;left:22px;bottom:22px;background:rgba(255,255,255,.2);color:#fff"><svg data-hf-id="hf-9pwq" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><rect data-hf-id="hf-6c2c" x="5" y="11" width="14" height="9" rx="2" /><path data-hf-id="hf-tdb4" d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>Members only</div>
+                  <div data-hf-id="hf-wb4n" class="s5-chip" id="s5-mem-save" style="position:absolute;right:18px;top:18px;background:#F9B233;color:#0D1E1C;opacity:0">Save €6</div></div>
+              </div>
+            </div></div>
+          </div>
+
+          <!-- 3 Pay what you can -->
+          <div data-hf-id="hf-jkl3" class="s5-pnl" id="s5-p3">
+            <div data-hf-id="hf-d0n6" class="s5-blob" style="background:radial-gradient(circle, rgba(154,178,255,.7) 0%, rgba(154,178,255,0) 66%)"></div>
+            <div data-hf-id="hf-il87" class="s5-bar" style="background:#9AB2FF"></div>
+            <div data-hf-id="hf-57ve" class="s5-lbl">Pay what you can.</div>
+            <div data-hf-id="hf-yggi" class="s5-cw"><div data-hf-id="hf-47bz" class="s5-card">
+              <div data-hf-id="hf-qaw1" class="s5-hd"><div data-hf-id="hf-ix5k" class="s5-tile" style="background:#9AB2FF"><svg data-hf-id="hf-u8ia" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0D1E1C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-s5cd" d="M4 8h16v3a2 2 0 0 0 0 4v3H4v-3a2 2 0 0 0 0-4z" /></svg></div>
+                <div data-hf-id="hf-y7yw"><div data-hf-id="hf-gj2q" class="s5-t1">Basement Sessions</div><div data-hf-id="hf-2jtj" class="s5-t2">The Velvet Cellar · Choose your price</div></div></div>
+              <div data-hf-id="hf-q4by" style="display:flex;align-items:baseline;gap:10px"><div data-hf-id="hf-wlcl" class="s5-amt" id="s5-p3-amt">€5</div><div data-hf-id="hf-s11a" class="s5-t2">per ticket</div></div>
+              <div data-hf-id="hf-e7sc" class="s5-sl"><div data-hf-id="hf-vv9y" class="tr"></div><div data-hf-id="hf-27o5" class="fl" id="s5-p3-fl"></div><div data-hf-id="hf-7ray" class="th" id="s5-p3-th" style="left:0"></div>
+                <svg data-hf-id="hf-kkzk" id="s5-p3-cur" class="s5-cur" style="left:-6px;top:8px" viewBox="0 0 24 24"><path data-hf-id="hf-jmbk" d="M5 3l14 8-6 1.6L10.5 19z" fill="#0D1E1C" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" /></svg></div>
+              <div data-hf-id="hf-zhk7" class="s5-mm"><span data-hf-id="hf-n2xy">min €5</span><span data-hf-id="hf-jm4c">max €25</span></div>
+              <div data-hf-id="hf-z7h8" class="s5-pre"><div data-hf-id="hf-c65f" class="p" id="s5-p3-c5" style="background:#EFE8FF">€5</div><div data-hf-id="hf-og7g" class="p" id="s5-p3-c10">€10</div><div data-hf-id="hf-96uw" class="p" id="s5-p3-c15">€15</div><div data-hf-id="hf-0qwg" class="p" id="s5-p3-c25">€25</div></div>
+            </div></div>
+          </div>
+
+          <!-- 4 Waitlists -->
+          <div data-hf-id="hf-pqaw" class="s5-pnl" id="s5-p4">
+            <div data-hf-id="hf-kjzj" class="s5-blob" style="background:radial-gradient(circle, rgba(230,51,42,.28) 0%, rgba(230,51,42,0) 66%)"></div>
+            <div data-hf-id="hf-anht" class="s5-bar" style="background:#E6332A"></div>
+            <div data-hf-id="hf-xnwx" class="s5-lbl">Waitlists.</div>
+            <div data-hf-id="hf-y25h" class="s5-cw"><div data-hf-id="hf-0tn9" class="s5-card" id="s5-p4-card">
+              <div data-hf-id="hf-ichy" class="s5-lay" id="s5-p4-queue">
+                <div data-hf-id="hf-rht4" class="s5-hd"><div data-hf-id="hf-dmr7" class="s5-tile" style="background:#E7DEF6"><svg data-hf-id="hf-gf6n" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8C3CDD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle data-hf-id="hf-o1fd" cx="12" cy="12" r="8.5" /><path data-hf-id="hf-ge4w" d="M12 7.5V12l3 2" /></svg></div>
+                  <div data-hf-id="hf-x11t"><div data-hf-id="hf-brqe" class="s5-t1">Golden Hour Photo Walk</div><div data-hf-id="hf-o67u" class="s5-t2">Analog Photo Walks · Sold out</div></div>
+                  <span data-hf-id="hf-f3lf" class="s5-chip" style="margin-left:auto;background:rgba(249,178,51,.28);color:#7A4E00">Waitlist</span></div>
+                <div data-hf-id="hf-vtav" class="s5-stack">
+                  <div data-hf-id="hf-ad1m" id="s5-n3" class="s5-big">You’re #3</div>
+                  <div data-hf-id="hf-8yhx" id="s5-n2" class="s5-big" style="opacity:0">You’re #2</div>
+                  <div data-hf-id="hf-gfu9" id="s5-n1" class="s5-big" style="opacity:0">You’re #1</div>
+                </div>
+                <div data-hf-id="hf-jupu" class="s5-q">
+                  <span data-hf-id="hf-9t60" class="s5-av" id="s5-qa" style="width:40px;height:40px;font-size:16px;background:#9AB2FF">A</span>
+                  <span data-hf-id="hf-kkfy" class="s5-av" id="s5-qb" style="width:40px;height:40px;font-size:16px;background:#F9B233;color:#0D1E1C">B</span>
+                  <span data-hf-id="hf-rabx" class="s5-av" style="width:40px;height:40px;font-size:15px;background:#8C3CDD">You</span>
+                  <span data-hf-id="hf-ncn4" class="s5-t2" style="margin-left:6px">People ahead of you leave the list</span>
+                </div>
+              </div>
+              <div data-hf-id="hf-bwut" class="s5-open" id="s5-p4-open">
+                <div data-hf-id="hf-r3i3" class="s5-hd"><div data-hf-id="hf-l5i7" class="s5-tile" style="background:#F9B233"><svg data-hf-id="hf-asv7" width="22" height="22" viewBox="0 0 24 24" fill="#0D1E1C"><path data-hf-id="hf-22yy" d="M12 2l2.2 6.3L21 10l-5.2 4 1.7 6.6L12 17l-5.5 3.6L8.2 14 3 10l6.8-1.7z" /></svg></div>
+                  <div data-hf-id="hf-xfcu"><div data-hf-id="hf-qoqc" class="s5-t1" style="font-size:22px">A spot opened up for you</div><div data-hf-id="hf-ldxp" class="s5-t2" style="margin-top:3px">It is yours if you want it. Claim it within 24 hours.</div></div></div>
+                <div data-hf-id="hf-o03r" class="s5-prog" style="margin-top:22px"><i data-hf-id="hf-789o" style="background:#F9B233;width:100%"></i></div>
+                <div data-hf-id="hf-j0hv" style="margin-top:22px;position:relative;display:inline-block"><span data-hf-id="hf-vb4h" class="s5-btn" id="s5-p4-claim" style="height:44px;padding:0 24px;font-size:17px">Claim spot</span>
+                  <svg data-hf-id="hf-zzq7" id="s5-p4-cur" class="s5-cur" style="left:70px;top:22px" viewBox="0 0 24 24"><path data-hf-id="hf-ifeh" d="M5 3l14 8-6 1.6L10.5 19z" fill="#0D1E1C" stroke="#fff" stroke-width="1.6" stroke-linejoin="round" /></svg></div>
+              </div>
+            </div></div>
+          </div>
+
+          <!-- 5 Check-in -->
+          <div data-hf-id="hf-qhyp" class="s5-pnl" id="s5-p5">
+            <div data-hf-id="hf-0p1m" class="s5-blob" style="background:radial-gradient(circle, rgba(140,60,221,.34) 0%, rgba(140,60,221,0) 66%)"></div>
+            <div data-hf-id="hf-x56c" class="s5-bar" style="background:#8C3CDD"></div>
+            <div data-hf-id="hf-nr57" class="s5-lbl">Check-in at the door.</div>
+            <div data-hf-id="hf-0uao" class="s5-cw"><div data-hf-id="hf-3t0y" class="s5-card">
+              <div data-hf-id="hf-p3yy" class="s5-hd"><div data-hf-id="hf-grtr" class="s5-tile" style="background:#8C3CDD"><svg data-hf-id="hf-4pkq" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-olo0" d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3" /><path data-hf-id="hf-xqeq" d="M8 12h8" /></svg></div>
+                <div data-hf-id="hf-w8fr"><div data-hf-id="hf-vr74" class="s5-t1">Door check-in</div><div data-hf-id="hf-3i4s" class="s5-t2">Basement Sessions · The Velvet Cellar</div></div></div>
+              <div data-hf-id="hf-7ody" class="s5-tk">
+                <div data-hf-id="hf-ccjg" class="s5-qr"><div data-hf-id="hf-iw0u" id="s5-qr-svg"></div><div data-hf-id="hf-43b6" class="s5-scan" id="s5-scan"></div>
+                  <div data-hf-id="hf-3tyg" class="s5-ok" id="s5-ok"><svg data-hf-id="hf-ryyj" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path data-hf-id="hf-h36i" id="s5-ok-p" d="M5 12.5l4.5 4.5L19 7.5" stroke-dasharray="20" stroke-dashoffset="20" /></svg></div></div>
+                <div data-hf-id="hf-o6lj" style="flex:1">
+                  <div data-hf-id="hf-dv27" class="s5-t2">Ticket</div><div data-hf-id="hf-ybo2" class="s5-t1" style="font-size:20px">Noa Beckmann</div>
+                  <div data-hf-id="hf-tqxq" class="s5-t2" style="margin-top:10px">Tier</div><div data-hf-id="hf-xx45" class="s5-t1">General admission</div>
+                  <div data-hf-id="hf-5blo" class="s5-chip" id="s5-p5-chip" style="margin-top:14px;background:#F1ECFA;color:#6B5F7E">Ready to scan</div>
+                </div>
+              </div>
+              <div data-hf-id="hf-fsi3" class="s5-stat"><span data-hf-id="hf-d85l">Checked in</span><span data-hf-id="hf-fbx3"><b data-hf-id="hf-c9zm" id="s5-p5-n">36</b> / 120</span></div>
+            </div></div>
+          </div>
+
+          <!-- 6 Languages -->
+          <div data-hf-id="hf-ug2q" class="s5-pnl" id="s5-p6">
+            <div data-hf-id="hf-eloe" class="s5-blob" style="background:radial-gradient(circle, rgba(249,178,51,.5) 0%, rgba(249,178,51,0) 66%)"></div>
+            <div data-hf-id="hf-sc8k" class="s5-bar" style="background:#F9B233"></div>
+            <div data-hf-id="hf-4i3h" class="s5-lbl">In six languages.</div>
+            <div data-hf-id="hf-0fzn" class="s5-cw"><div data-hf-id="hf-xpxr" class="s5-card" id="s5-p6-card">
+              <div data-hf-id="hf-0qco" class="s5-sw" id="s5-sw">
+                <div data-hf-id="hf-pgw4" class="c">EN</div><div data-hf-id="hf-jhcg" class="c">DE</div><div data-hf-id="hf-tyj2" class="c">IT</div><div data-hf-id="hf-ztt3" class="c">FR</div><div data-hf-id="hf-nhcz" class="c">ES</div><div data-hf-id="hf-le8n" class="c">PT</div>
+              </div>
+              <div data-hf-id="hf-lm82" class="s5-lg"><div data-hf-id="hf-rxhh" class="gr">Welcome</div><div data-hf-id="hf-9zcd" class="nm">English</div><span data-hf-id="hf-x2d3" class="s5-btn">Get tickets</span></div>
+              <div data-hf-id="hf-7gh2" class="s5-lg"><div data-hf-id="hf-9bq8" class="gr">Willkommen</div><div data-hf-id="hf-q8xd" class="nm">Deutsch</div><span data-hf-id="hf-1cgn" class="s5-btn">Tickets holen</span></div>
+              <div data-hf-id="hf-7us3" class="s5-lg"><div data-hf-id="hf-py6j" class="gr">Benvenuti</div><div data-hf-id="hf-66ee" class="nm">Italiano</div><span data-hf-id="hf-9a48" class="s5-btn">Prendi i biglietti</span></div>
+              <div data-hf-id="hf-8934" class="s5-lg"><div data-hf-id="hf-76i8" class="gr">Bienvenue</div><div data-hf-id="hf-zd4c" class="nm">Français</div><span data-hf-id="hf-tr88" class="s5-btn">Obtenir des billets</span></div>
+              <div data-hf-id="hf-5gxx" class="s5-lg"><div data-hf-id="hf-my15" class="gr">Bienvenidos</div><div data-hf-id="hf-s844" class="nm">Español</div><span data-hf-id="hf-ctif" class="s5-btn">Conseguir entradas</span></div>
+              <div data-hf-id="hf-5v8y" class="s5-lg"><div data-hf-id="hf-sp35" class="gr">Bem-vindos</div><div data-hf-id="hf-ug98" class="nm">Português</div><span data-hf-id="hf-6oka" class="s5-btn">Obter bilhetes</span></div>
+            </div></div>
+          </div>
+        </div>
+
+        <!-- close: the lockup (R first, wordmark on "Let’s revel.") -->
+        <div data-hf-id="hf-n5qf" id="s5-lock">
+          <img data-hf-id="hf-4yo0" id="s5-lock-r" src="assets/brand/Revel_Logo_Gradient_Wordmark.svg" alt="">
+          <img data-hf-id="hf-ap3z" id="s5-lock-w" src="assets/brand/Revel_Logo_Gradient_Wordmark.svg#wordmark" alt="">
+        </div>
+        <div data-hf-id="hf-t7vy" id="s5-tag"><span data-hf-id="hf-0m6t" class="ln" id="s5-tag1">The free, open-source event platform</span><span data-hf-id="hf-akse" class="ln" id="s5-tag2">for communities, clubs and independent venues.</span></div>
+        <div data-hf-id="hf-mi01" id="s5-url">letsrevel.io</div>
+      </div>
+
+      <script>
+        (function () {
+          const tl = gsap.timeline({ paused: true });
+          const L = 71.4, M = FILM.T.montage, END = FILM.T.montageEnd;
+          const A = t => t - L;
+          const $ = s => document.querySelector(s);
+
+          // ---- language: visible text keyed by its English source (English is untouched)
+          const LANG = FILM.T.lang || 'en', DE = LANG === 'de';
+          const DEX = {
+            'Potlucks.': 'Potlucks.', 'Member pricing.': 'Mitgliederpreise.', 'Pay what you can.': 'Zahl, was du kannst.', 'Waitlists.': 'Wartelisten.',
+            'Check-in at the door.': 'Check-in am Einlass.', 'In six languages.': 'In sechs Sprachen.',
+            'Who brings what': 'Wer bringt was mit', 'Sourdough loaf': 'Sauerteigbrot', 'Lemon cake': 'Zitronenkuchen', 'Oat milk': 'Hafermilch',
+            'I’ll bring this': 'Ich bringe das mit', 'You': 'Du', '2 of 3 dishes claimed': '2 von 3 Gerichten vergeben', 'Sat 14 Jun · 15:00': 'Sa., 14. Juni · 15:00',
+            'General admission': 'Allgemeiner Eintritt', 'Members': 'Mitglieder', 'per person': 'pro Person', 'Everyone': 'Alle', 'Members only': 'Nur für Mitglieder', 'Save €6': '6 € gespart',
+            '€18': '18 €', 'per ticket': 'pro Ticket', 'The Velvet Cellar · Choose your price': 'The Velvet Cellar · Zahle, was du kannst',
+            'min €5': 'min. 5 €', 'max €25': 'max. 25 €', '€5': '5 €', '€10': '10 €', '€15': '15 €', '€25': '25 €',
+            'Analog Photo Walks · Sold out': 'Analog Photo Walks · Ausgebucht', 'Waitlist': 'Warteliste',
+            'You’re #3': 'Du bist #3', 'You’re #2': 'Du bist #2', 'You’re #1': 'Du bist #1', 'People ahead of you leave the list': 'Wer vor dir steht, rückt nach',
+            'A spot opened up for you': 'Ein Platz ist frei geworden', 'It is yours if you want it. Claim it within 24 hours.': 'Er gehört dir, wenn du ihn willst. Sichere ihn dir innerhalb von 24 Stunden.',
+            'Claim spot': 'Platz sichern', 'Door check-in': 'Einlass', 'Tier': 'Ticketart', 'Ready to scan': 'Bereit zum Scannen', 'Checked in': 'Eingecheckt',
+            '3 of 3 dishes claimed': '3 von 3 Gerichten vergeben',
+          };
+          const tr = x => (DE && DEX[x] !== undefined) ? DEX[x] : x;
+          const eur = n => DE ? n + ' €' : '€' + n;
+          if (DE) {
+            const wk = document.createTreeWalker($('#root'), NodeFilter.SHOW_TEXT), nodes = [];
+            while (wk.nextNode()) nodes.push(wk.currentNode);
+            nodes.forEach(n => { const k = n.nodeValue.trim(); if (k && DEX[k] !== undefined) n.nodeValue = n.nodeValue.replace(k, DEX[k]); });
+            // long German labels: step the type down so they stay inside the safe area
+            $('#s5-p2 .s5-lbl').style.fontSize = '100px';
+            $('#s5-p3 .s5-lbl').style.fontSize = '116px';
+            $('#s5-p5 .s5-lbl').style.fontSize = '116px';
+            $('#s5-tag').style.cssText += ';top:628px;font-size:56px';
+            $('#s5-url').style.top = '905px';
+          }
+
+          // ---- QR (seeded, deterministic)
+          (function () {
+            const r = FILM.rng(4242), n = 21; let s = '<svg viewBox="0 0 ' + n + ' ' + n + '" shape-rendering="crispEdges"><g fill="#0D1E1C">';
+            const fin = (a, b) => [[0, 0], [0, 14], [14, 0]].some(([i, j]) => a >= i && a < i + 7 && b >= j && b < j + 7);
+            for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+              let on;
+              if (fin(i, j)) { const [a, b] = [[0, 0], [0, 14], [14, 0]].find(([p, q]) => i >= p && i < p + 7 && j >= q && j < q + 7); const di = i - a, dj = j - b; on = di === 0 || di === 6 || dj === 0 || dj === 6 || (di >= 2 && di <= 4 && dj >= 2 && dj <= 4); }
+              else on = r() > 0.52;
+              if (on) s += '<rect x="' + j + '" y="' + i + '" width="1.02" height="1.02"/>';
+            }
+            $('#s5-qr-svg').innerHTML = s + '</g></svg>';
+            $('#s5-qr-svg').style.cssText = 'width:100%;height:100%';
+          })();
+
+          // ---- helpers
+          function words(el, times, o = {}) {
+            const toks = el.textContent.trim().split(/\s+/); el.textContent = '';
+            toks.forEach((tk, i) => {
+              const s = document.createElement('span'); s.textContent = tk; s.style.display = 'inline-block';
+              el.appendChild(s); if (i < toks.length - 1) el.appendChild(document.createTextNode(' '));
+              tl.fromTo(s, { opacity: 0, y: o.y ?? 34, scale: o.scale ?? 0.94, filter: 'blur(' + (o.blur ?? 8) + 'px)' },
+                { opacity: 1, y: 0, scale: 1, filter: 'blur(0px)', duration: o.dur ?? 0.38, ease: o.ease || 'back.out(1.5)' }, A(times[i]) - 0.02);
+            });
+          }
+          const W = (id, w) => FILM.wordAt(id, w);
+          const show = (sel, t, v = 1) => tl.set(sel, { opacity: v }, A(t));
+          const pop = (sel, t, from = 0.6, dur = 0.5) => tl.fromTo(sel, { scale: from, opacity: 0 }, { scale: 1, opacity: 1, duration: dur, ease: 'back.out(1.8)' }, A(t));
+          function press(sel, t) { tl.to(sel, { scale: 0.92, duration: 0.07, ease: 'power2.in' }, A(t)); tl.to(sel, { scale: 1, duration: 0.18, ease: 'back.out(3)' }, A(t) + 0.07); }
+          function cursor(sel, t0, t1, dx, dy) {
+            tl.fromTo(sel, { x: dx, y: dy, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: t1 - t0, ease: 'power2.out' }, A(t0));
+          }
+
+          // ---- panel visibility: hard cuts on the montage beats
+          const ids = ['#s5-p1', '#s5-p2', '#s5-p3', '#s5-p4', '#s5-p5', '#s5-p6'];
+          const ends = [M[1], M[2], M[3], M[4], M[5], END];
+          ids.forEach((id, i) => {
+            tl.set(id, { opacity: 1 }, A(M[i]));
+            if (i < 5) tl.set(id, { opacity: 0 }, A(ends[i]));
+            // entrance on the beat: card springs, blob swells, bar draws
+            tl.fromTo(id + ' .s5-cw', { y: 70, scale: 0.9, rotation: -1.6, opacity: 0, transformOrigin: '0% 50%' },
+              { y: 0, scale: 1, rotation: 0, opacity: 1, duration: 0.55, ease: 'back.out(1.5)' }, A(M[i]));
+            tl.fromTo(id + ' .s5-blob', { scale: 0.55, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: 'expo.out' }, A(M[i]));
+            tl.fromTo(id + ' .s5-bar', { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: 'expo.out' }, A(M[i]) + 0.06);
+            // slow drift so nothing is dead still
+            tl.fromTo(id + ' .s5-blob', { x: 0, y: 0 }, { x: 24, y: -14, duration: ends[i] - M[i], ease: 'none' }, A(M[i]));
+          });
+
+          // ---- labels, on his words
+          words($('#s5-p1 .s5-lbl'), [W('v17a', 0)]);
+          words($('#s5-p2 .s5-lbl'), DE ? [W('v17b', 0)] : [W('v17b', 0), W('v17b', 1)]);
+          words($('#s5-p3 .s5-lbl'), [W('v17c', 0), W('v17c', 1), W('v17c', 2), W('v17c', 3)]);
+          words($('#s5-p4 .s5-lbl'), [W('v17d', 0)]);
+          words($('#s5-p5 .s5-lbl'), DE ? [W('v17e', 0), W('v17e', 1), W('v17e', 2)] : [W('v17e', 0), W('v17e', 2), W('v17e', 3), W('v17e', 4)]);
+          words($('#s5-p6 .s5-lbl'), [W('v17f', 0), W('v17f', 1), W('v17f', 2)]);
+
+          // ---- 1 potluck: a dish gets claimed
+          (function () {
+            const s = M[0];
+            ['#s5-p1-r1', '#s5-p1-r2', '#s5-p1-r3'].forEach((r, i) => tl.fromTo(r, { x: 40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, A(s) + 0.1 + i * 0.07));
+            cursor('#s5-p1-cur', s + 0.35, s + 0.85, 150, 90);
+            press('#s5-p1-btn', s + 0.88);
+            tl.set('#s5-p1-btn', { opacity: 0 }, A(s + 0.97));
+            tl.fromTo('#s5-p1-you', { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(2.2)' }, A(s + 0.97));
+            tl.fromTo('#s5-p1-r3', { backgroundColor: '#F6F2FC' }, { backgroundColor: '#E9DBF9', duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut' }, A(s + 0.97));
+            tl.to('#s5-p1-cur', { opacity: 0, x: 40, y: 30, duration: 0.3, ease: 'power2.in' }, A(s + 1.15));
+            tl.to('#s5-p1-fill', { scaleX: 1, duration: 0.5, ease: 'power3.out' }, A(s + 1.0));
+            tl.set('#s5-p1-cnt', { textContent: tr('3 of 3 dishes claimed') }, A(s + 1.0));
+          })();
+
+          // ---- 2 member pricing: the members price lands
+          (function () {
+            const s = M[1];
+            tl.fromTo('#s5-t-gen', { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.4)' }, A(s) + 0.05);
+            tl.fromTo('#s5-t-mem', { x: 60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.4)' }, A(s) + 0.15);
+            const p = { v: 18 };
+            tl.fromTo(p, { v: 18 }, { v: 12, duration: 0.5, ease: 'power3.inOut', onUpdate: () => { $('#s5-mem-pr').textContent = eur(Math.round(p.v)); } }, A(s) + 0.6);
+            tl.fromTo('#s5-mem-pr', { scale: 1 }, { scale: 1.1, duration: 0.14, yoyo: true, repeat: 1, ease: 'power2.out', transformOrigin: '0% 50%' }, A(s) + 1.08);
+            pop('#s5-mem-save', s + 1.12, 0.4, 0.45);
+            tl.to('#s5-t-mem', { y: -14, scale: 1.05, duration: 0.4, ease: 'back.out(2)' }, A(s) + 1.1);
+            tl.to('#s5-t-gen', { opacity: 0.62, duration: 0.4 }, A(s) + 1.1);
+          })();
+
+          // ---- 3 pay what you can: the slider
+          (function () {
+            const s = M[2], p = { v: 5 }; // slider track is 100% of #s5-sl inner width
+            const apply = () => {
+              const f = (p.v - 5) / 20;
+              $('#s5-p3-th').style.left = (f * 100) + '%'; $('#s5-p3-fl').style.width = (f * 100) + '%';
+              $('#s5-p3-amt').textContent = eur(Math.round(p.v));
+            };
+            tl.fromTo(p, { v: 5 }, { v: 15, duration: 0.9, ease: 'power3.inOut', onUpdate: apply, onComplete: apply }, A(s) + 0.45);
+            cursor('#s5-p3-cur', s + 0.15, s + 0.45, 90, 60);
+            tl.to('#s5-p3-cur', { x: 250, duration: 0.9, ease: 'power3.inOut' }, A(s) + 0.45);
+            tl.to('#s5-p3-cur', { opacity: 0, duration: 0.25 }, A(s) + 1.5);
+            tl.set('#s5-p3-c5', { backgroundColor: '#F6F2FC' }, A(s + 0.5));
+            tl.set('#s5-p3-c15', { backgroundColor: '#8C3CDD', color: '#fff' }, A(s + 1.35));
+            tl.fromTo('#s5-p3-c15', { scale: 1 }, { scale: 1.12, duration: 0.14, yoyo: true, repeat: 1, ease: 'power2.out' }, A(s + 1.35));
+            tl.fromTo('#s5-p3-amt', { scale: 1 }, { scale: 1.1, duration: 0.14, yoyo: true, repeat: 1, ease: 'power2.out', transformOrigin: '0% 80%' }, A(s + 1.35));
+          })();
+
+          // ---- 4 waitlist: #3 → #2 → #1 → a spot opens
+          (function () {
+            const s = M[3];
+            tl.fromTo('#s5-n3', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power3.out' }, A(s) + 0.05);
+            const swap = (from, to, t, gone) => {
+              tl.to(gone, { x: -40, scale: 0.5, opacity: 0, duration: 0.25, ease: 'power2.in' }, A(t) - 0.05);
+              tl.to(from, { y: -26, opacity: 0, duration: 0.18, ease: 'power2.in' }, A(t));
+              tl.fromTo(to, { y: 28, opacity: 0, scale: 1 }, { y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.9)' }, A(t) + 0.06);
+            };
+            swap('#s5-n3', '#s5-n2', s + 0.5, '#s5-qa');
+            swap('#s5-n2', '#s5-n1', s + 0.9, '#s5-qb');
+            // the spot opens
+            tl.to('#s5-p4-queue', { opacity: 0, y: -20, duration: 0.22, ease: 'power2.in' }, A(s + 1.3));
+            tl.fromTo('#s5-p4-open', { opacity: 0, y: 24, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: 0.5, ease: 'back.out(1.6)' }, A(s + 1.5));
+            cursor('#s5-p4-cur', s + 1.6, s + 1.85, 100, 60);
+            press('#s5-p4-claim', s + 1.88);
+          })();
+
+          // ---- 5 check-in: scan → checked in
+          (function () {
+            const s = M[4];
+            tl.fromTo('#s5-scan', { y: -36 }, { y: 150, duration: 0.55, ease: 'power1.inOut' }, A(s) + 0.2);
+            tl.to('#s5-scan', { opacity: 0, duration: 0.1 }, A(s) + 0.75);
+            tl.to('#s5-qr-svg', { opacity: 0.16, duration: 0.25 }, A(s) + 0.78);
+            tl.fromTo('#s5-ok', { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(2.2)' }, A(s) + 0.78);
+            tl.to('#s5-ok-p', { strokeDashoffset: 0, duration: 0.3, ease: 'power2.out' }, A(s) + 0.95);
+            tl.set('#s5-p5-chip', { backgroundColor: '#8C3CDD', color: '#fff', textContent: tr('Checked in') }, A(s + 0.8));
+            tl.fromTo('#s5-p5-chip', { scale: 0.7 }, { scale: 1, duration: 0.4, ease: 'back.out(2.4)' }, A(s + 0.8));
+            tl.set('#s5-p5-n', { textContent: '37' }, A(s + 0.85));
+            tl.fromTo('#s5-p5-n', { scale: 1.5 }, { scale: 1, duration: 0.35, ease: 'power3.out' }, A(s + 0.85));
+          })();
+
+          // ---- 6 languages: the same label, six ways
+          (function () {
+            const s = M[5] + 0.03, step = 0.26;
+            const lg = document.querySelectorAll('#s5-p6 .s5-lg'), ch = document.querySelectorAll('#s5-sw .c');
+            const order = DE ? [1, 0, 2, 3, 4, 5] : [0, 1, 2, 3, 4, 5];
+            order.forEach((gi, i) => {
+              const g = lg[gi], t0 = s + i * step, last = i === order.length - 1;
+              tl.set(g, { opacity: 1 }, A(t0));
+              if (!last) tl.set(g, { opacity: 0 }, A(t0 + step));
+              tl.fromTo(g, { y: 18, scale: 0.97 }, { y: 0, scale: 1, duration: 0.28, ease: 'back.out(2)' }, A(t0));
+              tl.set(ch[gi], { backgroundColor: '#8C3CDD', color: '#fff' }, A(t0));
+              if (i > 0) tl.set(ch[order[i - 1]], { backgroundColor: '#F6F2FC', color: '#6B5F7E' }, A(t0));
+              tl.fromTo(ch[gi], { scale: 1.18 }, { scale: 1, duration: 0.3, ease: 'back.out(2)' }, A(t0));
+            });
+          })();
+
+          // ---- the breath: the montage clears in one slow exhale at the drop
+          tl.to('#s5-mont', { opacity: 0, y: 10, scale: 0.985, duration: 0.7, ease: 'power2.inOut', transformOrigin: '50% 50%' }, A(END) + 0.04);
+
+          // ---- the mark
+          tl.fromTo('#s5-glow', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 2.2, ease: 'power2.out' }, A(84.4));
+          tl.fromTo('#s5-lock-r', { opacity: 0, scale: 0.985, filter: 'blur(5px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.85, ease: 'power2.out', transformOrigin: '960px 330px' }, A(84.2));
+          tl.fromTo('#s5-lock', { scale: 1 }, { scale: 1.035, duration: 95 - 84.2, ease: 'none' }, A(84.2));
+
+          // tagline, verbatim, on his words (two lines)
+          (function () {
+            const t1 = ['The', 'free,', 'open-source', 'event', 'platform'], k1 = ['the', 'free', 'open', 'event', 'platform'];
+            const t2 = ['for', 'communities,', 'clubs', 'and', 'independent', 'venues.'], k2 = ['for', 'communities', 'clubs', 'and', 'independent', 'venues'];
+            const build = (el, toks, keys) => {
+              el.textContent = '';
+              toks.forEach((tk, i) => {
+                const sp = document.createElement('span'); sp.textContent = tk; sp.style.display = 'inline-block';
+                el.appendChild(sp); if (i < toks.length - 1) el.appendChild(document.createTextNode(' '));
+                tl.fromTo(sp, { opacity: 0, y: 14, filter: 'blur(10px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: 'power3.out' }, A(W('v18', keys[i])) - 0.04);
+              });
+            };
+            if (DE) {
+              // „Die kostenlose, quelloffene Event-Plattform für Communities, Vereine und unabhängige Veranstaltungsorte." — by spoken word index (v18: Revel.=0)
+              const ln3 = document.createElement('span'); ln3.className = 'ln'; ln3.id = 's5-tag3'; $('#s5-tag').appendChild(ln3);
+              build($('#s5-tag1'), ['Die', 'kostenlose,', 'quelloffene'], [1, 2, 3]);
+              build($('#s5-tag2'), ['Event-Plattform', 'für', 'Communities,'], [4, 5, 6]);
+              build($('#s5-tag3'), ['Vereine', 'und', 'unabhängige', 'Veranstaltungsorte.'], [7, 8, 9, 10]);
+            } else { build($('#s5-tag1'), t1, k1); build($('#s5-tag2'), t2, k2); }
+          })();
+          tl.fromTo('#s5-url', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, A(90.6));
+          // the tagline leaves, the wordmark answers him: "Let’s revel."
+          tl.to('#s5-tag', { opacity: 0, y: -10, filter: 'blur(6px)', duration: 0.5, ease: 'power2.in' }, A(91.25));
+          tl.fromTo('#s5-lock-w', { opacity: 0, clipPath: 'inset(74% 100% 0 0)' }, { opacity: 1, clipPath: 'inset(74% 0% 0 0)', duration: 0.9, ease: 'power3.inOut' }, A(91.8));
+
+          window.__timelines['s5-everything'] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

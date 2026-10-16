@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body>
+    <template>
+      <style>
+        @font-face { font-family: 'Bricolage Grotesque'; font-weight: 200 800; src: url(assets/fonts/BricolageGrotesque-latin-normal-200_800.woff2) format('woff2'); }
+        @font-face { font-family: 'Instrument Serif'; font-style: italic; font-weight: 400; src: url(assets/fonts/InstrumentSerif-latin-italic-400.woff2) format('woff2'); }
+        @font-face { font-family: 'Nata Sans'; font-weight: 100 900; src: url(assets/fonts/NataSans-latin-normal-100_900.woff2) format('woff2'); }
+        @font-face { font-family: 'JetBrains Mono'; font-weight: 400; src: url(assets/fonts/JetBrainsMono-latin-normal-400.woff2) format('woff2'); }
+        @font-face { font-family: 'JetBrains Mono'; font-weight: 600; src: url(assets/fonts/JetBrainsMono-latin-normal-600.woff2) format('woff2'); }
+
+        #root { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        #s1-origins-world, #s1-origins-fg { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 0 0; }
+
+        /* ---- type ---- */
+        .s1-t { position: absolute; left: 150px; margin: 0; color: #0D1E1C; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; letter-spacing: -0.02em; }
+        #s1-origins-v01 { top: 478px; font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; font-size: 66px; line-height: 1.05; letter-spacing: 0; color: rgba(13,30,28,.78); width: 760px; }
+        #s1-origins-v02a, #s1-origins-v02b { font-size: 100px; line-height: 1.04; width: 800px; }
+        #s1-origins-v02a { top: 362px; }
+        #s1-origins-v02b { top: 466px; font-size: 100px; }
+        .s1-lab { top: 112px; font-weight: 800; font-size: 100px; line-height: 1; letter-spacing: -0.03em; white-space: nowrap; }
+        #s1-origins-plat, #s1-origins-fees { top: 120px; font-weight: 800; font-size: 96px; line-height: 1.04; width: 900px; letter-spacing: -0.03em; color: #5D6069; }
+        #s1-origins-data { top: 120px; font-weight: 800; font-size: 96px; line-height: 1.04; width: 760px; letter-spacing: -0.03em; color: #5D6069; }
+
+        /* ---- world props (top-down, light from upper left => shadows fall to lower right) ---- */
+        .pr { position: absolute; width: 0; height: 0; }
+        .pr > .in { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+        .sh { filter: drop-shadow(6px 10px 8px rgba(44,16,72,.24)); }
+        .ab { position: absolute; }
+
+        .bk { position: absolute; width: 134px; height: 94px; border-radius: 5px 9px 9px 5px; background: var(--c);
+          box-shadow: inset 11px 0 0 rgba(13,30,28,.2), inset -2px 0 0 rgba(255,255,255,.35), 4px 0 0 #FFFFFF, 5px 0 0 rgba(13,30,28,.18); }
+        .bk::after { content: ''; position: absolute; left: 34px; top: 24px; width: 66px; height: 7px; border-radius: 4px; background: rgba(255,255,255,.6); box-shadow: 0 16px 0 -1px rgba(255,255,255,.34); }
+        .pg { position: absolute; width: 58px; height: 78px; background: #FFFFFF;
+          background-image: repeating-linear-gradient(180deg, transparent 0 9px, rgba(13,30,28,.13) 9px 10.5px); background-origin: content-box; background-clip: padding-box; }
+        .pgL { border-radius: 6px 0 0 6px; background-color: #FFFFFF; box-shadow: inset -14px 0 14px -10px rgba(13,30,28,.2); }
+        .pgR { border-radius: 0 6px 6px 0; box-shadow: inset 14px 0 14px -10px rgba(13,30,28,.2); }
+        .mug { position: absolute; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle, #5C3418 0 8px, #FFFFFF 8px 10px, #F9B233 10px); box-shadow: inset 0 0 0 2px rgba(13,30,28,.12); }
+        .mug::after { content: ''; position: absolute; right: -13px; top: 10px; width: 18px; height: 18px; border-radius: 50%; border: 5px solid #F9B233; }
+
+        .bl { position: absolute; width: 170px; height: 126px; border-radius: 4px;
+          background-color: #FFFFFF;
+          background-image: linear-gradient(rgba(249,178,51,.5), rgba(249,178,51,.5)), linear-gradient(90deg, rgba(230,120,30,.35) 50%, transparent 50%), linear-gradient(rgba(230,120,30,.35) 50%, transparent 50%);
+          background-size: 100% 100%, 28px 28px, 28px 28px; background-blend-mode: normal; }
+        .bl2 { position: absolute; inset: 0; border-radius: 4px; background-image: linear-gradient(90deg, rgba(255,255,255,.28) 50%, transparent 50%), linear-gradient(rgba(255,255,255,.28) 50%, transparent 50%); background-size: 28px 28px; }
+        .pl { position: absolute; width: 38px; height: 38px; border-radius: 50%; background: #FFFFFF; box-shadow: inset 0 0 0 5px #F1ECFA, inset 0 0 0 6px rgba(13,30,28,.1); }
+        .bsk { position: absolute; width: 46px; height: 46px; border-radius: 50%; background: #7A4B2A;
+          background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.14) 0 3px, transparent 3px 7px), repeating-linear-gradient(-45deg, rgba(0,0,0,.14) 0 3px, transparent 3px 7px); box-shadow: inset 0 0 0 4px #5C3418; }
+
+        .stg { position: absolute; width: 200px; height: 62px; left: -100px; top: -72px; border-radius: 12px; background: linear-gradient(180deg, #24373a, #0D1E1C);
+          box-shadow: inset 0 2px 0 rgba(255,255,255,.18), inset 0 -3px 0 rgba(255,255,255,.05); }
+        .pool { position: absolute; width: 270px; height: 170px; left: -135px; top: -127px; border-radius: 50%;
+          background: radial-gradient(closest-side, rgba(249,178,51,.85), rgba(249,178,51,.4) 55%, rgba(249,178,51,0)); mix-blend-mode: screen; }
+        .lamp { position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #0D1E1C; box-shadow: inset 0 0 0 5px #3b4a47, 0 0 0 3px #0D1E1C; }
+        .lamp::after { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: #F9B233; box-shadow: 0 0 12px 3px rgba(249,178,51,.8); }
+        .mic { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #5D6069; box-shadow: 0 0 0 3px #0D1E1C; }
+
+        /* ---- fee tags ---- */
+        .tag { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+        .tag .body { position: absolute; white-space: nowrap; background: #EDEEF1; border-radius: 18px; padding: 18px 32px 18px; font: 700 43px/1 'Nata Sans', sans-serif; color: #5D6069;
+          box-shadow: 0 1px 2px rgba(13,30,28,.12), 5px 9px 14px rgba(40,42,50,.28), inset 0 0 0 1px rgba(255,255,255,.7); }
+        .tag .body b { color: #E6332A; font-weight: 800; margin-right: 12px; }
+        .tag .jaw { position: absolute; width: 34px; height: 24px; border-radius: 8px; background: #0D1E1C; box-shadow: inset 0 2px 0 rgba(255,255,255,.2), 3px 5px 6px rgba(13,30,28,.3); }
+        .tag .jaw::after { content: ''; position: absolute; left: 7px; right: 7px; top: 9px; height: 6px; border-radius: 2px; background: #5D6069; }
+
+        /* ---- table ---- */
+        #s1-origins-tbl { position: absolute; left: 1030px; top: 230px; width: 760px; box-sizing: border-box; padding: 28px; border-radius: 16px; opacity: 0;
+          background: rgba(13,30,28,.92); box-shadow: 0 1px 2px rgba(13,30,28,.2), 0 18px 40px rgba(40,42,50,.35), 0 50px 90px rgba(40,42,50,.22); }
+        .s1-tr { display: grid; grid-template-columns: 34px 112px 64px 148px 196px 1fr; align-items: center; height: 54px; font: 400 22px/1 'JetBrains Mono', monospace; color: #C9CAD0; white-space: nowrap; }
+        .s1-tr.h { height: 56px; font-weight: 600; color: #8E9098; border-bottom: 1.5px solid rgba(142,144,152,.35); margin-bottom: 0; }
+        .s1-tr .chip { width: 18px; height: 18px; border-radius: 3px; background: #8E9098; opacity: 0; }
+        .s1-tr .sc { color: #E6332A; text-align: right; font-weight: 600; padding-right: 8px; }
+        .s1-tr.h .sc { color: #8E9098; }
+        .s1-tr.r > span { opacity: 0; }
+        .s1-tr.r > .chip { opacity: 0; }
+      </style>
+
+      <div data-hf-id="hf-y1ix" id="root" data-composition-id="s1-origins" data-width="1920" data-height="1080">
+        <div data-hf-id="hf-87vc" id="s1-origins-world"></div>
+        <div data-hf-id="hf-ews9" id="s1-origins-fg"></div>
+
+        <div data-hf-id="hf-88bu" id="s1-origins-tbl"></div>
+
+        <p data-hf-id="hf-e8pd" id="s1-origins-v01" class="s1-t">Every community starts the same way.</p>
+        <p data-hf-id="hf-jtge" id="s1-origins-v02a" class="s1-t">A few people.</p>
+        <p data-hf-id="hf-qzui" id="s1-origins-v02b" class="s1-t">And a reason to get together.</p>
+        <p data-hf-id="hf-9hp7" id="s1-origins-lab1" class="s1-t s1-lab">A book club.</p>
+        <p data-hf-id="hf-z2bl" id="s1-origins-lab2" class="s1-t s1-lab">A rope circle.</p>
+        <p data-hf-id="hf-o6ku" id="s1-origins-lab3" class="s1-t s1-lab">A Sunday picnic.</p>
+        <p data-hf-id="hf-2unt" id="s1-origins-lab4" class="s1-t s1-lab">A basement gig.</p>
+        <p id="s1-origins-plat" class="s1-t">Then come the platforms.</p>
+        <p id="s1-origins-fees" class="s1-t">Fees on every ticket.</p>
+        <p data-hf-id="hf-qwkl" id="s1-origins-data" class="s1-t">Your people, turned into data.</p>
+      </div>
+
+      <script>
+        (function () {
+          const F = FILM, S = window.S1, E = F.E, prog = F.prog, clamp = F.clamp, lerp = F.lerp, spring = F.spring;
+          const $ = id => document.getElementById('s1-origins-' + id);
+          const tl = gsap.timeline({ paused: true });
+          const world = $('world'), fg = $('fg'), tbl = $('tbl');
+          const NS = 'http://www.w3.org/2000/svg';
+          const DE = !S.EN, TM = S.TM, SE = S.SENT;
+          const Ltxt = DE ? {
+            tags: ['<b>+ 2,49 €</b>Servicegebühr', '<b>+</b>Buchungsgebühr', '<b>+</b>Bearbeitungsgebühr'],
+            head: ['Alter', 'Stadt', 'Interessen'], score: 'Score',
+            rows: [['#48213', '34', 'Wien', 'Seile, Bücher', 214], ['#48214', '27', 'Graz', 'Livemusik', 187], ['#48215', '41', 'Linz', 'Picknicks, Wein', 302], ['#48216', '23', 'Wien', 'Fotografie', 95],
+              ['#48217', '38', 'Salzburg', 'Bücher, Theater', 266], ['#48218', '30', 'Wien', 'Seile, Tanz', 148], ['#48219', '45', 'Innsbruck', 'Wandern', 71], ['#48220', '29', 'Wien', 'Konzerte, Vinyl', 233]],
+          } : {
+            tags: ['<b>+€2.49</b>service fee', '<b>+</b>booking fee', '<b>+</b>processing fee'],
+            head: ['age', 'city', 'interests'], score: 'score',
+            rows: [['#48213', '34', 'Vienna', 'rope, books', 214], ['#48214', '27', 'Graz', 'live music', 187], ['#48215', '41', 'Linz', 'picnics, wine', 302], ['#48216', '23', 'Vienna', 'photography', 95],
+              ['#48217', '38', 'Salzburg', 'books, theatre', 266], ['#48218', '30', 'Vienna', 'rope, dance', 148], ['#48219', '45', 'Innsbruck', 'hiking', 71], ['#48220', '29', 'Vienna', 'gigs, vinyl', 233]],
+          };
+          const wordsOf = id => F.line(id).words;
+          const sentTxt = (id, k) => { const sn = SE[id][k]; return wordsOf(id).slice(sn.from, sn.to + 1).map(w => w.w).join(' '); };
+          $('v01').textContent = F.line('v01').text;
+          if (F.T.lang === 'de') $('v01').style.width = '900px';   // „…fängt gleich an.“ — keep „an.“ off a line of its own
+          $('v02a').textContent = sentTxt('v02', 0); $('v02b').textContent = sentTxt('v02', 1);
+          ['lab1', 'lab2', 'lab3', 'lab4'].forEach((id, k) => { $(id).textContent = sentTxt('v03', k); });
+          $('plat').textContent = sentTxt('v04', 0); $('fees').textContent = sentTxt('v04', 1); $('data').textContent = sentTxt('v04', 2);
+
+          // ------------------------------------------------------------ world props
+          const L = S.LOOPS;
+          const prop = (k, html) => {
+            const d = document.createElement('div'); d.className = 'pr'; d.style.left = L[k].cx + 'px'; d.style.top = L[k].cy + 'px';
+            d.innerHTML = '<div class="in">' + html + '</div>'; world.appendChild(d); return d.firstChild;
+          };
+          const bk = (c, x, y, rot) => `<div class="bk" style="--c:${c};left:${x - 67}px;top:${y - 47}px;transform:rotate(${rot}deg)"></div>`;
+          const book = prop(1, `<div class="sh">
+              ${bk('#8C3CDD', -8, 6, -9)}${bk('#E6332A', 6, 2, 5)}${bk('#9AB2FF', -2, -4, -2)}
+              <div class="ab" style="left:-52px;top:-52px;transform:rotate(-7deg)"><div class="pg pgL" style="left:0;top:0"></div><div class="pg pgR" style="left:58px;top:0"></div></div>
+              <div class="mug" style="left:34px;top:22px"></div></div>`);
+          const knotInner = (() => { let d = ''; for (let k = 0; k <= 160; k++) { const u = k / 160 * Math.PI * 2; d += (k ? 'L' : 'M') + ((Math.sin(u) + 2 * Math.sin(2 * u)) * 19).toFixed(1) + ' ' + ((Math.cos(u) - 2 * Math.cos(2 * u)) * 19).toFixed(1); } return d; })();
+          const knotWrap = prop(2, `<svg class="sh" width="160" height="160" viewBox="-80 -80 160 160" style="position:absolute;left:-80px;top:-80px;overflow:visible">
+              <path d="${knotInner}" fill="none" stroke="#0D1E1C" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" id="s1-origins-knot"/>
+              <path d="${knotInner}" fill="none" stroke="#AB82DB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1 1" id="s1-origins-knot2" opacity=".7"/></svg>`);
+          const picnic = prop(3, `<div class="sh" style="transform:rotate(-9deg)">
+              <div class="bl" style="left:-85px;top:-63px"><div class="bl2"></div></div>
+              <div class="pl" style="left:-52px;top:-30px"></div><div class="pl" style="left:14px;top:-34px"></div>
+              <div class="bsk" style="left:-10px;top:8px"></div></div>`);
+          const gig = prop(4, `<div>
+              <div class="sh"><div class="stg"></div>
+              <div class="lamp" style="left:-92px;top:-68px"></div><div class="lamp" style="left:70px;top:-68px"></div></div>
+              <div class="pool" id="s1-origins-pool"></div></div>`);
+          const props = [null, book, knotWrap, picnic, gig];
+          const grayable = [book, knotWrap, picnic, gig];
+
+          // fee tags
+          const tagTxt = [['+€2.49', 'service fee'], ['+', 'booking fee'], ['+', 'processing fee']];
+          const tagEls = S.TAGS.map((a, i) => {
+            const d = document.createElement('div'); d.className = 'tag'; d.style.left = a.x + 'px'; d.style.top = a.y + 'px';
+            const price = Ltxt.tags[i];
+            const bodyPos = a.dir === 'down' ? 'left:-190px;top:14px' : a.dir === 'up' ? 'left:-170px;bottom:14px' : 'right:14px;top:-40px';
+            const jawPos = a.dir === 'left' ? 'left:-17px;top:-12px;transform:rotate(90deg)' : 'left:-17px;top:-12px';
+            d.innerHTML = '<div class="in" style="position:absolute;left:0;top:0"><div class="body" style="' + bodyPos + '">' + price + '</div><div class="jaw" style="' + jawPos + '"></div></div>';
+            world.appendChild(d); return d;
+          });
+          if (!true) tagTxt.length = 0;
+
+          // foreground bokeh (parallax 1.6x), deterministic
+          const rnd = F.rng(11);
+          const bokeh = [];
+          for (let i = 0; i < 9; i++) {
+            const d = document.createElement('div'), s = 110 + rnd() * 120;
+            const x = 3300 + i * 1020 + rnd() * 300, y = 90 + rnd() * 900;
+            d.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${s}px;height:${s}px;border-radius:50%;filter:blur(14px);background:${[F.C.lavender, F.C.amber, F.C.peri][i % 3]};opacity:${0.16 + rnd() * 0.08}`;
+            fg.appendChild(d); bokeh.push(d);
+          }
+
+          // table
+          const rows = Ltxt.rows;
+          tbl.innerHTML = '<div class="s1-tr h"><span></span><span>id</span><span>' + Ltxt.head.join('</span><span>') + '</span></div>'.replace('</span></div>', '</span><span class="sc">' + Ltxt.score + '</span></div>') +
+            rows.map((r, j) => `<div class="s1-tr r" id="s1-origins-r${j}"><span class="chip"></span><span>${r[0]}</span><span>${r[1]}</span><span>${r[2]}</span><span>${r[3]}</span><span class="sc">0</span></div>`).join('');
+          if (DE) tbl.querySelectorAll('.s1-tr').forEach(r => { r.style.gridTemplateColumns = '34px 108px 84px 140px 210px 1fr'; });
+          const rowEls = rows.map((r, j) => $('r' + j));
+
+          // ------------------------------------------------------------ voice-synced type
+          const lines = F.T.lines;
+          const RV = (id, line, k) => F.revealWords(tl, $(id), line, 0, { from: SE[line][k].from, to: SE[line][k].to });
+          F.revealWords(tl, $('v01'), 'v01', 0, { y: 10, blur: 8 });
+          RV('v02a', 'v02', 0); RV('v02b', 'v02', 1);
+          RV('lab1', 'v03', 0); RV('lab2', 'v03', 1); RV('lab3', 'v03', 2); RV('lab4', 'v03', 3);
+          RV('plat', 'v04', 0); RV('fees', 'v04', 1); RV('data', 'v04', 2);
+
+          const out = (el, t, d = 0.28) => tl.to(el, { opacity: 0, y: -10, filter: 'blur(6px)', duration: d, ease: 'power2.in' }, t);
+          out($('v01'), TM.OUT.v01, 0.3);
+          out($('v02a'), TM.OUT.v02, 0.3); out($('v02b'), TM.OUT.v02, 0.3);
+          out($('lab1'), TM.OUT.lab[0]); out($('lab2'), TM.OUT.lab[1]); out($('lab3'), TM.OUT.lab[2]); out($('lab4'), TM.OUT.lab[3], 0.35);
+          out($('plat'), TM.OUT.plat, 0.25); out($('fees'), TM.OUT.fees, 0.25);
+          tl.to($('data'), { opacity: 0, duration: 0.17, ease: 'power2.in' }, S.OUT0);
+
+          // ------------------------------------------------------------ per-frame state (pure function of film time)
+          const fgs = 1.6;
+          function render(t) {
+            const c = F.camera(t), cd = S.cold(t);
+            world.style.transform = F.cameraCSS(t);
+            fg.style.transform = `translate(960px,540px) scale(${c.zoom}) translate(${-c.x * fgs}px,${-c.y * fgs}px)`;
+            fg.style.opacity = prog(7.0, 8.2, t) * (1 - prog(S.COLD, S.COLD + 0.8, t)) * (1 - prog(S.OUT0, S.OUT1, t));
+            // station props pop on their word
+            for (let k = 1; k <= 4; k++) {
+              const s = spring(t - (S.stationT[k]), 1.9, 0.6), el = props[k];
+              el.style.opacity = clamp(s * 1.8);
+              el.style.transform = `scale(${0.72 + 0.28 * s}) rotate(${(1 - clamp(s, 0, 1.2)) * -6}deg)`;
+            }
+            const kd = prog(S.stationT[2], S.stationT[2] + 1.0, t);
+            const kn = $('knot'), kn2 = $('knot2');
+            kn.style.strokeDashoffset = 1 - E.inOutCubic(kd); kn2.style.strokeDashoffset = 1 - E.inOutCubic(prog(S.stationT[2] + 0.15, S.stationT[2] + 1.15, t));
+            // gig light sways, then drains
+            const pool = $('pool');
+            pool.style.opacity = (0.82 + 0.18 * Math.sin(t * 3.1)) * (1 - 0.5 * cd);
+            pool.style.transform = `translateX(${Math.sin(t * 1.3) * 6}px)`;
+            // cold: colour drains from the props
+            const f = `grayscale(${(0.88 * cd).toFixed(3)}) brightness(${(1 - 0.05 * cd).toFixed(3)})`;
+            grayable.forEach(e => { e.style.filter = cd > 0.001 ? f : 'none'; });
+            const a = 1 - prog(S.OUT0, S.OUT1, t);
+            world.style.opacity = a;
+            // gig props thin out as the people leave for the table
+            props[4].style.opacity = clamp(spring(t - (S.stationT[4]), 1.9, 0.6) * 1.8) * (1 - 0.7 * prog(S.flyStart(0), S.flyStart(7) + 0.5, t));
+
+            // fee tags: swing in on a spring from outside, hang
+            S.TAGS.forEach((g, i) => {
+              const el = tagEls[i], dt = t - g.t, sp = spring(dt, 1.5, 0.42);
+              const vis = dt > -0.02 ? 1 : 0;
+              el.style.opacity = vis * clamp(dt * 8);
+              const out = (1 - sp) * 90, sw = Math.sin(dt * 13) * Math.exp(-dt * 3.2) * 5 * (dt > 0 ? 1 : 0);
+              const v = g.dir === 'down' ? [0, -out] : g.dir === 'up' ? [0, out] : [-out, 0];
+              const ds = t - S.CUT_T[i], sn = ds > 0 ? Math.exp(-ds * 12) * Math.sin(ds * 45) : 0;
+              const kk = g.dir === 'down' ? [0, 1] : g.dir === 'up' ? [0, -1] : [-1, 0];
+              el.firstChild.style.transform = `translate(${v[0] - kk[0] * sn * -9}px,${v[1] - kk[1] * sn * -9}px) rotate(${sw + sn * 5}deg) scale(${1 + 0.05 * Math.max(0, sn)})`;
+            });
+
+            // table
+            const tin = E.outQuint(prog(S.flyStart(0) - 0.12, S.flyStart(0) + 0.45, t));
+            tbl.style.opacity = tin * (1 - prog(S.OUT0, S.OUT1, t));
+            tbl.style.transform = `translateY(${(1 - tin) * 26}px)`;
+            rowEls.forEach((el, j) => {
+              const arrive = S.flyStart(j) + S.FLY_DUR * 0.82, p = prog(arrive, arrive + 0.14, t);
+              el.children[0].style.opacity = p;
+              for (let q = 1; q < 5; q++) el.children[q].style.opacity = p;
+              el.children[5].style.opacity = p;
+              el.children[5].textContent = Math.round(rows[j][4] * E.outCubic(prog(arrive, arrive + 0.9, t)));
+              el.children[0].style.background = S.mix(F.C.concreteDark, F.C.crimson, prog(TM.CHIP, TM.CHIP + 0.475, t) * (j % 2 ? 0.55 : 0.85));
+            });
+          }
+          const p = { t: 0 };
+          tl.fromTo(p, { t: 0 }, { t: 19.2, duration: 19.2, ease: 'none', onUpdate: () => render(p.t) }, 0);
+          render(0);
+          window.__timelines['s1-origins'] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

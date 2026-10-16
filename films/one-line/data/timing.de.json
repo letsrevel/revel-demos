@@ -1,0 +1,1339 @@
+{
+ "lang": "de",
+ "duration": 95,
+ "fps": 60,
+ "sections": {
+  "intro": 0,
+  "platforms": 13.09,
+  "drop": 21.817,
+  "breakdown": 39.271,
+  "build": 56.724,
+  "climax": 65.45,
+  "outro": 82.904,
+  "end": 95
+ },
+ "music": [
+  {
+   "id": "m1",
+   "from": 4.503,
+   "to": 61.22704,
+   "start": 0,
+   "dur": 56.724
+  },
+  {
+   "id": "m2",
+   "from": 69.954,
+   "to": 96.13392,
+   "start": 56.724,
+   "dur": 26.18
+  },
+  {
+   "id": "m3",
+   "from": 111.406,
+   "to": 123.01,
+   "start": 82.904,
+   "dur": 11.604
+  }
+ ],
+ "montage": [
+  71.996,
+  73.632,
+  75.268,
+  77.45,
+  79.631,
+  81.268
+ ],
+ "montageEnd": 82.904,
+ "musicBeat": 0.54542,
+ "lines": [
+  {
+   "id": "v01",
+   "text": "Jede Community fängt gleich an.",
+   "start": 1.2,
+   "dur": 2.243,
+   "end": 3.443,
+   "words": [
+    {
+     "w": "Jede",
+     "s": 1.2,
+     "e": 1.68
+    },
+    {
+     "w": "Community",
+     "s": 1.68,
+     "e": 2.24
+    },
+    {
+     "w": "fängt",
+     "s": 2.24,
+     "e": 2.72
+    },
+    {
+     "w": "gleich",
+     "s": 2.72,
+     "e": 3.12
+    },
+    {
+     "w": "an.",
+     "s": 3.12,
+     "e": 3.443
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 0,
+     "start": 1.2,
+     "dur": 2.243,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v02",
+   "text": "Ein paar Leute. Und ein Grund, zusammenzukommen.",
+   "start": 4.3,
+   "dur": 2.726,
+   "end": 7.026,
+   "words": [
+    {
+     "w": "Ein",
+     "s": 4.334,
+     "e": 4.494
+    },
+    {
+     "w": "paar",
+     "s": 4.494,
+     "e": 4.734
+    },
+    {
+     "w": "Leute.",
+     "s": 4.734,
+     "e": 5.134
+    },
+    {
+     "w": "Und",
+     "s": 5.134,
+     "e": 5.374
+    },
+    {
+     "w": "ein",
+     "s": 5.374,
+     "e": 5.614
+    },
+    {
+     "w": "Grund,",
+     "s": 5.614,
+     "e": 5.854
+    },
+    {
+     "w": "zusammenzukommen.",
+     "s": 6.014,
+     "e": 7.026
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 2.366,
+     "start": 4.3,
+     "dur": 2.726,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v03",
+   "text": "Ein Buchclub. Ein Rope-Kreis. Ein Picknick am Sonntag. Ein Konzert im Keller.",
+   "start": 7.6,
+   "dur": 5.079,
+   "end": 12.679,
+   "words": [
+    {
+     "w": "Ein",
+     "s": 7.625,
+     "e": 7.865
+    },
+    {
+     "w": "Buchclub.",
+     "s": 7.865,
+     "e": 8.585
+    },
+    {
+     "w": "Ein",
+     "s": 8.585,
+     "e": 8.745
+    },
+    {
+     "w": "Rope-Kreis.",
+     "s": 8.745,
+     "e": 9.785
+    },
+    {
+     "w": "Ein",
+     "s": 9.785,
+     "e": 9.945
+    },
+    {
+     "w": "Picknick",
+     "s": 9.945,
+     "e": 10.425
+    },
+    {
+     "w": "am",
+     "s": 10.425,
+     "e": 10.665
+    },
+    {
+     "w": "Sonntag.",
+     "s": 10.665,
+     "e": 11.385
+    },
+    {
+     "w": "Ein",
+     "s": 11.385,
+     "e": 11.545
+    },
+    {
+     "w": "Konzert",
+     "s": 11.545,
+     "e": 12.025
+    },
+    {
+     "w": "im",
+     "s": 12.025,
+     "e": 12.185
+    },
+    {
+     "w": "Keller.",
+     "s": 12.185,
+     "e": 12.679
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 5.095,
+     "start": 7.6,
+     "dur": 5.079,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v04",
+   "text": "Dann kommen die Plattformen. Gebühren auf jedes Ticket. Aus deinen Leuten werden Daten.",
+   "start": 13.3,
+   "dur": 4.836,
+   "end": 18.136,
+   "words": [
+    {
+     "w": "Dann",
+     "s": 13.307,
+     "e": 13.547
+    },
+    {
+     "w": "kommen",
+     "s": 13.547,
+     "e": 13.867
+    },
+    {
+     "w": "die",
+     "s": 13.867,
+     "e": 14.027
+    },
+    {
+     "w": "Plattformen.",
+     "s": 14.027,
+     "e": 14.827
+    },
+    {
+     "w": "Gebühren",
+     "s": 14.827,
+     "e": 15.307
+    },
+    {
+     "w": "auf",
+     "s": 15.387,
+     "e": 15.547
+    },
+    {
+     "w": "jedes",
+     "s": 15.547,
+     "e": 15.867
+    },
+    {
+     "w": "Ticket.",
+     "s": 15.867,
+     "e": 16.427
+    },
+    {
+     "w": "Aus",
+     "s": 16.427,
+     "e": 16.587
+    },
+    {
+     "w": "deinen",
+     "s": 16.587,
+     "e": 16.907
+    },
+    {
+     "w": "Leuten",
+     "s": 16.907,
+     "e": 17.387
+    },
+    {
+     "w": "werden",
+     "s": 17.387,
+     "e": 17.707
+    },
+    {
+     "w": "Daten.",
+     "s": 17.707,
+     "e": 18.136
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 10.313,
+     "start": 13.3,
+     "dur": 4.836,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v05",
+   "text": "Revel ist anders.",
+   "start": 19.4,
+   "dur": 1.453,
+   "end": 20.853,
+   "words": [
+    {
+     "w": "Revel",
+     "s": 19.4,
+     "e": 19.713
+    },
+    {
+     "w": "ist",
+     "s": 20.033,
+     "e": 20.273
+    },
+    {
+     "w": "anders.",
+     "s": 20.273,
+     "e": 20.853
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 15.367,
+     "start": 19.4,
+     "dur": 1.453,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v06",
+   "text": "Es ist Open Source. Alle können es lesen, betreiben und besser machen.",
+   "start": 22.3,
+   "dur": 4.12,
+   "end": 26.42,
+   "words": [
+    {
+     "w": "Es",
+     "s": 22.306,
+     "e": 22.466
+    },
+    {
+     "w": "ist",
+     "s": 22.466,
+     "e": 22.706
+    },
+    {
+     "w": "Open",
+     "s": 22.706,
+     "e": 23.106
+    },
+    {
+     "w": "Source.",
+     "s": 23.106,
+     "e": 23.746
+    },
+    {
+     "w": "Alle",
+     "s": 23.746,
+     "e": 24.066
+    },
+    {
+     "w": "können",
+     "s": 24.066,
+     "e": 24.386
+    },
+    {
+     "w": "es",
+     "s": 24.386,
+     "e": 24.626
+    },
+    {
+     "w": "lesen,",
+     "s": 24.626,
+     "e": 24.946
+    },
+    {
+     "w": "betreiben",
+     "s": 25.106,
+     "e": 25.586
+    },
+    {
+     "w": "und",
+     "s": 25.586,
+     "e": 25.746
+    },
+    {
+     "w": "besser",
+     "s": 25.746,
+     "e": 26.066
+    },
+    {
+     "w": "machen.",
+     "s": 26.066,
+     "e": 26.42
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 16.874,
+     "start": 22.3,
+     "dur": 4.12,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v07",
+   "text": "Wer kauft, zahlt den Ticketpreis. Keine Gebühr obendrauf.",
+   "start": 27,
+   "dur": 3.424,
+   "end": 30.424,
+   "words": [
+    {
+     "w": "Wer",
+     "s": 27,
+     "e": 27.19
+    },
+    {
+     "w": "kauft,",
+     "s": 27.19,
+     "e": 27.59
+    },
+    {
+     "w": "zahlt",
+     "s": 27.59,
+     "e": 27.91
+    },
+    {
+     "w": "den",
+     "s": 27.91,
+     "e": 28.07
+    },
+    {
+     "w": "Ticketpreis.",
+     "s": 28.07,
+     "e": 28.95
+    },
+    {
+     "w": "Keine",
+     "s": 28.95,
+     "e": 29.19
+    },
+    {
+     "w": "Gebühr",
+     "s": 29.19,
+     "e": 29.67
+    },
+    {
+     "w": "obendrauf.",
+     "s": 29.67,
+     "e": 30.424
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 21.09,
+     "start": 27,
+     "dur": 3.424,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v08",
+   "text": "Das Geld geht direkt an die Organisation.",
+   "start": 30.75,
+   "dur": 2.451,
+   "end": 33.201,
+   "words": [
+    {
+     "w": "Das",
+     "s": 30.75,
+     "e": 30.981
+    },
+    {
+     "w": "Geld",
+     "s": 30.981,
+     "e": 31.301
+    },
+    {
+     "w": "geht",
+     "s": 31.301,
+     "e": 31.621
+    },
+    {
+     "w": "direkt",
+     "s": 31.621,
+     "e": 31.941
+    },
+    {
+     "w": "an",
+     "s": 31.941,
+     "e": 32.101
+    },
+    {
+     "w": "die",
+     "s": 32.101,
+     "e": 32.261
+    },
+    {
+     "w": "Organisation.",
+     "s": 32.261,
+     "e": 33.201
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 24.649,
+     "start": 30.75,
+     "dur": 2.451,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v09",
+   "text": "Keine Werbung. Keine Tracker. Und deine Daten werden nie und nimmer verkauft.",
+   "start": 33.6,
+   "dur": 4.806,
+   "end": 38.406,
+   "words": [
+    {
+     "w": "Keine",
+     "s": 33.6,
+     "e": 33.91
+    },
+    {
+     "w": "Werbung.",
+     "s": 33.91,
+     "e": 34.55
+    },
+    {
+     "w": "Keine",
+     "s": 34.55,
+     "e": 34.63
+    },
+    {
+     "w": "Tracker.",
+     "s": 34.79,
+     "e": 35.43
+    },
+    {
+     "w": "Und",
+     "s": 35.43,
+     "e": 35.59
+    },
+    {
+     "w": "deine",
+     "s": 35.59,
+     "e": 35.91
+    },
+    {
+     "w": "Daten",
+     "s": 35.91,
+     "e": 36.47
+    },
+    {
+     "w": "werden",
+     "s": 36.47,
+     "e": 36.79
+    },
+    {
+     "w": "nie",
+     "s": 36.79,
+     "e": 37.11
+    },
+    {
+     "w": "und",
+     "s": 37.11,
+     "e": 37.27
+    },
+    {
+     "w": "nimmer",
+     "s": 37.27,
+     "e": 37.75
+    },
+    {
+     "w": "verkauft.",
+     "s": 37.75,
+     "e": 38.406
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 27.13,
+     "start": 33.6,
+     "dur": 4.806,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v10",
+   "text": "Manche Räume brauchen ein bisschen mehr Achtsamkeit.",
+   "start": 39.9,
+   "dur": 3.026,
+   "end": 42.926,
+   "words": [
+    {
+     "w": "Manche",
+     "s": 39.934,
+     "e": 40.334
+    },
+    {
+     "w": "Räume",
+     "s": 40.334,
+     "e": 40.814
+    },
+    {
+     "w": "brauchen",
+     "s": 40.814,
+     "e": 41.214
+    },
+    {
+     "w": "ein",
+     "s": 41.214,
+     "e": 41.374
+    },
+    {
+     "w": "bisschen",
+     "s": 41.374,
+     "e": 41.694
+    },
+    {
+     "w": "mehr",
+     "s": 41.694,
+     "e": 41.934
+    },
+    {
+     "w": "Achtsamkeit.",
+     "s": 41.934,
+     "e": 42.926
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 32.046,
+     "start": 39.9,
+     "dur": 3.026,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v11",
+   "text": "Wie ein Rope-Workshop in Wien, der auf Vertrauen baut.",
+   "start": 43.25,
+   "dur": 3.01,
+   "end": 46.26,
+   "words": [
+    {
+     "w": "Wie",
+     "s": 43.25,
+     "e": 43.341
+    },
+    {
+     "w": "ein",
+     "s": 43.341,
+     "e": 43.501
+    },
+    {
+     "w": "Rope-Workshop",
+     "s": 43.501,
+     "e": 44.381
+    },
+    {
+     "w": "in",
+     "s": 44.381,
+     "e": 44.461
+    },
+    {
+     "w": "Wien,",
+     "s": 44.461,
+     "e": 44.941
+    },
+    {
+     "w": "der",
+     "s": 44.941,
+     "e": 45.101
+    },
+    {
+     "w": "auf",
+     "s": 45.101,
+     "e": 45.341
+    },
+    {
+     "w": "Vertrauen",
+     "s": 45.341,
+     "e": 45.821
+    },
+    {
+     "w": "baut.",
+     "s": 45.821,
+     "e": 46.26
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 35.189,
+     "start": 43.25,
+     "dur": 3.01,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v12",
+   "text": "Bevor also jemand ein Ticket bekommt, gibt es ein paar Fragen.",
+   "start": 46.6,
+   "dur": 3.052,
+   "end": 49.652,
+   "words": [
+    {
+     "w": "Bevor",
+     "s": 46.6,
+     "e": 46.908
+    },
+    {
+     "w": "also",
+     "s": 46.908,
+     "e": 47.148
+    },
+    {
+     "w": "jemand",
+     "s": 47.148,
+     "e": 47.548
+    },
+    {
+     "w": "ein",
+     "s": 47.548,
+     "e": 47.708
+    },
+    {
+     "w": "Ticket",
+     "s": 47.708,
+     "e": 48.028
+    },
+    {
+     "w": "bekommt,",
+     "s": 48.028,
+     "e": 48.508
+    },
+    {
+     "w": "gibt",
+     "s": 48.508,
+     "e": 48.748
+    },
+    {
+     "w": "es",
+     "s": 48.748,
+     "e": 48.908
+    },
+    {
+     "w": "ein",
+     "s": 48.908,
+     "e": 49.068
+    },
+    {
+     "w": "paar",
+     "s": 49.068,
+     "e": 49.228
+    },
+    {
+     "w": "Fragen.",
+     "s": 49.228,
+     "e": 49.652
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 38.252,
+     "start": 46.6,
+     "dur": 3.052,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v13",
+   "text": "Zur Erfahrung, zu den Konsens-Regeln, und warum man kommen möchte.",
+   "start": 50.5,
+   "dur": 3.923,
+   "end": 54.423,
+   "words": [
+    {
+     "w": "Zur",
+     "s": 50.514,
+     "e": 50.754
+    },
+    {
+     "w": "Erfahrung,",
+     "s": 50.754,
+     "e": 51.474
+    },
+    {
+     "w": "zu",
+     "s": 51.474,
+     "e": 51.634
+    },
+    {
+     "w": "den",
+     "s": 51.634,
+     "e": 51.794
+    },
+    {
+     "w": "Konsens-Regeln,",
+     "s": 51.794,
+     "e": 52.834
+    },
+    {
+     "w": "und",
+     "s": 52.914,
+     "e": 53.074
+    },
+    {
+     "w": "warum",
+     "s": 53.074,
+     "e": 53.474
+    },
+    {
+     "w": "man",
+     "s": 53.474,
+     "e": 53.714
+    },
+    {
+     "w": "kommen",
+     "s": 53.714,
+     "e": 54.034
+    },
+    {
+     "w": "möchte.",
+     "s": 54.034,
+     "e": 54.423
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 41.346,
+     "start": 50.5,
+     "dur": 3.923,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v14",
+   "text": "Dann liest ein echter Mensch jede Antwort und entscheidet.",
+   "start": 57.3,
+   "dur": 3.242,
+   "end": 60.542,
+   "words": [
+    {
+     "w": "Dann",
+     "s": 57.34,
+     "e": 57.58
+    },
+    {
+     "w": "liest",
+     "s": 57.58,
+     "e": 57.9
+    },
+    {
+     "w": "ein",
+     "s": 58.06,
+     "e": 58.22
+    },
+    {
+     "w": "echter",
+     "s": 58.22,
+     "e": 58.62
+    },
+    {
+     "w": "Mensch",
+     "s": 58.62,
+     "e": 58.94
+    },
+    {
+     "w": "jede",
+     "s": 58.94,
+     "e": 59.26
+    },
+    {
+     "w": "Antwort",
+     "s": 59.26,
+     "e": 59.66
+    },
+    {
+     "w": "und",
+     "s": 59.66,
+     "e": 59.82
+    },
+    {
+     "w": "entscheidet.",
+     "s": 59.82,
+     "e": 60.542
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 45.4,
+     "start": 57.3,
+     "dur": 3.242,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v15",
+   "text": "Und dann: Du bist dabei.",
+   "start": 63.2,
+   "dur": 1.41,
+   "end": 64.61,
+   "words": [
+    {
+     "w": "Und",
+     "s": 63.252,
+     "e": 63.412
+    },
+    {
+     "w": "dann:",
+     "s": 63.412,
+     "e": 63.732
+    },
+    {
+     "w": "Du",
+     "s": 63.732,
+     "e": 63.972
+    },
+    {
+     "w": "bist",
+     "s": 63.972,
+     "e": 64.132
+    },
+    {
+     "w": "dabei.",
+     "s": 64.132,
+     "e": 64.61
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 48.748,
+     "start": 63.2,
+     "dur": 1.41,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v16",
+   "text": "Alle im Raum haben sich entschieden, hier zu sein. Und wurden mit Achtsamkeit empfangen.",
+   "start": 66.2,
+   "dur": 4.572,
+   "end": 70.772,
+   "words": [
+    {
+     "w": "Alle",
+     "s": 66.245,
+     "e": 66.485
+    },
+    {
+     "w": "im",
+     "s": 66.485,
+     "e": 66.725
+    },
+    {
+     "w": "Raum",
+     "s": 66.725,
+     "e": 67.045
+    },
+    {
+     "w": "haben",
+     "s": 67.045,
+     "e": 67.285
+    },
+    {
+     "w": "sich",
+     "s": 67.285,
+     "e": 67.445
+    },
+    {
+     "w": "entschieden,",
+     "s": 67.445,
+     "e": 68.005
+    },
+    {
+     "w": "hier",
+     "s": 68.005,
+     "e": 68.245
+    },
+    {
+     "w": "zu",
+     "s": 68.245,
+     "e": 68.405
+    },
+    {
+     "w": "sein.",
+     "s": 68.405,
+     "e": 68.805
+    },
+    {
+     "w": "Und",
+     "s": 68.805,
+     "e": 68.965
+    },
+    {
+     "w": "wurden",
+     "s": 68.965,
+     "e": 69.325
+    },
+    {
+     "w": "mit",
+     "s": 69.325,
+     "e": 69.469
+    },
+    {
+     "w": "Achtsamkeit",
+     "s": 69.469,
+     "e": 70.165
+    },
+    {
+     "w": "empfangen.",
+     "s": 70.165,
+     "e": 70.772
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 50.195,
+     "start": 66.2,
+     "dur": 4.572,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v17a",
+   "text": "Potlucks.",
+   "start": 72.056,
+   "dur": 0.866,
+   "end": 72.922,
+   "words": [
+    {
+     "w": "Potlucks.",
+     "s": 72.058,
+     "e": 72.922
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 54.878,
+     "start": 72.056,
+     "dur": 0.866,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v17b",
+   "text": "Mitgliederpreise.",
+   "start": 73.692,
+   "dur": 1.141,
+   "end": 74.833,
+   "words": [
+    {
+     "w": "Mitgliederpreise.",
+     "s": 73.692,
+     "e": 74.833
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 55.793,
+     "start": 73.692,
+     "dur": 1.141,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v17c",
+   "text": "Zahl, was du kannst.",
+   "start": 75.328,
+   "dur": 1.241,
+   "end": 76.569,
+   "words": [
+    {
+     "w": "Zahl,",
+     "s": 75.328,
+     "e": 75.697
+    },
+    {
+     "w": "was",
+     "s": 75.697,
+     "e": 75.937
+    },
+    {
+     "w": "du",
+     "s": 75.937,
+     "e": 76.097
+    },
+    {
+     "w": "kannst.",
+     "s": 76.097,
+     "e": 76.569
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 57.071,
+     "start": 75.328,
+     "dur": 1.241,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v17d",
+   "text": "Wartelisten.",
+   "start": 77.51,
+   "dur": 1.01,
+   "end": 78.52,
+   "words": [
+    {
+     "w": "Wartelisten.",
+     "s": 77.528,
+     "e": 78.488
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 58.382,
+     "start": 77.51,
+     "dur": 1.01,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v17e",
+   "text": "Check-in am Einlass.",
+   "start": 79.691,
+   "dur": 1.319,
+   "end": 81.01,
+   "words": [
+    {
+     "w": "Check-in",
+     "s": 79.691,
+     "e": 80.052
+    },
+    {
+     "w": "am",
+     "s": 80.212,
+     "e": 80.372
+    },
+    {
+     "w": "Einlass.",
+     "s": 80.372,
+     "e": 81.01
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 59.489,
+     "start": 79.691,
+     "dur": 1.319,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v17f",
+   "text": "In sechs Sprachen.",
+   "start": 81.328,
+   "dur": 1.216,
+   "end": 82.544,
+   "words": [
+    {
+     "w": "In",
+     "s": 81.361,
+     "e": 81.521
+    },
+    {
+     "w": "sechs",
+     "s": 81.521,
+     "e": 81.841
+    },
+    {
+     "w": "Sprachen.",
+     "s": 81.921,
+     "e": 82.544
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 60.937,
+     "start": 81.328,
+     "dur": 1.216,
+     "volume": 1
+    }
+   ]
+  },
+  {
+   "id": "v18",
+   "text": "Revel. Die kostenlose, quelloffene Event-Plattform für Communities, Vereine und unabhängige Veranstaltungsorte.",
+   "start": 84,
+   "dur": 7.456,
+   "end": 91.456,
+   "words": [
+    {
+     "w": "Revel.",
+     "s": 84,
+     "e": 84.494
+    },
+    {
+     "w": "Die",
+     "s": 84.711,
+     "e": 84.861
+    },
+    {
+     "w": "kostenlose,",
+     "s": 84.861,
+     "e": 85.741
+    },
+    {
+     "w": "quelloffene",
+     "s": 85.741,
+     "e": 86.621
+    },
+    {
+     "w": "Event-Plattform",
+     "s": 86.621,
+     "e": 87.501
+    },
+    {
+     "w": "für",
+     "s": 87.501,
+     "e": 87.741
+    },
+    {
+     "w": "Communities,",
+     "s": 87.741,
+     "e": 88.621
+    },
+    {
+     "w": "Vereine",
+     "s": 88.621,
+     "e": 89.261
+    },
+    {
+     "w": "und",
+     "s": 89.261,
+     "e": 89.421
+    },
+    {
+     "w": "unabhängige",
+     "s": 89.421,
+     "e": 90.221
+    },
+    {
+     "w": "Veranstaltungsorte.",
+     "s": 90.221,
+     "e": 91.341
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 62.236,
+     "start": 84,
+     "dur": 0.571,
+     "volume": 1
+    },
+    {
+     "file": "audio/vo-pickups-d03.wav",
+     "mediaStart": 6.97,
+     "start": 84.711,
+     "dur": 6.745,
+     "volume": 0.75
+    }
+   ]
+  },
+  {
+   "id": "v20",
+   "text": "Let’s revel.",
+   "start": 91.8,
+   "dur": 0.848,
+   "end": 92.648,
+   "words": [
+    {
+     "w": "Let’s",
+     "s": 91.849,
+     "e": 92.089
+    },
+    {
+     "w": "revel.",
+     "s": 92.089,
+     "e": 92.569
+    }
+   ],
+   "clips": [
+    {
+     "file": "audio/vo-de.wav",
+     "mediaStart": 68.441,
+     "start": 91.8,
+     "dur": 0.848,
+     "volume": 1
+    }
+   ]
+  }
+ ]
+}

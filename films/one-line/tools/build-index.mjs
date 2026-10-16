@@ -1,0 +1,141 @@
+// Writes index.html — the thin orchestrator — from data/timing.<lang>.json. A project
+// has exactly one root, so index.html is regenerated for the language being worked on
+// (`bash tools/build.sh de` switches the whole project to German, `en` back).
+// Layers (z order): world (3D rope, whole film) → scene layers (type + UI) →
+// finish (grain, vignette, fades) → credit. Audio: three music passes spliced on
+// bar lines, one clip per narration phrase.
+//
+//   node tools/timing.mjs <lang> && node tools/build-index.mjs <lang>
+import fs from 'node:fs';
+
+const ROOT = new URL('..', import.meta.url).pathname;
+const LANG = process.argv[2] || 'en';
+const T = JSON.parse(fs.readFileSync(`${ROOT}data/timing.${LANG}.json`, 'utf8'));
+const OUT = 'index.html';
+const CREDIT = { en: 'Voice:', de: 'Stimme:' }[LANG] || 'Voice:';
+const S = T.sections;
+const r3 = x => +x.toFixed(3);
+// audio attributes must be double-quoted with &quot; — scripts/carve.mjs reads name="…" only
+const attr = o => JSON.stringify(o).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+
+// Scene layers: one sub-composition per music section. Windows overlap a little
+// so a layer can dissolve under the next one; each layer owns its own exits.
+export const SCENES = [
+  { id: 's1-origins', from: 0, to: 19.2, title: 'Origins + the platforms' },
+  { id: 's2-different', from: 19.0, to: S.breakdown + 0.4, title: 'Revel is different (drop + verse)' },
+  { id: 's3-care', from: S.breakdown, to: S.build + 0.4, title: 'Some rooms need care (breakdown)' },
+  { id: 's4-in', from: S.build, to: 71.6, title: 'A real person, you are in, the room (build + climax)' },
+  { id: 's5-everything', from: 71.4, to: T.duration, title: 'Everything else + the mark (montage + outro)' },
+];
+
+const MUSIC_VOL = 0.55; // bed under the voice; carved further by the audio pass
+const music = T.music.map((m, i) => {
+  const last = i === T.music.length - 1;
+    const ring = 0; // m2 ends on bar 44 inside the score's own breath (bar 43 dip) — no overlap, or the climax-2 re-entry hit leaks in
+  const dur = r3(last ? Math.min(m.dur, T.duration - m.start) : m.dur + ring + 0.03);
+  const fin = i === 0 ? 0.8 : i === 2 ? 0.12 : 0.03, fout = last ? 2.0 : i === 1 ? 0.25 : 0.03;
+  const pts = [{ t: 0, v: i === 0 ? 0 : 1 }, { t: fin, v: 1 }, { t: r3(dur - fout), v: 1 }, { t: dur, v: 0 }];
+  return `      <audio id="music-${m.id}" src="audio/score.mp3" data-start="${m.start}" data-duration="${dur}" data-media-start="${m.from}"
+        data-track-index="${20 + (i % 2)}" data-volume="${MUSIC_VOL}" data-audio-group="music"
+        data-automation="${attr({ version: 1, lanes: [{ target: 'volume', points: pts }] })}"></audio>`;
+}).join('\n');
+
+// one clip per source range: a phrase spliced from the take and a pickup has several
+const vo = T.lines.flatMap(l => l.clips.map((c, k) =>
+  `      <audio id="vo-${l.id}${l.clips.length > 1 ? '-' + (k + 1) : ''}" src="${c.file}" data-start="${c.start}" data-duration="${c.dur}" data-media-start="${c.mediaStart}" data-track-index="10" data-volume="${c.volume}" data-audio-group="voiceover"></audio>`)).join('\n');
+
+// voice bus: rumble cut, gentle levelling, lift the take (≈ −21 LUFS) toward the bed
+const voiceBus = attr({ version: 1, nodes: [
+  { type: 'highpass', id: 'n1', label: 'Remove Rumble', params: { frequency: 80, q: 0.707, poles: '2' } },
+  { type: 'compressor', id: 'n2', label: 'Even Out', params: { threshold: -24, ratio: 2.5, attack: 12, release: 220, knee: 4, makeup: 0 } },
+  { type: 'gain', id: 'n3', label: 'Level', params: { gain: 5 } },
+] });
+// master: lift to ≈ −14 LUFS (draft 1 measured −18.8), then the delivery ceiling
+const master = attr({ version: 1, nodes: [
+  { type: 'gain', id: 'n1', label: 'Loudness', params: { gain: 4.8 } },
+  { type: 'truepeak', id: 'n2', label: 'Ceiling', params: { ceiling: -1.5, lookahead: 3, release: 80 } },
+] });
+// sound design (tools/sfx-cues.mjs → tools/sfx.py), on its own bus
+const SFX = fs.existsSync(`${ROOT}data/sfx.${LANG}.json`) ? JSON.parse(fs.readFileSync(`${ROOT}data/sfx.${LANG}.json`, 'utf8')).filter(c => c.file) : [];
+// pack overlapping cues onto separate Studio lanes (lint: duplicate_audio_track)
+const laneEnd = [];
+const sfx = SFX.map((c, i) => {
+  let lane = laneEnd.findIndex(e => e <= c.t);
+  if (lane < 0) { lane = laneEnd.length; laneEnd.push(0); }
+  laneEnd[lane] = c.t + c.dur;
+  return `      <audio id="sfx-${String(i).padStart(3, '0')}" src="${c.file}" data-start="${c.t}" data-duration="${c.dur}" data-track-index="${30 + lane}" data-volume="1" data-audio-group="sfx"></audio>`;
+}).join('\n');
+const sfxBus = attr({ version: 1, nodes: [
+  { type: 'highpass', id: 'n1', label: 'Clean Lows', params: { frequency: 60, q: 0.707, poles: '2' } },
+  { type: 'gain', id: 'n2', label: 'Level', params: { gain: 0 } },
+] });
+const gaps = T.lines.filter(l => l.gap).map(l => `      <!-- ${l.id} "${l.text}" — pickup pending, ${l.start}–${l.end} s left silent -->`).join('\n');
+
+const scenes = SCENES.map((s, i) =>
+  `      <div id="el-${s.id}" class="layer" data-composition-id="${s.id}" data-composition-src="compositions/${s.id}.html"
+        data-start="${r3(s.from)}" data-duration="${r3(s.to - s.from)}" data-track-index="${2 + (i % 2)}" data-width="1920" data-height="1080" style="z-index:${10 + i}"></div>`).join('\n');
+
+const html = `<!doctype html>
+<!-- GENERATED by tools/build-index.mjs from data/timing.${LANG}.json — edit the tool, not this file. -->
+<html lang="${LANG}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="data/timing.${LANG}.js"></script>
+    <script src="lib/film.js"></script>
+    <script src="lib/rpath.js"></script>
+    <script src="lib/code.js"></script>
+    <!-- rope choreography, one module per scene section (pure functions of time) -->
+${SCENES.map(s => `    <script src="rope/${s.id}.js"></script>`).join('\n')}
+    <style>
+      @font-face { font-family: 'Nata Sans'; font-weight: 100 900; src: url(assets/fonts/NataSans-latin-normal-100_900.woff2) format('woff2'); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: #F1ECFA; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      #root > .layer { position: absolute; inset: 0; }
+      #credit { position: absolute; left: 48px; bottom: 44px; z-index: 95; font: 500 18px/1 'Nata Sans', sans-serif;
+        letter-spacing: 0.01em; color: #0D1E1C; opacity: 0; }
+      #credit .k { opacity: 0.62; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-duration="${T.duration}" data-fps="${T.fps}"
+      data-fx-chain="${master}">
+      <!-- 3D world: paper, light, the rope, the people (whole film) -->
+      <div id="el-world" class="layer" data-composition-id="world" data-composition-src="compositions/world.html"
+        data-start="0" data-duration="${T.duration}" data-track-index="0" data-width="1920" data-height="1080" style="z-index:1"></div>
+
+      <!-- scene layers: type + Revel UI, one per music section -->
+${scenes}
+
+      <!-- finish: grain, vignette, head/tail fades (whole film) -->
+      <div id="el-finish" class="layer" data-composition-id="finish" data-composition-src="compositions/finish.html"
+        data-start="0" data-duration="${T.duration}" data-track-index="5" data-width="1920" data-height="1080" style="z-index:90"></div>
+
+      <!-- voice credit (every film that uses his voice) -->
+      <div id="credit" class="clip" data-start="0.8" data-duration="6.4" data-track-index="6"><span class="k">${CREDIT}</span> Tobias Fischbach</div>
+
+      <!-- music: score-v5 in three passes, spliced on bar lines -->
+${music}
+
+      <hf-audio-group id="voiceover" data-label="Voice — Tobias Fischbach" data-volume="1" data-fx-chain="${voiceBus}"></hf-audio-group>
+      <!-- narration: Tobias Fischbach, ${T.lang.toUpperCase()} take, one clip per phrase -->
+${vo}
+${gaps}
+
+      <!-- sound design -->
+      <hf-audio-group id="sfx" data-label="Sound design" data-volume="0.8" data-fx-chain="${sfxBus}"></hf-audio-group>
+${sfx}
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#credit', { opacity: 0, y: 6 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.8)
+        .to('#credit', { opacity: 0, duration: 0.6, ease: 'power2.in' }, 6.6);
+      window.__timelines['main'] = tl;
+    </script>
+  </body>
+</html>
+`;
+fs.writeFileSync(`${ROOT}${OUT}`, html);
+console.log(OUT, 'written:', SCENES.length, 'scene layers,', T.music.length, 'music passes,', T.lines.filter(l => !l.gap).length, 'phrases,', T.lines.filter(l => l.gap).length, 'gap(s)');

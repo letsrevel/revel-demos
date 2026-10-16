@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+  <head><meta charset="UTF-8"></head>
+  <body>
+    <template>
+      <style>
+        #root { position: absolute; inset: 0; background: #F1ECFA; }
+        #world-c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+      </style>
+      <div data-hf-id="hf-9y5f" id="root" data-composition-id="world" data-width="1920" data-height="1080" data-duration="95">
+        <canvas data-hf-id="hf-ao6q" id="world-c"></canvas>
+      </div>
+      <script>
+        /* ============================================================================
+         * WORLD — the 3D layer of "One Line": paper / concrete / night surface, one
+         * lit physical rope (laid cord), people beads, soft shadows, one camera.
+         * Pure function of film time: render(t) → pixels. No clocks, no Math.random.
+         *
+         * COORDINATES  world px, y DOWN, z toward the viewer (0 = surface). Internally
+         * three-space is (x, -y, z); an orthographic camera maps world px == screen px
+         * at camera {960,540,1,0}. FILM.camera(t) = {x,y,zoom,rot} is applied each frame.
+         *
+         * STRANDS (see lib/film.js)  pts [[x,y,z?]…] (Catmull-Rom smoothed unless
+         * smooth:false; closed), w = diameter px, from/to = drawn fraction of the
+         * whole length, colA→colB along the WHOLE strand length, alpha, phase = lay
+         * offset (fraction of one lay pitch). Rope z lifts it off the surface and
+         * widens/softens/fades its shadow. Tube centre sits at z + w/2.
+         * BEADS  {x,y,z,r,color,alpha,glow}: lacquered spheres resting at z + r;
+         * glow 0..1 adds a coloured halo (and feeds bloom).
+         *
+         * ENV OVERRIDE SCHEMA — a rope section may return `env` from frame(t); it is
+         * merged into FILM.rope.at(t).env. Every key optional; absent = the
+         * section-table default for that time (frame.md "Light per section"):
+         *   surface        'paper' | 'concrete' | 'night' | 'plum' | 'gradient'
+         *   surfaceMix     0..1  blend from the table's surface toward `surface` (default 1)
+         *   keyWarmth      -1 (cold white-blue) .. 0 .. +1 (warm amber) tint of the key
+         *   keyIntensity   absolute key strength (1 ≈ paper reads at its true colour)
+         *   keyAngle       deg, where the key comes FROM on screen, clockwise from
+         *                  top: 0 top, 90 right, 180 bottom, -45 upper-left
+         *   keyElevation   deg above the surface (low = long raking shadows, 90 = none)
+         *   practical      {x,y,color,intensity} warm point light in WORLD px
+         *                  (x,y on the surface, ~220 px above it). intensity 0 = off.
+         *   ambient        scalar fill 0..1.5 (absolute)
+         *   vignette       0..1 light falloff of the surface toward the edges
+         *   bloom          0..1 glow of everything bright (practical, halos, speculars)
+         * Colour of dark/lifted states: surfaces 'night' and 'plum' are albedo, lit by
+         * the same table — raise keyIntensity/ambient to lift them.
+         * ========================================================================== */
+        (function () {
+          'use strict';
+          const F = window.FILM;
+          const W = 1920, H = 1080;
+
+          // ---- time plumbing: GSAP proxy + hf-seek, both → render(t) (idempotent) ----
+          let T_PENDING = 0, api = null, lastDrawn = -1;
+          function request(t) { T_PENDING = t; if (api && t !== lastDrawn) { lastDrawn = t; api.render(t); } }
+          const tl = gsap.timeline({ paused: true });
+          const proxy = { t: 0 };
+          tl.fromTo(proxy, { t: 0 }, { t: F.T.duration, duration: F.T.duration, ease: 'none', onUpdate: () => request(proxy.t) }, 0);
+          window.__timelines['world'] = tl;
+          window.addEventListener('hf-seek', (e) => { if (e && e.detail && typeof e.detail.time === 'number') request(e.detail.time); });
+          window.__hf = window.__hf || {}; window.__hf.buildReady = window.__hf.buildReady || {};
+          window.__hf.buildReady['world'] = build().then((a) => { api = a; lastDrawn = -1; request(T_PENDING); }, (err) => { console.error('world build failed', err); });
+
+          async function build() {
+            const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js');
+            const clamp = F.clamp, lerp = F.lerp, TAU = Math.PI * 2;
+            const canvas = document.getElementById('world-c');
+            const dpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+            const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false, powerPreference: 'high-performance', preserveDrawingBuffer: true });
+            renderer.setPixelRatio(1);
+            renderer.setSize(W * dpr, H * dpr, false);       // drawing buffer in device px, CSS size stays 100%
+            renderer.autoClear = false;
+            renderer.toneMapping = THREE.NoToneMapping;
+            const BW = W * dpr, BH = H * dpr;
+            window.__worldDpr = dpr;
+
+            // ================= colour helpers (sRGB hex → linear floats) =================
+            const lin = (hex) => { const c = new THREE.Color(hex); return [c.r, c.g, c.b]; };
+            const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+            // ================= procedural textures (seeded, deterministic) =================
+            function lattice(px, py, seed) { const r = F.rng(seed); const a = new Float32Array(px * py); for (let i = 0; i < a.length; i++) a[i] = r(); return { px, py, a }; }
+            function vnoise(L, x, y) {
+              const xi = Math.floor(x), yi = Math.floor(y), fx = x - xi, fy = y - yi;
+              const sx = fx * fx * (3 - 2 * fx), sy = fy * fy * (3 - 2 * fy);
+              const x0 = ((xi % L.px) + L.px) % L.px, y0 = ((yi % L.py) + L.py) % L.py, x1 = (x0 + 1) % L.px, y1 = (y0 + 1) % L.py;
+              const a = L.a[y0 * L.px + x0], b = L.a[y0 * L.px + x1], c = L.a[y1 * L.px + x0], d = L.a[y1 * L.px + x1];
+              return (a + (b - a) * sx) + ((c + (d - c) * sx) - (a + (b - a) * sx)) * sy;
+            }
+
+            // --- rope: tileable height of a three-strand laid cord. u = around (0..1), v = along, one lay pitch per v=1.
+            // x = 3(u + v·LAY) runs across the three strands; periodic in both u and v.
+            const LAY = -1;            // sign of the lay (S/Z)
+            const RN = 1024;
+            const Lc = lattice(7 * 3, 3, 11), Lf = lattice(26 * 3, 9, 23), Lx = lattice(60 * 3, 20, 37);
+            function ropeHeight(u, v) {
+              const x = 3 * (u + LAY * v);
+              const fr = x - Math.floor(x);
+              const strand = Math.pow(Math.sin(Math.PI * fr), 0.5) * (0.85 + 0.15 * Math.sin(Math.PI * fr * 2));              // rounded strand, creased between strands
+              const yarn = 0.5 + 0.30 * Math.sin(TAU * (7 * x + 5 * v * -LAY)) + 0.20 * Math.sin(TAU * (13 * x - 3 * v * -LAY)) + 0.15 * Math.sin(TAU * (29 * x + 2 * v * -LAY));
+              const n1 = vnoise(Lc, x * 7, v * 3), n2 = vnoise(Lf, x * 26, v * 9), n3 = vnoise(Lx, x * 60, v * 20);
+              return 0.42 * strand + 0.26 * yarn + 0.16 * n1 + 0.14 * n2 + 0.10 * n3;
+            }
+            function makeRopeMaps() {
+              const hgt = new Float32Array(RN * RN);
+              for (let r = 0; r < RN; r++) { const v = (RN - 1 - r) / RN; for (let c = 0; c < RN; c++) hgt[r * RN + c] = ropeHeight(c / RN, v); }
+              const cN = document.createElement('canvas'); cN.width = cN.height = RN;
+              const cC = document.createElement('canvas'); cC.width = cC.height = RN;
+              const iN = cN.getContext('2d').createImageData(RN, RN), iC = cC.getContext('2d').createImageData(RN, RN);
+              // physical size of one texel (in units of rope diameter): around π/RN, along PITCH/RN
+              const PITCH = 4.4, A = 0.16;
+              const du = Math.PI / RN, dv = PITCH / RN;
+              for (let r = 0; r < RN; r++) for (let c = 0; c < RN; c++) {
+                const h = hgt[r * RN + c];
+                const hl = hgt[r * RN + ((c + RN - 1) % RN)], hr = hgt[r * RN + ((c + 1) % RN)];
+                const hu = hgt[((r + RN - 1) % RN) * RN + c], hd = hgt[((r + 1) % RN) * RN + c];  // row r-1 is +v
+                let nx = -A * (hr - hl) / (2 * du), ny = -A * (hu - hd) / (2 * dv), nz = 1;
+                const m = Math.hypot(nx, ny, nz); nx /= m; ny /= m; nz /= m;
+                const k = (r * RN + c) * 4;
+                iN.data[k] = (nx * 0.5 + 0.5) * 255; iN.data[k + 1] = (ny * 0.5 + 0.5) * 255; iN.data[k + 2] = (nz * 0.5 + 0.5) * 255; iN.data[k + 3] = 255;
+                // cavity: valleys between strands and fibres are darker (multiplies the vertex colour)
+                const cav = 0.34 + 0.66 * smooth(0.15, 0.78, h);
+                const g = Math.round(cav * 255);
+                iC.data[k] = g; iC.data[k + 1] = Math.round(cav * 250); iC.data[k + 2] = g; iC.data[k + 3] = 255;
+              }
+              cN.getContext('2d').putImageData(iN, 0, 0); cC.getContext('2d').putImageData(iC, 0, 0);
+              const nrm = new THREE.CanvasTexture(cN), cav = new THREE.CanvasTexture(cC);
+              for (const t of [nrm, cav]) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = Math.min(16, renderer.capabilities.getMaxAnisotropy()); t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; }
+              cav.colorSpace = THREE.SRGBColorSpace; nrm.colorSpace = THREE.NoColorSpace;
+              return { nrm, cav };
+            }
+
+            // --- surface noise tile: R fine tooth, G paper fibres, B low-frequency mottling (periodic, 512)
+            function makeSurfaceNoise() {
+              const N = 512, cv = document.createElement('canvas'); cv.width = cv.height = N;
+              const ctx = cv.getContext('2d'); ctx.fillStyle = '#000'; ctx.fillRect(0, 0, N, N);
+              const rnd = F.rng(4242);
+              ctx.lineCap = 'round';
+              for (let i = 0; i < 2600; i++) {         // paper fibres: short seeded strokes, drawn with wrap
+                const x = rnd() * N, y = rnd() * N, a = rnd() * Math.PI, l = 6 + rnd() * 22, g = 70 + rnd() * 120;
+                ctx.strokeStyle = `rgba(${g},${g},${g},0.55)`; ctx.lineWidth = 0.6 + rnd() * 0.7;
+                for (const ox of [-N, 0, N]) for (const oy of [-N, 0, N]) {
+                  ctx.beginPath(); ctx.moveTo(x + ox, y + oy); ctx.lineTo(x + ox + Math.cos(a) * l, y + oy + Math.sin(a) * l); ctx.stroke();
+                }
+              }
+              const fib = ctx.getImageData(0, 0, N, N).data;
+              const L1 = lattice(128, 128, 5), L2 = lattice(64, 64, 6), L3 = lattice(8, 8, 7), L4 = lattice(32, 32, 8);
+              const img = ctx.createImageData(N, N);
+              for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+                const k = (y * N + x) * 4;
+                const fine = 0.5 * vnoise(L1, x / 4, y / 4) + 0.3 * vnoise(L2, x / 8, y / 8) + 0.2 * vnoise(L4, x / 16, y / 16);
+                const low = 0.6 * vnoise(L3, x / 64, y / 64) + 0.4 * vnoise(L4, x / 16, y / 16);
+                img.data[k] = fine * 255; img.data[k + 1] = fib[k]; img.data[k + 2] = low * 255; img.data[k + 3] = 255;
+              }
+              ctx.putImageData(img, 0, 0);
+              const tex = new THREE.CanvasTexture(cv);
+              tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.colorSpace = THREE.NoColorSpace; tex.anisotropy = 8;
+              tex.generateMipmaps = true; tex.minFilter = THREE.LinearMipmapLinearFilter;
+              return tex;
+            }
+
+            // soft round halo sprite texture
+            function makeHaloTex() {
+              const N = 128, cv = document.createElement('canvas'); cv.width = cv.height = N;
+              const ctx = cv.getContext('2d'), g = ctx.createRadialGradient(N / 2, N / 2, 0, N / 2, N / 2, N / 2);
+              g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.25, 'rgba(255,255,255,0.55)');
+              g.addColorStop(0.6, 'rgba(255,255,255,0.14)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+              ctx.fillStyle = g; ctx.fillRect(0, 0, N, N);
+              const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
+            }
+
+            const ropeMaps = makeRopeMaps();
+            const surfNoise = makeSurfaceNoise();
+            const haloTex = makeHaloTex();
+
+            // ================= environment for glossy/sheen response (small PMREM) =================
+            const envScene = new THREE.Scene();
+            envScene.add(new THREE.Mesh(new THREE.SphereGeometry(50, 32, 16), new THREE.ShaderMaterial({
+              side: THREE.BackSide, depthWrite: false,
+              vertexShader: 'varying vec3 vD; void main(){ vD=normalize(position); gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }',
+              fragmentShader: 'varying vec3 vD; void main(){ float z=vD.z*.5+.5; vec3 c=mix(vec3(.16,.11,.24), vec3(.62,.58,.72), smoothstep(0.,.55,z)); c=mix(c, vec3(1.05,1.02,1.1), smoothstep(.55,1.,z)); gl_FragColor=vec4(c,1.); }',
+            })));
+            const box = (w, h, col, x, y, z) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(col[0], col[1], col[2]), side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); envScene.add(m); };
+            box(22, 16, [7, 6.6, 6], -16, 14, 18);       // key softbox, upper left
+            box(10, 24, [1.8, 1.9, 2.6], 20, 4, 10);     // cool strip, right
+            box(8, 6, [3, 1.9, 1.1], 16, -14, 8);        // warm kicker, lower right
+            const pmrem = new THREE.PMREMGenerator(renderer);
+            const envTex = pmrem.fromScene(envScene, 0.03).texture;
+
+            // ================= render targets =================
+            const HALF = { type: THREE.HalfFloatType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: false, colorSpace: THREE.LinearSRGBColorSpace };
+            const sw = Math.ceil(BW / 2), sh = Math.ceil(BH / 2);
+            const rtMain = new THREE.WebGLRenderTarget(BW, BH, { type: THREE.HalfFloatType, samples: 4, depthBuffer: true, colorSpace: THREE.LinearSRGBColorSpace });
+            const rtShC = new THREE.WebGLRenderTarget(sw, sh, HALF), rtShK = new THREE.WebGLRenderTarget(sw, sh, HALF), rtTmp = new THREE.WebGLRenderTarget(sw, sh, HALF);
+            const bw = Math.ceil(BW / 4), bh = Math.ceil(BH / 4);
+            const rtBlA = new THREE.WebGLRenderTarget(bw, bh, HALF), rtBlB = new THREE.WebGLRenderTarget(bw, bh, HALF);
+
+            // ================= scenes =================
+            const scene = new THREE.Scene(); scene.environment = envTex; scene.environmentIntensity = 0.7;
+            const shScene = new THREE.Scene();
+            const cam = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, 1, 3000);
+            cam.position.set(W / 2, -H / 2, 1000);
+            const quadCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+            const quadGeo = new THREE.PlaneGeometry(2, 2);
+            const quadScene = new THREE.Scene(); const quad = new THREE.Mesh(quadGeo, null); quad.frustumCulled = false; quadScene.add(quad);
+
+            // lights
+            const keyL = new THREE.DirectionalLight(0xffffff, 1); scene.add(keyL, keyL.target);
+            const hemi = new THREE.HemisphereLight(0xffffff, 0x222222, 1); scene.add(hemi);
+            const prL = new THREE.PointLight(0xffaa55, 0, 0, 1); scene.add(prL);
+
+            // shared uniforms
+            const U = {
+              uShDir: { value: new THREE.Vector2(-0.5, -0.8) }, uShK: { value: 1 }, uFadeH: { value: 260 },
+              uNoise: { value: surfNoise }, uShC: { value: rtShC.texture }, uShKt: { value: rtShK.texture }, uRes: { value: new THREE.Vector2(BW, BH) },
+              uAlb: { value: new THREE.Vector3() }, uAlb2: { value: new THREE.Vector3() }, uGrad: { value: 0 }, uFibre: { value: 1 }, uConc: { value: 0 },
+              uKey: { value: new THREE.Vector3() }, uLdir: { value: new THREE.Vector3(0, 0, 1) }, uAmb: { value: new THREE.Vector3() },
+              uPr: { value: new THREE.Vector4() }, uPrCol: { value: new THREE.Vector3() }, uShCol: { value: new THREE.Vector3() },
+              uVig: { value: 0.2 }, uShStr: { value: new THREE.Vector2(0.5, 0.8) }, uKeyXY: { value: new THREE.Vector2() }, uZoom: { value: 1 },
+            };
+
+            // ---- surface plane
+            const surfMat = new THREE.ShaderMaterial({
+              uniforms: U, depthWrite: true,
+              vertexShader: 'varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }',
+              fragmentShader: /* glsl */`
+                precision highp float;
+                uniform sampler2D uNoise, uShC, uShKt; uniform vec2 uRes, uShStr, uKeyXY; uniform float uGrad, uFibre, uConc, uVig, uZoom;
+                uniform vec3 uAlb, uAlb2, uKey, uLdir, uAmb, uPrCol, uShCol; uniform vec4 uPr;
+                varying vec3 vW;
+                float hgt(vec2 p){ vec4 a=texture2D(uNoise,p*3.6), b=texture2D(uNoise,p*8.3+.31);
+                  float paper = a.r*.34 + a.g*.46 + b.r*.20;
+                  float conc  = a.r*.55 + b.r*.35 + a.b*.10;
+                  return mix(paper, conc, uConc); }
+                void main(){
+                  vec2 sc = gl_FragCoord.xy/uRes;
+                  vec2 p = vW.xy/512.;
+                  vec2 e = vec2(1./900., 0.);
+                  float h0=hgt(p), hx=hgt(p+e.xy*0.6), hy=hgt(p+e.yx*0.6);
+                  float bump = mix(1.5, 3., uConc);
+                  vec3 n = normalize(vec3(-(hx-h0)*bump, -(hy-h0)*bump, 1.));
+                  float ndl = max(dot(n, uLdir), 0.);
+                  vec4 m = texture2D(uNoise, p*0.31+.13);
+                  vec3 base = uAlb;
+                  vec2 q = sc-.5; float gt = clamp(dot(q, vec2(.62,-.62))*1.3+.5, 0., 1.);
+                  vec3 gcol = mix(uAlb, uAlb2, smoothstep(.0,1.,gt));
+                  base = mix(base, gcol, uGrad);
+                  base *= 1. + (m.g-.5)*.035*uFibre + (m.b-.5)*.07*uFibre;
+                  vec4 big = texture2D(uNoise, p*0.08);
+                  base *= 1. + (big.b-.5)*.04*uConc + (h0-.5)*.06*uConc;
+                  base *= 1. - uConc*.07*smoothstep(.33,.1, texture2D(uNoise,p*7.1+.5).r);   // pores
+                  vec2 qq = q*vec2(1.2,1.);
+                  float pool = 1. - uVig*smoothstep(.28,.95,length(qq)*1.15);
+                  pool *= 1. + .10*dot(q, uKeyXY);                                           // lit side of the frame is brighter
+                  vec3 L = uKey*ndl + uAmb;
+                  vec3 d = vec3(uPr.xy - vW.xy, uPr.z);
+                  float dl = length(d);
+                  float pr = 3.4 * uPr.w * (uPr.z/dl) / (1. + (dl*dl)/(640.*640.));
+                  float s = clamp(uShStr.x*texture2D(uShC, sc).r + uShStr.y*texture2D(uShKt, sc).r, 0., 1.);
+                  vec3 col = base * (L*pool + uPrCol*pr*(1.-.55*s));
+                  col *= mix(vec3(1.), uShCol, s);
+                  gl_FragColor = vec4(col, 1.);
+                }`,
+            });
+            const surf = new THREE.Mesh(new THREE.PlaneGeometry(40000, 40000), surfMat);
+            surf.frustumCulled = false; scene.add(surf);
+
+            // ================= rope slots =================
+            const RAD = 14, MAXR = 1500, NCAP = 6, TWO_PI = TAU;
+            const ropeIndex = (() => {
+              const idx = new Uint32Array((MAXR - 1) * RAD * 6); let k = 0;
+              for (let i = 0; i < MAXR - 1; i++) for (let j = 0; j < RAD; j++) {
+                const a = i * (RAD + 1) + j, b = a + 1, c = a + RAD + 1, d = c + 1;
+                idx[k++] = a; idx[k++] = b; idx[k++] = c; idx[k++] = b; idx[k++] = d; idx[k++] = c;
+              }
+              return new THREE.BufferAttribute(idx, 1);
+            })();
+            const shadowVS = 'uniform vec2 uShDir; uniform float uShK; varying float vH; void main(){ vec4 w=modelMatrix*vec4(position,1.); vH=max(w.z,0.); w.xy += uShDir*uShK*vH; w.z=0.; gl_Position=projectionMatrix*viewMatrix*w; }';
+            const shadowFS = 'uniform float uOp; uniform float uFadeH; varying float vH; void main(){ gl_FragColor=vec4(uOp/(1.+vH/uFadeH),0.,0.,1.); }';
+            function shadowMaterial() {
+              return new THREE.ShaderMaterial({
+                uniforms: { uShDir: U.uShDir, uShK: U.uShK, uFadeH: U.uFadeH, uOp: { value: 1 } },
+                vertexShader: shadowVS, fragmentShader: shadowFS, side: THREE.DoubleSide, depthTest: false, depthWrite: false, transparent: true,
+                blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, blendSrc: THREE.OneFactor, blendDst: THREE.OneFactor,
+              });
+            }
+            const ropeSlots = [];
+            function makeRopeSlot() {
+              const NV = MAXR * (RAD + 1), g = new THREE.BufferGeometry();
+              const P = new THREE.BufferAttribute(new Float32Array(NV * 3), 3), N = new THREE.BufferAttribute(new Float32Array(NV * 3), 3);
+              const UV = new THREE.BufferAttribute(new Float32Array(NV * 2), 2), C = new THREE.BufferAttribute(new Float32Array(NV * 3), 3);
+              for (const a of [P, N, UV, C]) a.setUsage(THREE.DynamicDrawUsage);
+              g.setAttribute('position', P); g.setAttribute('normal', N); g.setAttribute('uv', UV); g.setAttribute('color', C); g.setIndex(ropeIndex);
+              g.boundingSphere = new THREE.Sphere(new THREE.Vector3(), 1e6);
+              const mat = new THREE.MeshPhysicalMaterial({
+                vertexColors: true, map: ropeMaps.cav, normalMap: ropeMaps.nrm, normalScale: new THREE.Vector2(1.5, 1.5),
+                roughness: 0.62, metalness: 0, clearcoat: 0.45, clearcoatRoughness: 0.28, sheen: 0.3, sheenRoughness: 0.6, sheenColor: new THREE.Color(0.7, 0.5, 1.0),
+                transparent: true, side: THREE.FrontSide, envMapIntensity: 0.4,
+              });
+              const mesh = new THREE.Mesh(g, mat); mesh.frustumCulled = false; mesh.visible = false; scene.add(mesh);
+              const sm = shadowMaterial(); const sh = new THREE.Mesh(g, sm); sh.frustumCulled = false; sh.visible = false; shScene.add(sh);
+              return { g, P, N, UV, C, mat, mesh, sm, sh, ca: new THREE.Color(), cb: new THREE.Color(), cc: new THREE.Color() };
+            }
+
+            // build one tube into a slot. returns max z of the strand (for shadow softness) or -1 when nothing to draw.
+            const _T = [0, 0, 0];
+            function fillRope(slot, s) {
+              const src = s.pts; if (!src || src.length < 2) return -1;
+              const pts = new Array(src.length);
+              for (let i = 0; i < src.length; i++) pts[i] = [src[i][0], src[i][1], src[i][2] || 0];
+              const closed = !!s.closed;
+              const sm = s.smooth === false ? pts : F.spline(pts, 16, closed);
+              const path = F.measure(sm), L = path.L; if (!(L > 0.5)) return -1;
+              const from = clamp(s.from || 0), to = clamp(s.to ?? 1);
+              const s0 = L * from, s1 = L * to, span = s1 - s0; if (span < 0.35) return -1;
+              const w = s.w || 18, r = w / 2;
+              const full = closed && from <= 0 && to >= 1;
+              const ds = clamp(w * 0.26, 2.6, 9);
+              let nb = Math.max(2, Math.ceil(span / ds) + 1); nb = Math.min(nb, MAXR - 2 * NCAP - 2);
+              const ncap = full ? 0 : NCAP, nr = nb + 2 * ncap;
+              // lay: pitch ≈ 4.4 w; for a full closed loop make L an integer number of lays so the seam is invisible
+              let pitch = 4.4 * w; if (full) pitch = L / Math.max(1, Math.round(L / pitch));
+              // body ring centres
+              const bx = new Float32Array(nb), by = new Float32Array(nb), bz = new Float32Array(nb);
+              let zmax = 0;
+              for (let i = 0; i < nb; i++) {
+                const ss = s0 + span * (i / (nb - 1)), p = F.pointAt(path, ss);
+                bx[i] = p.x; by[i] = -p.y; bz[i] = p.z; if (p.z > zmax) zmax = p.z;
+              }
+              slot.ca.set(s.colA || '#8C3CDD'); slot.cb.set(s.colB || s.colA || '#E6332A');
+              const P = slot.P.array, N = slot.N.array, UV = slot.UV.array, C = slot.C.array;
+              const phase = (s.phase || 0);
+              const nbm = full ? nb - 1 : nb; // for full loops the last ring duplicates the first
+              let vi = 0;
+              for (let k = 0; k < nr; k++) {
+                // ring k: cap-start (0..ncap-1), body (ncap..ncap+nb-1), cap-end
+                let bi, capT = 0, sgn = 0;     // capT = sin(phi) of the hemisphere, sgn -1 start / +1 end
+                if (k < ncap) { bi = 0; const phi = (Math.PI / 2) * (1 - k / ncap); capT = Math.sin(phi); sgn = -1; var rad = r * Math.cos(phi); }
+                else if (k >= ncap + nb) { bi = nb - 1; const phi = (Math.PI / 2) * ((k - ncap - nb + 1) / ncap); capT = Math.sin(phi); sgn = 1; var rad = r * Math.cos(phi); }
+                else { bi = k - ncap; rad = r; }
+                if (rad < 1e-3) rad = 1e-3;
+                // tangent from neighbouring body centres
+                let i0, i1;
+                if (full) { i0 = (bi - 1 + nbm) % nbm; i1 = (bi + 1) % nbm; if (bi >= nbm) { i0 = nbm - 1; i1 = 1; } }
+                else { i0 = Math.max(0, bi - 1); i1 = Math.min(nb - 1, bi + 1); }
+                let tx = bx[i1] - bx[i0], ty = by[i1] - by[i0], tz = bz[i1] - bz[i0];
+                const tm = Math.hypot(tx, ty, tz) || 1; tx /= tm; ty /= tm; tz /= tm;
+                // frame: N = up × T, B = T × N  (up = +z)
+                let nx = -ty, ny = tx, nz = 0, nm = Math.hypot(nx, ny);
+                if (nm < 1e-4) { nx = 1; ny = 0; nm = 1; }
+                nx /= nm; ny /= nm;
+                const ux = ty * nz - tz * ny, uy = tz * nx - tx * nz, uz = tx * ny - ty * nx; // B = T × N
+                const cx = bx[bi] + tx * capT * r * sgn, cy = by[bi] + ty * capT * r * sgn, cz = bz[bi] + r + tz * capT * r * sgn;
+                const sArc = s0 + span * (bi / (nb - 1)) + capT * r * sgn;
+                const frac = clamp((s0 + span * (bi / (nb - 1))) / L);
+                slot.cc.copy(slot.ca).lerp(slot.cb, frac);
+                const v = sArc / pitch + phase;
+                const cphi = capT === 0 ? 1 : Math.sqrt(Math.max(0, 1 - capT * capT)); // cos(phi)
+                for (let j = 0; j <= RAD; j++) {
+                  const a = (j / RAD) * TWO_PI, ca = Math.cos(a), sa = Math.sin(a);
+                  const ox = ca * nx + sa * ux, oy = ca * ny + sa * uy, oz = sa * uz;
+                  const p3 = vi * 3;
+                  P[p3] = cx + ox * rad; P[p3 + 1] = cy + oy * rad; P[p3 + 2] = cz + oz * rad;
+                  // normal: sphere cap = (-T sinφ·sgnflip + cosφ·o); body = o
+                  const k2 = sgn === 0 ? 0 : sgn * capT;
+                  N[p3] = tx * k2 + ox * cphi; N[p3 + 1] = ty * k2 + oy * cphi; N[p3 + 2] = tz * k2 + oz * cphi;
+                  UV[vi * 2] = j / RAD; UV[vi * 2 + 1] = v;
+                  const shd = 0.42 + 0.58 * Math.pow(Math.max(N[p3 + 2], 0), 0.75);
+                  C[p3] = slot.cc.r * shd; C[p3 + 1] = slot.cc.g * shd; C[p3 + 2] = slot.cc.b * shd;
+                  vi++;
+                }
+              }
+              slot.g.setDrawRange(0, (nr - 1) * RAD * 6);
+              for (const a of [slot.P, slot.N, slot.UV, slot.C]) { a.clearUpdateRanges(); a.addUpdateRange(0, vi * a.itemSize); a.needsUpdate = true; }
+              return zmax;
+            }
+
+            // ================= bead slots =================
+            const sphereGeo = new THREE.SphereGeometry(1, 56, 36);
+            const haloGeo = new THREE.PlaneGeometry(1, 1);
+            const beadSlots = [];
+            function makeBeadSlot() {
+              const mat = new THREE.MeshPhysicalMaterial({
+                color: 0xffffff, roughness: 0.30, metalness: 0, clearcoat: 0.8, clearcoatRoughness: 0.18,
+                sheen: 0.12, sheenRoughness: 0.5, sheenColor: new THREE.Color(1, 0.9, 1), transparent: true, envMapIntensity: 1.0,
+              });
+              const mesh = new THREE.Mesh(sphereGeo, mat); mesh.frustumCulled = false; scene.add(mesh);
+              const sm = shadowMaterial(); const sh = new THREE.Mesh(sphereGeo, sm); sh.frustumCulled = false; shScene.add(sh);
+              const hm = new THREE.MeshBasicMaterial({ map: haloTex, transparent: true, depthWrite: false, blending: THREE.NormalBlending });
+              const halo = new THREE.Mesh(haloGeo, hm); halo.frustumCulled = false; halo.renderOrder = -1; scene.add(halo);
+              return { mat, mesh, sm, sh, hm, halo, c: new THREE.Color() };
+            }
+
+            // ================= full-screen passes =================
+            const blurMat = new THREE.ShaderMaterial({
+              uniforms: { tex: { value: null }, step: { value: new THREE.Vector2() } }, depthTest: false, depthWrite: false,
+              vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.,1.); }',
+              fragmentShader: `uniform sampler2D tex; uniform vec2 step; varying vec2 vUv;
+                void main(){ vec4 s=vec4(0.); float ws=0.;
+                  for(int i=-6;i<=6;i++){ float f=float(i); float w=exp(-f*f/8.); s+=texture2D(tex, vUv+step*f)*w; ws+=w; }
+                  gl_FragColor=s/ws; }`,
+            });
+            const brightMat = new THREE.ShaderMaterial({
+              uniforms: { tex: { value: null }, thr: { value: 0.95 } }, depthTest: false, depthWrite: false,
+              vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.,1.); }',
+              fragmentShader: 'uniform sampler2D tex; uniform float thr; varying vec2 vUv; void main(){ vec3 c=texture2D(tex,vUv).rgb; float l=max(c.r,max(c.g,c.b)); gl_FragColor=vec4(c*max(l-thr,0.)/max(l,1e-3),1.); }',
+            });
+            const finalMat = new THREE.ShaderMaterial({
+              uniforms: { tMain: { value: rtMain.texture }, tBloom: { value: rtBlA.texture }, uBloom: { value: 0 }, uRes: { value: new THREE.Vector2(BW, BH) } },
+              depthTest: false, depthWrite: false,
+              vertexShader: 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position.xy,0.,1.); }',
+              fragmentShader: `uniform sampler2D tMain, tBloom; uniform float uBloom; uniform vec2 uRes; varying vec2 vUv;
+                vec3 oetf(vec3 c){ c=max(c,0.); return mix(c*12.92, 1.055*pow(c,vec3(1./2.4))-.055, step(.0031308,c)); }
+                float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)))*43758.5453); }
+                void main(){
+                  vec3 c = texture2D(tMain, vUv).rgb;
+                  if (uBloom > 0.) c += texture2D(tBloom, vUv).rgb * uBloom * 1.6;
+                  c = min(c, vec3(1.)) ;
+                  vec3 o = oetf(c);
+                  o += (hash(gl_FragCoord.xy) - .5) / 255.;       // static dither against banding
+                  gl_FragColor = vec4(o, 1.);
+                }`,
+            });
+            function pass(mat, target) { quad.material = mat; renderer.setRenderTarget(target); renderer.clear(); renderer.render(quadScene, quadCam); }
+            function blur(src, tmp, radiusPx, rtW, rtH) {
+              blurMat.uniforms.tex.value = src.texture; blurMat.uniforms.step.value.set(radiusPx / 2.8 / rtW, 0); pass(blurMat, tmp);
+              blurMat.uniforms.tex.value = tmp.texture; blurMat.uniforms.step.value.set(0, radiusPx / 2.8 / rtH); pass(blurMat, src);
+            }
+
+            // ================= section table → state =================
+            const PAPER = { alb: lin('#F1ECFA'), alb2: lin('#F1ECFA'), grad: 0, fibre: 1, conc: 0, shCol: [0.48, 0.38, 0.66] };
+            const CONC = { alb: lin('#C9CAD0'), alb2: lin('#C9CAD0'), grad: 0, fibre: 0.2, conc: 1, shCol: [0.52, 0.52, 0.60] };
+            const NIGHT = { alb: lin('#3A2056'), alb2: lin('#3A2056'), grad: 0, fibre: 0.2, conc: 0, shCol: [0.30, 0.22, 0.45] };
+            const PLUM = { alb: lin('#30174A'), alb2: lin('#5A2D80'), grad: 0, fibre: 0.25, conc: 0, shCol: [0.34, 0.24, 0.50] };
+            const GRAD = { alb: lin('#8C3CDD'), alb2: lin('#E6332A'), grad: 1, fibre: 0.3, conc: 0, shCol: [0.40, 0.22, 0.45] };
+            const SURF = { paper: PAPER, concrete: CONC, night: NIGHT, plum: PLUM, gradient: GRAD };
+            const SURF_KEYS = ['alb', 'alb2', 'grad', 'fibre', 'conc', 'shCol'];
+            const BASE = {
+              keyCol: lin('#FFEBD0'), keyI: 1.1, keyAz: -50, keyEl: 34, ambCol: lin('#EDE6FA'), ambI: 0.5, vig: 0.22,
+              prX: 1500, prY: 520, prI: 0, prCol: lin('#FFA64D'), bloom: 0, envI: 0.75, shK: 0.45, shC: 0.85,
+            };
+            const mk = (surf, o) => Object.assign({}, BASE, surf, o);
+            // film-time keyframes; fade = seconds of dissolve (centred 25 % before the mark)
+            const TS = F.T.sections;
+            const TABLE = [
+              { t: 0, fade: 0, s: mk(PAPER, { keyCol: lin('#FFF6EC'), keyI: 0.95, keyAz: -52, keyEl: 30, ambCol: lin('#F4EEFC'), ambI: 0.60, vig: 0.20, shK: 0.55, shC: 0.9 }) },                 // intro: low warm key, soft
+              { t: TS.platforms, fade: 1.8, s: mk(CONC, { keyCol: lin('#F4F5FF'), keyI: 0.7, keyAz: -10, keyEl: 76, ambCol: lin('#F0F1F6'), ambI: 0.44, vig: 0.28, envI: 0.55, shK: 0.3, shC: 0.9 }) }, // platforms: flat cold overhead, colour drains
+              { t: TS.drop, fade: 0.14, s: mk(GRAD, { keyCol: lin('#FFF4EA'), keyI: 1.2, keyAz: -35, keyEl: 52, ambI: 0.62, vig: 0.15, bloom: 0.25, shK: 0.5, shC: 0.85 }) },              // the drop: brand flash
+              { t: TS.drop + 1.0, fade: 1.3, s: mk(PAPER, { keyCol: lin('#FFF6EC'), keyI: 0.78, keyAz: -35, keyEl: 52, ambCol: lin('#F4EEFC'), ambI: 0.45, vig: 0.17, shK: 0.5, shC: 0.85 }) },                  // verse: bright, clean
+              { t: TS.breakdown, fade: 2.6, s: mk(NIGHT, { keyCol: lin('#FFBE7D'), keyI: 0.75, keyAz: 78, keyEl: 24, ambCol: lin('#9A7AD0'), ambI: 0.62, vig: 0.5, prX: 1560, prY: 560, prI: 1.0, prCol: lin('#FFA95A'), bloom: 0.35, envI: 0.25, shK: 0.6, shC: 0.9 }) }, // dusk violet + one warm practical
+              { t: 48.0, fade: 7, s: mk(PLUM, { keyCol: lin('#FFBE7D'), keyI: 0.7, keyAz: 78, keyEl: 24, ambCol: lin('#A888DC'), ambI: 0.72, vig: 0.46, prX: 1560, prY: 560, prI: 1.0, prCol: lin('#FFA95A'), bloom: 0.38, envI: 0.3, shK: 0.6, shC: 0.9 }) }, // night → plum
+              { t: TS.build, fade: 0.5, s: mk(PLUM, { keyCol: lin('#FFC48A'), keyI: 0.8, keyAz: 70, keyEl: 26, ambCol: lin('#9C7AD0'), ambI: 0.55, vig: 0.45, prX: 1480, prY: 540, prI: 0.55, prCol: lin('#FFB066'), bloom: 0.4, envI: 0.35, shK: 0.6, shC: 0.9 }) },   // build: glow grows
+              { t: 64.2, fade: 2.0, s: mk(PLUM, { keyCol: lin('#FFD2A0'), keyI: 1.0, keyAz: 40, keyEl: 34, ambCol: lin('#B49AE0'), ambI: 0.7, vig: 0.38, prX: 1200, prY: 540, prI: 0.9, prCol: lin('#FFBE7A'), bloom: 0.55, envI: 0.5, shK: 0.6, shC: 0.9 }) }, // lifting toward warm
+              { t: TS.climax, fade: 1.6, s: mk(PAPER, { keyCol: lin('#FFEFD8'), keyI: 0.8, keyAz: -30, keyEl: 46, ambCol: lin('#F4EEFC'), ambI: 0.5, vig: 0.16, bloom: 0.2, shK: 0.5, shC: 0.85 }) },            // climax: paper, bright and warm
+              { t: TS.outro, fade: 2.0, s: mk(PAPER, { keyCol: lin('#FFF4E6'), keyI: 0.6, keyAz: -15, keyEl: 62, ambCol: lin('#F4EEFC'), ambI: 0.5, vig: 0.2, shK: 0.4, shC: 0.85 }) },                         // outro: quiet, centred
+            ].map((e, i, a) => Object.assign(e, { start: e.t - 0.25 * e.fade, end: e.t + 0.75 * e.fade }));
+
+            function mixState(a, b, w) {
+              const o = {};
+              for (const k in a) {
+                const x = a[k], y = b[k];
+                o[k] = Array.isArray(x) ? x.map((v, i) => lerp(v, y[i], w)) : lerp(x, y, w);
+              }
+              return o;
+            }
+            function tableState(t) {
+              let k = 0;
+              for (let i = 1; i < TABLE.length; i++) if (t >= TABLE[i].start) k = i;
+              if (k === 0) return TABLE[0].s;
+              const e = TABLE[k], w = e.fade <= 0 ? 1 : smooth(e.start, e.end, t);
+              return w >= 1 ? e.s : mixState(TABLE[k - 1].s, e.s, w);
+            }
+            const WARM = [1.0, 0.80, 0.58], COLD = [0.78, 0.88, 1.0];
+            function resolveState(t, env) {
+              let s = tableState(t);
+              if (env && Object.keys(env).length) {
+                s = Object.assign({}, s);
+                if (env.surface && SURF[env.surface]) {
+                  const tgt = SURF[env.surface], m = env.surfaceMix == null ? 1 : clamp(env.surfaceMix);
+                  for (const k of SURF_KEYS) s[k] = Array.isArray(s[k]) ? s[k].map((v, i) => lerp(v, tgt[k][i], m)) : lerp(s[k], tgt[k], m);
+                } else if (env.surfaceMix != null) { /* surfaceMix without surface: ignored */ }
+                if (env.keyIntensity != null) s.keyI = env.keyIntensity;
+                if (env.keyAngle != null) s.keyAz = env.keyAngle;
+                if (env.keyElevation != null) s.keyEl = env.keyElevation;
+                if (env.keyWarmth) { const w = clamp(env.keyWarmth, -1, 1), tint = w > 0 ? WARM : COLD, m = Math.abs(w) * 0.7; s.keyCol = s.keyCol.map((v, i) => lerp(v, lin_of(tint[i]), m)); }
+                if (env.ambient != null) s.ambI = env.ambient;
+                if (env.vignette != null) s.vig = env.vignette;
+                if (env.bloom != null) s.bloom = env.bloom;
+                if (env.practical) {
+                  const p = env.practical;
+                  if (p.x != null) s.prX = p.x; if (p.y != null) s.prY = p.y;
+                  if (p.color) s.prCol = lin(p.color);
+                  if (p.intensity != null) s.prI = p.intensity;
+                }
+              }
+              return s;
+            }
+            const lin_of = (v) => Math.pow(v, 2.2);   // tints are authored in display space
+
+            // ================= per-frame render =================
+            const v3 = (u, a) => u.value.set(a[0], a[1], a[2]);
+            const tmpCol = new THREE.Color();
+            function render(t) {
+              const f = F.rope.at(t);
+              const s = resolveState(t, f.env);
+              const cm = F.camera(t);
+
+              // camera: world px ↔ screen px
+              cam.position.set(cm.x, -cm.y, 1000); cam.rotation.set(0, 0, cm.rot); cam.zoom = cm.zoom; cam.updateProjectionMatrix(); cam.updateMatrixWorld(true);
+
+              // light rig
+              const az = s.keyAz * Math.PI / 180, el = clamp(s.keyEl, 8, 89) * Math.PI / 180;
+              const Lx = Math.sin(az) * Math.cos(el), Ly = Math.cos(az) * Math.cos(el), Lz = Math.sin(el);
+              keyL.position.set(Lx * 1500, Ly * 1500, Lz * 1500); keyL.target.position.set(0, 0, 0);
+              keyL.color.setRGB(s.keyCol[0], s.keyCol[1], s.keyCol[2], THREE.LinearSRGBColorSpace); keyL.intensity = s.keyI * Math.PI;
+              hemi.color.setRGB(s.ambCol[0], s.ambCol[1], s.ambCol[2], THREE.LinearSRGBColorSpace);
+              hemi.groundColor.setRGB(s.ambCol[0] * 0.14, s.ambCol[1] * 0.1, s.ambCol[2] * 0.18, THREE.LinearSRGBColorSpace);
+              hemi.intensity = s.ambI * Math.PI;
+              hemi.position.set(0, 0, 100);
+              prL.color.setRGB(s.prCol[0], s.prCol[1], s.prCol[2], THREE.LinearSRGBColorSpace);
+              prL.intensity = s.prI * Math.PI * 900; prL.position.set(s.prX, -s.prY, 220); prL.visible = s.prI > 0.001;
+              scene.environmentIntensity = s.envI;
+
+              // surface uniforms
+              v3(U.uAlb, s.alb); v3(U.uAlb2, s.alb2); U.uGrad.value = s.grad; U.uFibre.value = s.fibre; U.uConc.value = s.conc;
+              U.uKey.value.set(s.keyCol[0] * s.keyI, s.keyCol[1] * s.keyI, s.keyCol[2] * s.keyI);
+              U.uLdir.value.set(Lx, Ly, Lz); v3(U.uAmb, [s.ambCol[0] * s.ambI, s.ambCol[1] * s.ambI, s.ambCol[2] * s.ambI]);
+              U.uPr.value.set(s.prX, -s.prY, 220, s.prI); v3(U.uPrCol, s.prCol); v3(U.uShCol, s.shCol);
+              U.uVig.value = s.vig; U.uShStr.value.set(s.shC * 0.8, s.shK * 1.0); U.uKeyXY.value.set(Lx / Math.max(0.2, Math.cos(el)) * 0.6, Ly / Math.max(0.2, Math.cos(el)) * 0.6);
+              U.uZoom.value = cm.zoom;
+              U.uShDir.value.set(-Math.sin(az), -Math.cos(az));
+
+              // ---- strands
+              let used = 0, zmax = 0;
+              for (const st of f.strands) {
+                const a = st.alpha ?? 1; if (a <= 0.003) continue;
+                if (used >= ropeSlots.length) ropeSlots.push(makeRopeSlot());
+                const slot = ropeSlots[used];
+                const zm = fillRope(slot, st);
+                if (zm < 0) continue;
+                used++;
+                if (zm > zmax) zmax = zm;
+                slot.mesh.visible = true; slot.sh.visible = true;
+                slot.mat.opacity = a; slot.mat.depthWrite = a > 0.98; slot.sm.uniforms.uOp.value = a;
+                // rope lit tones: sheen picks up the key colour a little
+                tmpCol.setRGB(Math.min(1, 0.7 + s.keyCol[0] * 0.3), Math.min(1, 0.6 + s.keyCol[1] * 0.3), Math.min(1, 0.85 + s.keyCol[2] * 0.15), THREE.LinearSRGBColorSpace);
+                slot.mat.sheenColor.copy(tmpCol);
+              }
+              for (let i = used; i < ropeSlots.length; i++) { ropeSlots[i].mesh.visible = false; ropeSlots[i].sh.visible = false; }
+
+              // ---- beads
+              let nbd = 0;
+              for (const b of f.beads) {
+                const a = b.alpha ?? 1; if (a <= 0.003 || !(b.r > 0)) continue;
+                if (nbd >= beadSlots.length) beadSlots.push(makeBeadSlot());
+                const sl = beadSlots[nbd++];
+                const r = b.r, z = (b.z || 0) + r;
+                if ((b.z || 0) > zmax) zmax = b.z;
+                sl.mesh.visible = sl.sh.visible = true;
+                sl.mesh.position.set(b.x, -b.y, z); sl.mesh.scale.setScalar(r);
+                sl.sh.position.copy(sl.mesh.position); sl.sh.scale.setScalar(r); sl.sm.uniforms.uOp.value = a;
+                sl.c.set(b.color || '#8C3CDD'); sl.mat.color.copy(sl.c); sl.mat.opacity = a; sl.mat.depthWrite = a > 0.98;
+                sl.mat.emissive.copy(sl.c); sl.mat.emissiveIntensity = 0.03 + 0.9 * (b.glow || 0);
+                sl.mat.sheenColor.copy(sl.c).lerp(tmpCol.setRGB(1, 1, 1), 0.55);
+                const g = b.glow || 0;
+                sl.halo.visible = g > 0.01;
+                if (g > 0.01) {
+                  sl.halo.position.set(b.x, -b.y, 0.4); sl.halo.scale.setScalar(r * (4 + 4 * g));
+                  sl.hm.color.copy(sl.c); sl.hm.opacity = Math.min(1, g * a * 0.75);
+                }
+              }
+              for (let i = nbd; i < beadSlots.length; i++) beadSlots[i].mesh.visible = beadSlots[i].sh.visible = beadSlots[i].halo.visible = false;
+
+              // ---- shadow passes (same camera): tight contact + soft cast, blurred
+              const tanK = Math.cos(el) / Math.sin(el);
+              const zoom = cm.zoom * dpr * 0.5;                 // blur radii in half-res RT pixels
+              renderer.setClearColor(0x000000, 1);
+              U.uShK.value = tanK * 0.22; U.uFadeH.value = 900;
+              renderer.setRenderTarget(rtShC); renderer.clear(); renderer.render(shScene, cam);
+              blur(rtShC, rtTmp, 3.2 * zoom, sw, sh);
+              U.uShK.value = tanK; U.uFadeH.value = 260;
+              renderer.setRenderTarget(rtShK); renderer.clear(); renderer.render(shScene, cam);
+              blur(rtShK, rtTmp, (9 + 0.45 * zmax) * zoom * (0.8 + 0.6 * Math.min(2.2, tanK)), sw, sh);
+
+              // ---- main
+              renderer.setClearColor(0x000000, 1);
+              renderer.setRenderTarget(rtMain); renderer.clear(); renderer.render(scene, cam);
+
+              // ---- bloom (only when asked for)
+              let bl = clamp(s.bloom);
+              if (bl > 0.005) {
+                brightMat.uniforms.tex.value = rtMain.texture; brightMat.uniforms.thr.value = 0.82; pass(brightMat, rtBlA);
+                blur(rtBlA, rtBlB, 7 * dpr * 0.5, bw, bh); blur(rtBlA, rtBlB, 16 * dpr * 0.5, bw, bh);
+              }
+              finalMat.uniforms.uBloom.value = bl > 0.005 ? bl : 0;
+              pass(finalMat, null);
+              window.__worldState = { t, used, nbd };
+            }
+
+            return { render, THREE, renderer };
+          }
+        })();
+      </script>
+    </template>
+  </body>
+</html>
