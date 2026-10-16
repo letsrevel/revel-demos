@@ -14,7 +14,7 @@
     "argo": "argo",
     "validate": "argo validate",
     "validate:all": "node scripts/validate-all.mjs",
-    "pipeline": "argo pipeline",
+    "pipeline": "node scripts/pipeline.mjs",
     "record": "argo record",
     "export": "argo export",
     "preview": "argo preview",
