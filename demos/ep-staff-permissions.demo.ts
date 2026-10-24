@@ -265,8 +265,10 @@ test('ep-staff-permissions', async ({ page, narration }) => {
 		await page.getByRole('heading', { name: 'Manage Tickets' }).first().waitFor({ timeout: 20_000 }).catch(() => undefined);
 		await page.waitForLoadState('networkidle').catch(() => undefined);
 		await page.waitForTimeout(600);
-		// Bring the counts and the first rows into frame, cursor off the names.
-		await glideScroll(page, 260, 1600);
+		// Bring all four rows into frame, cursor off the names. Since FE 2.25 a
+		// "Sales by source" panel sits above the list; 190 px keeps the Scan QR
+		// button in frame too ("check-in one tap away").
+		await glideScroll(page, 190, 1600);
 		await page.mouse.move(1700, 560, { steps: 10 });
 		await page.waitForTimeout(Math.max(1500, narration.durationFor('limited')));
 	});

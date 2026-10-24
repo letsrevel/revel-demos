@@ -10,7 +10,7 @@ const BASE = process.env.BASE_URL || 'http://localhost:5173';
 const ORG = 'shibari-circle-vienna';
 const OWNER = { email: 'ren.owner@demovideo.example.com', password: 'password123' };
 const SEEDED_SLUG = 'intro-to-shibari-rope-and-trust';
-const COPY_NAME = 'Intro to Shibari — Rope & Trust · October';
+const COPY_NAME = 'Intro to Shibari — Rope & Trust · November';
 const Q_NAME = 'Workshop Application · October';
 
 // ---- Arrange -------------------------------------------------------------
@@ -37,7 +37,7 @@ if (!seededQ) throw new Error('seeded questionnaire not found on the flagship ev
 console.log('seeded questionnaire', seededQ.id, seededQ.questionnaire.name, '| pending', seededQ.pending_evaluations_count);
 
 // Duplicate as the October edition (a Sunday evening, like the original).
-const start = new Date('2026-10-11T17:00:00Z');
+const start = new Date('2026-11-15T17:00:00Z');
 const copy = await api(`/api/event-admin/${seeded.id}/duplicate`, { token: ownerToken, body: { name: COPY_NAME, start: start.toISOString() } });
 console.log('copy', copy.id, copy.slug, copy.status, '| address', copy.address, '| cover', copy.cover_art);
 await api(`/api/event-admin/${copy.id}/actions/update-status/open`, { method: 'POST', token: ownerToken, body: {} });

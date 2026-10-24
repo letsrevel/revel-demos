@@ -9,7 +9,7 @@ test.use({ bypassCSP: true });
 
 // Episode 13 · "The questionnaire gate". The seeded Shibari Circle Vienna
 // flagship is a one-question, questionnaire-gated workshop that other clips
-// film, so it is left untouched. Every run duplicates it into an "October"
+// film, so it is left untouched. Every run duplicates it into a "November"
 // edition, swaps the copy's questionnaire for a fresh two-section, five-question
 // one, and registers a fresh applicant — then films her applying, Ren reading
 // the answers and approving, and the free tier unlocking.
@@ -17,7 +17,7 @@ const CARD = { episode: 13, title: 'The questionnaire gate', pov: 'an applicant,
 const ORG = 'shibari-circle-vienna';
 const OWNER = { email: 'ren.owner@demovideo.example.com', password: 'password123' };
 const SEEDED_SLUG = 'intro-to-shibari-rope-and-trust';
-const COPY_NAME = 'Intro to Shibari — Rope & Trust · October';
+const COPY_NAME = 'Intro to Shibari — Rope & Trust · November';
 const Q_NAME = 'Workshop Application · October';
 
 const ANSWERS = {
@@ -61,7 +61,7 @@ async function arrange() {
 	// open it, and detach the seeded one-question questionnaire from the COPY.
 	const copy = await api(`/api/event-admin/${seeded.id}/duplicate`, {
 		token: ownerToken,
-		body: { name: COPY_NAME, start: new Date('2026-10-11T17:00:00Z').toISOString() }
+		body: { name: COPY_NAME, start: new Date('2026-11-15T17:00:00Z').toISOString() }
 	});
 	await api(`/api/event-admin/${copy.id}/actions/update-status/open`, { method: 'POST', token: ownerToken, body: {} });
 	await api(`/api/questionnaires/${seededQ.id}/events/${copy.id}`, { method: 'DELETE', token: ownerToken });

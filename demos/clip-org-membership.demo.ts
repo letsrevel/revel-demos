@@ -163,13 +163,17 @@ test('clip-org-membership', async ({ page, narration }) => {
 
 	await withOverlay(page, 'members', async () => {
 		await page.waitForTimeout(1400);
-		await glideScroll(page, 320, 1800);
 		// Tiers is the tab that makes the point: membership is not one flat list.
 		const tiers = page
 			.getByRole('button', { name: /Tiers/ })
 			.or(page.getByRole('tab', { name: /Tiers/ }))
 			.filter({ visible: true })
 			.first();
+		// Park the tab strip just under the navbar, so the tier names land right
+		// below it. A fixed distance broke when the admin sidebar (FE 2.25)
+		// narrowed the page and every card grew taller.
+		const tabBox = (await tiers.count()) ? await tiers.boundingBox() : null;
+		await glideScroll(page, tabBox ? Math.max(0, tabBox.y - 96) : 320, 1800);
 		if (await tiers.count()) {
 			await tiers.hover();
 			await page.waitForTimeout(400);

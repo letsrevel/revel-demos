@@ -9,7 +9,12 @@
 // stamped Stripe-connected (`markStripeConnected` in arrange-lib.mjs), and the
 // forwarder running on the host:
 //     stripe listen --forward-to localhost:8000/api/stripe/webhook
+// (or the DEMO_API_PORT in .env, when it is set)
 import { api } from './arrange-lib.mjs';
+
+// Where Stripe hands the buyer back: the app's own origin (BASE_URL moves it
+// off 5173 when a dev server holds that port).
+const APP_ORIGIN = new URL(process.env.BASE_URL || 'http://localhost:5173').origin;
 
 export const TEST_CARD = {
 	number: '4242 4242 4242 4242',
@@ -69,7 +74,7 @@ export async function payHostedCheckout(page, url, { email = 'demo-buyer@example
 	const submit = page.getByTestId('hosted-payment-submit-button');
 	if ((await submit.count()) > 0) await submit.click();
 	else await page.getByRole('button', { name: 'Pay', exact: true }).click();
-	await page.waitForURL(/localhost:5173/, { timeout: 60_000 });
+	await page.waitForURL((url) => url.origin === APP_ORIGIN, { timeout: 60_000 });
 }
 
 /** Poll until `check()` returns truthy — the webhook may take a few seconds. */
