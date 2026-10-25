@@ -18,7 +18,7 @@ const ORG = 'shibari-circle-vienna';
 const OWNER = { email: 'ren.owner@demovideo.example.com', password: 'password123' };
 const SEEDED_SLUG = 'intro-to-shibari-rope-and-trust';
 const COPY_NAME = 'Intro to Shibari — Rope & Trust · November';
-const Q_NAME = 'Workshop Application · October';
+const Q_NAME = 'Workshop Application · November';
 
 const ANSWERS = {
 	experience: 'None — complete beginner',
@@ -26,7 +26,7 @@ const ANSWERS = {
 	hope: 'How to tie safely, and how to talk about what I want before the rope comes out.',
 	injuries: 'A stiff left shoulder — nothing serious, but please no tight overhead ties.',
 	consent: 'Yes, I have read them',
-	note: 'Welcome, Noa — see you in October.'
+	note: 'Welcome, Noa — see you in November.'
 };
 
 interface Question {
@@ -46,7 +46,7 @@ async function arrange() {
 	// Self-healing: retire the copies and questionnaires left by earlier takes.
 	// The event DELETE commits and then a post-commit hook 500s on the missing
 	// row (backend #937), so the rejection is expected and the row is gone.
-	const stale = await api(`/api/events/?organization_slug=${ORG}&search=October&page_size=50`, { token: ownerToken });
+	const stale = await api(`/api/events/?organization_slug=${ORG}&search=November&page_size=50`, { token: ownerToken });
 	for (const old of (stale.results ?? []).filter((e: { name: string }) => e.name === COPY_NAME)) {
 		await api(`/api/event-admin/${old.id}`, { method: 'DELETE', token: ownerToken }).catch(() => undefined);
 	}
@@ -57,7 +57,7 @@ async function arrange() {
 	const seededQ = (qs.results ?? []).find((q: { events?: { id: string }[] }) => q.events?.some((e) => e.id === seeded.id));
 	if (!seededQ) throw new Error('seeded questionnaire not found on the flagship event');
 
-	// Duplicate as the October edition (a Sunday evening, like the original),
+	// Duplicate as the November edition (a Sunday evening, like the original),
 	// open it, and detach the seeded one-question questionnaire from the COPY.
 	const copy = await api(`/api/event-admin/${seeded.id}/duplicate`, {
 		token: ownerToken,

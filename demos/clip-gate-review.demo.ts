@@ -68,17 +68,29 @@ test('clip-gate-review', async ({ page, narration }) => {
 	await lookup.goto(`/org/${ORG}/admin/questionnaires`);
 	await lookup.locator('body[data-hydrated="true"]').waitFor({ state: 'attached' });
 	// The seeded questionnaire by name, not "the first link": ep-questionnaire-gate
-	// leaves a second one ("Workshop Application · October") on this org, and it
+	// leaves a second one ("Workshop Application · November") on this org, and it
 	// sorts first. Fall back to the first link only if the exact name is absent.
+	// Since FE 2.25 the links only read "Edit" and "Submissions"; the name is the
+	// first text of the card around them. Walk up to the card that names a
+	// Workshop Application and keep the one without the " · November" suffix.
+	const anyLink = lookup.locator('a[href*="/admin/questionnaires/"]').first();
+	await anyLink.waitFor({ state: 'attached', timeout: 20_000 });
+	const byHeading = await lookup.locator('a[href*="/admin/questionnaires/"]').evaluateAll((els) =>
+		els
+			.map((e) => {
+				let card: Element | null = e;
+				while (card && !(card.textContent ?? '').includes('Workshop Application')) card = card.parentElement;
+				const text = (card?.textContent ?? '').replace(/\s+/g, ' ').trim();
+				return { text, href: e.getAttribute('href') ?? '' };
+			})
+			.find((l) => /^Workshop Application(?! ·)/.test(l.text) && !l.href.endsWith('/submissions'))?.href
+	);
 	const byName = lookup
 		.locator('a[href*="/admin/questionnaires/"]')
 		.filter({ hasText: /^\s*Workshop Application\s*$/ })
 		.first();
-	const qLink = (await byName.count())
-		? byName
-		: lookup.locator('a[href*="/admin/questionnaires/"]').first();
-	await qLink.waitFor({ state: 'attached', timeout: 20_000 });
-	const href = await qLink.getAttribute('href');
+	const href =
+		byHeading ?? ((await byName.count()) ? await byName.getAttribute('href') : await anyLink.getAttribute('href'));
 
 	// Self-heal: the clip approves a submission on camera, and there is no API to
 	// put one back to pending — but the review screen itself offers "Pending
