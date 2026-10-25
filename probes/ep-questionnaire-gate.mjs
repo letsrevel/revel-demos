@@ -1,5 +1,5 @@
 // Probe for Episode 13 · "The questionnaire gate". Duplicates the seeded
-// Shibari flagship into an "October" copy, swaps its questionnaire for a fresh
+// Shibari flagship into a "November" copy, swaps its questionnaire for a fresh
 // five-question one, registers a fresh applicant, verifies the gate via the
 // API, then walks every page and selector the episode touches.
 // `node probes/ep-questionnaire-gate.mjs`
@@ -10,8 +10,8 @@ const BASE = process.env.BASE_URL || 'http://localhost:5173';
 const ORG = 'shibari-circle-vienna';
 const OWNER = { email: 'ren.owner@demovideo.example.com', password: 'password123' };
 const SEEDED_SLUG = 'intro-to-shibari-rope-and-trust';
-const COPY_NAME = 'Intro to Shibari — Rope & Trust · October';
-const Q_NAME = 'Workshop Application · October';
+const COPY_NAME = 'Intro to Shibari — Rope & Trust · November';
+const Q_NAME = 'Workshop Application · November';
 
 // ---- Arrange -------------------------------------------------------------
 const ownerToken = await login(OWNER.email, OWNER.password);
@@ -22,7 +22,7 @@ const orgId = seeded.organization.id;
 // Self-healing: retire copies and questionnaires left by earlier takes. The
 // event DELETE commits, then a post-commit hook 500s on the now-missing row
 // (backend #937), so the rejection is expected and the row is in fact gone.
-const stale = await api(`/api/events/?organization_slug=${ORG}&search=${encodeURIComponent('October')}&page_size=50`, { token: ownerToken });
+const stale = await api(`/api/events/?organization_slug=${ORG}&search=${encodeURIComponent('November')}&page_size=50`, { token: ownerToken });
 for (const old of (stale.results ?? []).filter((e) => e.name === COPY_NAME)) {
 	console.log('deleting stale copy', old.id);
 	await api(`/api/event-admin/${old.id}`, { method: 'DELETE', token: ownerToken }).catch(() => undefined);
@@ -36,8 +36,8 @@ const seededQ = (qs.results ?? []).find((q) => q.events?.some((e) => e.id === se
 if (!seededQ) throw new Error('seeded questionnaire not found on the flagship event');
 console.log('seeded questionnaire', seededQ.id, seededQ.questionnaire.name, '| pending', seededQ.pending_evaluations_count);
 
-// Duplicate as the October edition (a Sunday evening, like the original).
-const start = new Date('2026-10-11T17:00:00Z');
+// Duplicate as the November edition (a Sunday evening, like the original).
+const start = new Date('2026-11-15T17:00:00Z');
 const copy = await api(`/api/event-admin/${seeded.id}/duplicate`, { token: ownerToken, body: { name: COPY_NAME, start: start.toISOString() } });
 console.log('copy', copy.id, copy.slug, copy.status, '| address', copy.address, '| cover', copy.cover_art);
 await api(`/api/event-admin/${copy.id}/actions/update-status/open`, { method: 'POST', token: ownerToken, body: {} });
@@ -283,7 +283,7 @@ console.log('review: advanced toggle count', await adv.count());
 await adv.click();
 const comments = page.locator('#comments');
 await comments.waitFor({ timeout: 5000 });
-await comments.pressSequentially('Welcome, Noa — see you in October.', { delay: 5 });
+await comments.pressSequentially('Welcome, Noa — see you in November.', { delay: 5 });
 const approve = page.getByRole('button', { name: /^Approve/ }).filter({ visible: true }).first();
 console.log('review: approve count', await approve.count(), '| box', JSON.stringify(await approve.boundingBox()));
 await page.screenshot({ path: `${SHOT}/probe-review.png`, fullPage: true });

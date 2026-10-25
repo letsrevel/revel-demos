@@ -138,7 +138,9 @@ test('ep-pick-your-seat', async ({ page, narration }) => {
 	narration.mark('designer');
 	await withOverlay(page, 'designer', async () => {
 		await page.waitForTimeout(600);
-		await glideScroll(page, 400, 1600);
+		// Down to the canvas with the toolbar still in frame. Was 400 while the
+		// admin tab strip sat above it; FE 2.25 moved that into the sidebar.
+		await glideScroll(page, 260, 1600);
 		await page.waitForTimeout(300);
 		const zoomIn = page.getByRole('button', { name: 'Zoom in' });
 		for (let i = 0; i < 3; i++) {

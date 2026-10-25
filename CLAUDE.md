@@ -200,6 +200,17 @@ hide it with `.bg-info\/10.border-info\/30{display:none!important}`.
 Mailpit publishes on `MAILPIT_PORT` (`.env`). Every script reads
 `MAILPIT_URL`, so run them as `MAILPIT_URL=http://localhost:8125 npm run …`.
 
+**App and API ports**: the same goes for 5173 and 8000. The frontend's `pnpm
+dev` takes 5173 (and 5174, 5175… when several run) and the backend's E2E
+daemon takes 8000, and then the browser silently films *their* app — a Vite
+page never sets `data-hydrated`, so every take times out at the first login.
+`DEMO_APP_PORT` / `DEMO_API_PORT` in `.env` move the demo (e.g. 5190 / 8001);
+then run every script with `BASE_URL=http://localhost:5190
+API_URL=http://localhost:8001`, point `stripe listen` at the API port, and,
+on an existing database, update the stored `frontend_base_url` (or `down -v`)
+so email links open the right port. `lsof -nP -iTCP:<port> -sTCP:LISTEN`
+shows who holds a port.
+
 ### The deliberate fakes
 
 The demo environment is configured with believable **fake** credentials so that
@@ -391,7 +402,7 @@ Each of these cost a failed take at least once.
 | SSR paints the logged-out header until client auth lands | a fast cut onto an admin page shows "Login / Sign Up" over the organizer's own dashboard for up to half a second, and `gotoClean`'s `networkidle` does not always outlast it. Wait for the account chrome after the goto — bounded by that screen's own slot and swallowed on timeout, because a screen that never arrives is worse than a flash. Pre-visiting the page on the unrecorded side page helps too: the document loads in the same second either way, but a primed bundle cache makes hydration land sooner |
 | Client-rendered admin tabs need client auth, not just hydration | clicking the members "Tiers" tab before the bootstrap paints "No membership tiers" over a fully populated org |
 | Whatever the arrange step leaves unset is an empty state on camera | membership tiers created with only a name render "Plans — No plans yet.": three empty boxes above half a screen of whitespace. Dress prices and descriptions the way you dress addresses. Two API edges here — a tier carrying `requires_membership_approval` or a membership questionnaire *refuses* priced plans (400), and a plan's `description` is a plain string, so sending `null` is a 422 |
-| The API throttles per IP, and every author on this machine is one IP | anonymous 60/min, authenticated 100/min, auth endpoint 100/min. Several clips arranging at once trip it: registrations die with `429 Request was throttled` before the camera starts, a throttled sign-in stays on /login, and a throttled anonymous page (the `/join/event/<token>` preview) renders a 404. `arrange-lib.api()` waits and retries on 429 and `uiLogin` re-presses the button; keep page loads on the recorded page few, and prime anonymous pages on the side page first |
+| The API throttles per IP, and every author on this machine is one IP | The demo stack now sets `DISABLE_THROTTLING`, because backend 2.24 caps registration at 100 a day per IP and one evening of probes and takes used it up (`429 … available in 84000 seconds`). On a stack without it: anonymous 60/min, authenticated 100/min, auth endpoint 100/min. Several clips arranging at once trip it: registrations die with `429 Request was throttled` before the camera starts, a throttled sign-in stays on /login, and a throttled anonymous page (the `/join/event/<token>` preview) renders a 404. `arrange-lib.api()` waits and retries on 429 and `uiLogin` re-presses the button; keep page loads on the recorded page few, and prime anonymous pages on the side page first |
 | Refresh tokens rotate, and leaving the dashboard mid-refresh strands the session | the login page lands on `/dashboard`, whose bootstrap immediately rotates the refresh token. Navigate away — or close a side page — while that refresh is in flight and the browser keeps the OLD cookie: the next load gets a 401, both cookies are cleared, and the admin page paints logged out for the rest of the take (reproduced 4/4). `uiLogin` and `switchUser` now wait for the account bell before returning; do not shortcut them |
 | Publish/reload on an admin page flashes the logged-out SSR header | a `window.location.reload()` (the Publish button does one) paints "Login / Sign Up" and UTC times for ~0.5 s. Screenshot the page before the click, paint the still as a document-start cover via `addInitScript`, dissolve it once the account bell is back (`ep-publish-event.demo.ts`) |
 | The waitlist only auto-processes when the event has an offer window | raising `max_attendees` on a plain waitlist does nothing (`process_waitlist_for_event` returns `disabled`). Set `waitlist_time_window` via `PATCH /api/event-admin/{id}/waitlist-settings` first; then a capacity raise issues a timed offer with a real deadline on the page |

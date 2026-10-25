@@ -46,6 +46,12 @@ x-backend-env: &backend-env
   SECRET_KEY: demo-video-not-a-secret-key-do-not-reuse-anywhere
   SALT_KEY: 583l5Y4hl9WCwIu3qSpTctFZochMoegbghahnyUhUYE=
   DEBUG: "False"
+  # Every author and every script on this machine is one IP, and from backend
+  # 2.24 registration is capped at 100 a day per IP. Each probe and take
+  # registers fresh personas, so one evening of renders used it up and every
+  # arrange step after that died with "429 … available in 84000 seconds".
+  # The backend's own switch for test boxes turns all rate limits off.
+  DISABLE_THROTTLING: "True"
   # The single switch that puts the app in demo mode. It makes /api/version
   # report demo:true, which is what makes the login page show the one-click
   # demo-account picker (very handy on camera) and forces questionnaire
@@ -60,15 +66,19 @@ x-backend-env: &backend-env
   # *localhost itself* to https in the browser for a year, breaking every other
   # local project on the machine. Any value other than "production" is fine.
   DEPLOYMENT_ENVIRONMENT: demo
-  ALLOWED_HOSTS: web,localhost,127.0.0.1
+  ALLOWED_HOSTS: web,localhost,127.0.0.1,api.localhost
   # DEBUG=False closes CORS completely unless this is set explicitly.
-  CORS_ALLOWED_ORIGINS: http://localhost:5173,http://127.0.0.1:5173
-  SITE_DOMAIN: localhost:8000
+  CORS_ALLOWED_ORIGINS: http://localhost:${DEMO_APP_PORT:-5173},http://127.0.0.1:${DEMO_APP_PORT:-5173}
+  SITE_DOMAIN: localhost:${DEMO_API_PORT:-8000}
   SITE_NAME: Revel
-  BASE_URL: http://localhost:8000
+  # From backend 2.24 a plain localhost BASE_URL is a startup error while DEBUG
+  # is off (common.E001). `api.localhost` passes the check, and browsers resolve
+  # every *.localhost name to this machine. It only builds links in emails and
+  # wallet passes.
+  BASE_URL: http://api.localhost:${DEMO_API_PORT:-8000}
   # NOTE: this only seeds a DB row on first boot. Changing it later has no
   # effect — the app reads the stored value. `down -v` to really change it.
-  FRONTEND_BASE_URL: http://localhost:5173
+  FRONTEND_BASE_URL: http://localhost:${DEMO_APP_PORT:-5173}
   SERVICE_DESCRIPTION: The Revel API
   ADMIN_URL: admin/
 
@@ -233,7 +243,9 @@ services:
     image: caddy:2
     platform: *platform
     ports:
-      - '8000:8000'
+      - '${DEMO_API_PORT:-8000}:8000'
+    environment:
+      DEMO_API_PORT: ${DEMO_API_PORT:-8000}
     volumes:
       - ./scripts/media-proxy.Caddyfile:/etc/caddy/Caddyfile:ro
       - media:/srv/media:ro
@@ -309,10 +321,16 @@ services:
       - --worker-class=gthread
       - --workers=2
       - --threads=4
-      - --bind=0.0.0.0:8000
+      - --bind=0.0.0.0:${DEMO_API_PORT:-8000}
       - --timeout=120
     ports:
-      # NOTE: 8000 is NOT published here. The `media-proxy` service owns that
+      # Host ports: DEMO_APP_PORT (default 5173) and DEMO_API_PORT (default
+      # 8000), set in .env, move the demo off ports a local dev server holds.
+      # Gunicorn listens on DEMO_API_PORT inside the namespace too, so the
+      # browser's API address also works from inside the frontend container.
+      # The scripts then need BASE_URL and API_URL pointed at the same ports.
+      #
+      # NOTE: the API port is NOT published here. The `media-proxy` service owns that
       # host port and forwards to this container, so that /media/ is served at
       # all (see its Caddyfile). Gunicorn still listens on 8000 *inside* this
       # namespace, which is what the frontend's token refresh depends on.
@@ -320,7 +338,7 @@ services:
       # Published here on purpose, not on `frontend`: that service shares this
       # container's network namespace (see its network_mode), so its port has
       # to be declared on the namespace's owner.
-      - '5173:3000'
+      - '${DEMO_APP_PORT:-5173}:3000'
     volumes:
       - ./fake-secrets:/fake-secrets:ro
       - media:/app/src/media
@@ -344,7 +362,7 @@ services:
     healthcheck:
       test:
         - CMD-SHELL
-        - python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/healthcheck', timeout=5)"
+        - python -c "import urllib.request; urllib.request.urlopen('http://localhost:${DEMO_API_PORT:-8000}/api/healthcheck', timeout=5)"
       interval: 10s
       timeout: 10s
       retries: 12
@@ -441,9 +459,9 @@ services:
     # name — nothing here needs either.
     network_mode: 'service:web'
     environment:
-      PUBLIC_API_URL: http://localhost:8000
-      INTERNAL_API_URL: http://web:8000
-      ORIGIN: http://localhost:5173
+      PUBLIC_API_URL: http://localhost:${DEMO_API_PORT:-8000}
+      INTERNAL_API_URL: http://web:${DEMO_API_PORT:-8000}
+      ORIGIN: http://localhost:${DEMO_APP_PORT:-5173}
       NODE_ENV: production
       PORT: '3000'
       HOST: 0.0.0.0
